@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Practice · Notice, Allow, Choose</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  :root{
+    --forest:#d8e0cc;
+    --sage:#8ba888;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --paper:#142019;
+    --ink:#c2cfb2;
+    --line:#33493b;
+    --panel:#1d2d24;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    padding:48px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px;margin:0 auto;}
+
+  .masthead{
+    border-bottom:2px solid var(--forest);
+    padding-bottom:18px;
+    margin-bottom:14px;
+  }
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--rust);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:25px;
+    font-weight:600;
+    color:var(--forest);
+    letter-spacing:-.01em;
+    line-height:1.2;
+  }
+  .standfirst{
+    margin-top:14px;
+    font-size:13px;
+    color:var(--teal);
+    max-width:60ch;
+  }
+
+  /* meta row */
+  .meta{
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+    margin:18px 0 34px;
+    font-size:11.5px;
+    color:var(--teal);
+  }
+  .meta b{color:var(--rust);font-weight:600;letter-spacing:.05em;}
+
+  /* sequence banner */
+  .seq{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--forest);
+    background:rgba(139,168,136,.18);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:8px;
+    letter-spacing:.04em;
+  }
+  .seq .arrow{color:var(--sage);font-weight:400;}
+  .seq-sub{
+    text-align:center;
+    font-size:11px;
+    color:var(--teal);
+    font-style:italic;
+    margin-bottom:34px;
+  }
+
+  /* movements */
+  .move{
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--panel);
+    padding:22px 24px;
+    margin-bottom:18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .move::before{
+    content:"";
+    position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:var(--accent);
+  }
+  .m1{--accent:var(--teal);}
+  .m2{--accent:var(--rust);}
+  .m3{--accent:var(--forest);}
+
+  .move-head{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:3px;
+  }
+  .verb{
+    font-size:18px;
+    font-weight:600;
+    color:var(--forest);
+  }
+  .school{
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+    margin-left:auto;
+  }
+  .move .role{
+    font-size:11.5px;
+    font-style:italic;
+    color:var(--teal);
+    margin-bottom:12px;
+  }
+  .ask{
+    font-size:13px;
+    background:rgba(61,112,104,.07);
+    border-radius:8px;
+    padding:11px 14px;
+  }
+  .ask .lbl{
+    display:block;
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--rust);
+    font-weight:600;
+    margin-bottom:5px;
+  }
+
+  /* guardrail */
+  .guard{
+    margin-top:30px;
+    border-top:1px dashed var(--sage);
+    padding-top:22px;
+    font-size:12.5px;
+    color:var(--teal);
+  }
+  .guard strong{color:var(--forest);font-weight:600;}
+  .guard p{margin-bottom:10px;}
+  .guard p:last-child{margin-bottom:0;}
+
+  @media print{
+    :root{--forest:#2f4a3c;--sage:#6f8a6c;--teal:#2f6f6a;--rust:#a8542f;--paper:#fff;--ink:#26312b;--line:#cfd4c7;--panel:#fff;}
+    body{background:#fff;padding:0;}
+    .move,.seq{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Ongoing Practice · Built to outlive the heartbreak</div>
+    <h1>Notice · Allow · Choose</h1>
+    <p class="standfirst">A standing ten-minute weekly review. Three movements drawn from three frameworks that aren't redundant — they're three stages of one move. Each ends by handing the feeling somewhere to go, which is precisely what rumination never does.</p>
+  </div>
+
+  <div class="meta">
+    <div><b>WHEN</b> &nbsp;Saturday, around the gym session</div>
+    <div><b>LENGTH</b> &nbsp;~10 min</div>
+    <div><b>FORMAT</b> &nbsp;A few lines per movement — brevity is the control</div>
+  </div>
+
+  <div class="seq">
+    <span>NOTICE</span><span class="arrow">→</span><span>ALLOW</span><span class="arrow">→</span><span>CHOOSE</span>
+  </div>
+  <div class="seq-sub">The opposite of rumination, which goes notice → re-feel → notice the same thing again.</div>
+
+  <div class="move m1">
+    <div class="move-head">
+      <span class="verb">Notice</span>
+      <span class="school">IFS · Parts</span>
+    </div>
+    <div class="role">Name the part. "A part of me feels worthless" — not "I am worthless." The part is not the whole of you.</div>
+    <div class="ask">
+      <span class="lbl">Ask</span>
+      What parts of me showed up this week, and what was each one trying to protect? Name them. Thank them. Don't argue with them.
+    </div>
+  </div>
+
+  <div class="move m2">
+    <div class="move-head">
+      <span class="verb">Allow</span>
+      <span class="school">DBT · Radical acceptance</span>
+    </div>
+    <div class="role">Let the feeling be there without fighting it. Resisting what's true adds a second layer of suffering on top of the first. Secular, clinical — nothing to believe in.</div>
+    <div class="ask">
+      <span class="lbl">Ask</span>
+      What am I currently fighting that's true whether I like it or not? Write it as a plain statement of fact. Stating it plainly is the practice.
+    </div>
+  </div>
+
+  <div class="move m3">
+    <div class="move-head">
+      <span class="verb">Choose</span>
+      <span class="school">Stoic · Dichotomy of control</span>
+    </div>
+    <div class="role">Act from your values, not from reactivity. Spend energy only on what's yours: your judgments, choices, responses. Not other people, outcomes, or the past.</div>
+    <div class="ask">
+      <span class="lbl">Ask</span>
+      One thing I'm spending energy on that isn't in my control — name it, set it down. One thing that is in my control — name it, and the action I'll take next week.
+    </div>
+  </div>
+
+  <div class="guard">
+    <p><strong>Why these three and not one journal.</strong> Free reflection under load drifts to the most activated thought and circles it. This sequence can't: every movement ends by handing the feeling somewhere — a named part, a stated fact, a chosen action. Movement, not marination.</p>
+    <p><strong>Keep it short.</strong> If a movement runs to half a page, that's the rumination pull. Pull back to a few lines. The brevity is load-bearing, not laziness.</p>
+    <p><strong>This one stays.</strong> The two-week writing intensive ends. This doesn't — it's a way of relating to your own mind, useful long after Molly is a settled chapter rather than an open one.</p>
+  </div>
+
+</div>
+</body>
+</html>
