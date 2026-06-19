@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curl wash-day routine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#142019;
+    --panel:#1d2d24;
+    --panel-2:#233a2e;
+    --line:#33493b;
+    --sage:#c2cfb2;
+    --sage-dim:#8b9c7e;
+    --cream:#ece8db;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --rust-dim:#a8542f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+    background:var(--bg);
+    color:var(--sage);
+    line-height:1.5;
+    padding:32px 20px 56px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:10px}
+  h1{font-size:30px;font-weight:600;color:var(--cream);letter-spacing:-.01em}
+  .sub{font-size:13px;color:var(--sage-dim);margin-top:8px;max-width:64ch}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  @media (max-width:680px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}
+  .card-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .card-head h2{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600}
+  .card-head .when{font-size:11px;color:var(--sage-dim);letter-spacing:.1em}
+
+  .step{display:flex;gap:13px;padding:9px 0}
+  .step + .step{border-top:1px dashed var(--line)}
+  .num{flex:0 0 auto;width:22px;height:22px;border-radius:50%;border:1px solid var(--rust-dim);color:var(--rust);font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .step-body .label{color:var(--cream);font-size:14px;font-weight:500}
+  .step-body .prod{color:var(--sage-dim);font-size:12px;margin-top:2px}
+  .label.opt{color:var(--teal);font-size:13px}
+
+  .rhythm{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:22px;margin-bottom:18px}
+  .rhythm h2{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:6px}
+  .rhythm .note{font-size:12px;color:var(--sage-dim);margin-bottom:18px;max-width:64ch}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  @media (max-width:680px){.week{grid-template-columns:repeat(4,1fr)}}
+  .day{border:1px solid var(--line);border-radius:7px;padding:11px 6px;text-align:center;background:var(--panel)}
+  .day .d{font-size:10px;letter-spacing:.14em;color:var(--sage-dim);text-transform:uppercase}
+  .day .mark{font-size:11px;margin-top:8px;font-weight:500}
+  .day.wash{border-color:var(--rust-dim)}
+  .day.wash .mark{color:var(--rust)}
+  .day.refresh .mark{color:var(--teal)}
+  .day.between .mark{color:var(--sage-dim)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:11px;color:var(--sage-dim)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .dot.r{background:var(--rust)}.dot.t{background:var(--teal)}.dot.s{background:var(--sage-dim)}
+
+  .rule{margin-top:16px;padding:11px 14px;border-left:3px solid var(--rust);background:rgba(196,103,60,.08);font-size:12.5px;color:var(--cream)}
+
+  .lower{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:680px){.lower{grid-template-columns:1fr}}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}
+  .block h3{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:13px}
+  ul{list-style:none}
+  li{font-size:12.5px;padding:6px 0 6px 16px;position:relative;color:var(--sage)}
+  li::before{content:"—";position:absolute;left:0;color:var(--rust-dim)}
+  li b{color:var(--cream);font-weight:500}
+
+  footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--sage-dim);letter-spacing:.04em}
+
+  /* ---- Print: flip to light, and darken the light greens so they stay readable ---- */
+  @media print{
+    :root{
+      --bg:#ffffff;
+      --panel:#ffffff;
+      --panel-2:#f6f5ee;
+      --line:#cdd4c4;
+      --sage:#2c352c;      /* was #c2cfb2 — primary text, now dark on white */
+      --sage-dim:#566256;  /* was #8b9c7e — secondary text, now readable */
+      --cream:#1d2a20;     /* headings/labels, near-black green */
+      --teal:#2f6f6a;      /* darker teal for contrast on white */
+      --rust:#a8542f;
+      --rust-dim:#a8542f;
+    }
+    body{padding:0}
+    .grid,.lower{gap:12px}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Wash-day reference · fine 3A curls</div>
+    <h1>Curl wash-day routine</h1>
+    <p class="sub">Two cleanses a week — a fuller wash on Sunday, a gentle refresh midweek. Keep the bond and moisture treatments on alternating weeks so fine curls don't tip into overload.</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><h2>Sunday</h2><span class="when">main wash</span></div>
+      <div class="step"><div class="num">1</div><div class="step-body"><div class="label">Cleanse</div><div class="prod">Noughty Wave Hello · scalp only — let the suds rinse through the lengths</div></div></div>
+      <div class="step"><div class="num">2</div><div class="step-body"><div class="label">Treat</div><div class="prod">alternates week to week — see weekly treatment below</div></div></div>
+      <div class="step"><div class="num">3</div><div class="step-body"><div class="label">Style</div><div class="prod">Wavy curl crème on soaking-wet hair · scrunch, then diffuse or air-dry</div></div></div>
+      <div class="step"><div class="num">+</div><div class="step-body"><div class="label opt">Clarify swap</div><div class="prod">every 1–2 weeks, swap in Joico clarifying when curls feel coated, limp or stop clumping</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Wednesday</h2><span class="when">mid-week refresh</span></div>
+      <div class="step"><div class="num">1</div><div class="step-body"><div class="label">Cleanse</div><div class="prod">Wavy cowash · scalp focus, kept gentle</div></div></div>
+      <div class="step"><div class="num">2</div><div class="step-body"><div class="label">Slip</div><div class="prod">a little Umberto Frizz Fix on the ends</div></div></div>
+      <div class="step"><div class="num">3</div><div class="step-body"><div class="label">Restyle</div><div class="prod">curl crème on wet hair</div></div></div>
+    </div>
+  </div>
+
+  <div class="rhythm">
+    <h2>Weekly rhythm</h2>
+    <p class="note">A fuller wash on Sunday and a gentle refresh on Wednesday. The days in between are leave-it-alone protect days — no cleansing, just maintenance.</p>
+    <div class="week">
+      <div class="day between"><div class="d">Mon</div><div class="mark">Between</div></div>
+      <div class="day between"><div class="d">Tue</div><div class="mark">Between</div></div>
+      <div class="day refresh"><div class="d">Wed</div><div class="mark">Refresh</div></div>
+      <div class="day between"><div class="d">Thu</div><div class="mark">Between</div></div>
+      <div class="day between"><div class="d">Fri</div><div class="mark">Between</div></div>
+      <div class="day between"><div class="d">Sat</div><div class="mark">Between</div></div>
+      <div class="day wash"><div class="d">Sun</div><div class="mark">Main wash</div></div>
+    </div>
+    <div class="legend">
+      <span><i class="dot r"></i>Main wash — cleanse, treat, style</span>
+      <span><i class="dot t"></i>Mid-week refresh — cowash + restyle</span>
+      <span><i class="dot s"></i>Between — protect &amp; revive only</span>
+    </div>
+    <div class="rule">When curls go flat or stringy, that's buildup — not dryness. Clarify; don't pile on more product.</div>
+  </div>
+
+  <div class="lower">
+    <div class="block">
+      <h3>Weekly treatment · alternate</h3>
+      <ul>
+        <li><b>Wk A · Moisture</b> — Curlsmith mask, 10–15 min. Skip the conditioner.</li>
+        <li><b>Wk B · Strength</b> — Curlsmith bond repair, then a little Umberto Frizz Fix for slip.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Between washes</h3>
+      <ul>
+        <li>Pineapple (loose high pony) at night + a satin / silk pillowcase.</li>
+        <li>Revive day 2–3: mist with water, scrunch in a pea-size of curl crème.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Bond ↔ moisture balance</h3>
+      <ul>
+        <li>Alternating week to week is what keeps the two in check.</li>
+        <li>Don't run a protein / repair mask the same week as the bond treatment.</li>
+        <li>Stiff or straw-like hair = <b>protein overload</b> → lean into moisture, pause the bond product for a few weeks.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>Fine 3A · 2 wash days a week · review what's working every few weeks</footer>
+
+</div>
+</body>
+</html>
