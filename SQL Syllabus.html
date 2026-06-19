@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Self-Study Syllabus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#142019; --panel:#1d2d24; --panel-2:#233a2e; --line:#33493b;
+    --text:#c2cfb2; --muted:#8b9c7e; --cream:#ece8db;
+    --teal:#5fa39a; --rust:#c4673c; --sage:#8ba888;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--mono);background:var(--bg);color:var(--text);line-height:1.5;padding:40px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto}
+  header.mast{border-bottom:2px solid var(--line);padding-bottom:20px;margin-bottom:6px}
+  .eyebrow{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:10px}
+  h1{font-size:29px;font-weight:600;color:var(--cream);letter-spacing:-.01em;line-height:1.12}
+  .standfirst{font-size:13px;color:var(--teal);margin-top:8px;max-width:72ch}
+  .meta{display:grid;gap:7px;margin:22px 0 6px;font-size:12px}
+  .meta .row{display:grid;grid-template-columns:96px 1fr;gap:12px}
+  .meta .k{color:var(--rust);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:10px;padding-top:2px}
+  .meta .v{color:var(--text)}
+  .meta .v b{color:var(--cream);font-weight:600}
+  .seclabel{display:flex;align-items:center;gap:.75rem;font-size:11px;text-transform:uppercase;letter-spacing:.17em;color:var(--cream);margin:36px 0 16px}
+  .seclabel::after{content:"";flex:1;height:1px;background:var(--line)}
+  .seclabel .tag{color:var(--teal);letter-spacing:.1em;font-size:10px;flex:none}
+  .intro{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .intro .sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:14px 0 7px}
+  .intro .sub:first-child{margin-top:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px 14px;margin-bottom:14px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--teal))}
+  .ch{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  .wk{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--accent,var(--teal));white-space:nowrap}
+  .ct{font-size:15px;font-weight:600;color:var(--cream)}
+  .badge{margin-left:auto;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:3px 9px;white-space:nowrap}
+  .r{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:6px 0;font-size:12.5px}
+  .r + .r{border-top:1px dashed var(--line)}
+  .r .k{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rust);font-weight:600;padding-top:2px}
+  .r .v{color:var(--text)}
+  .sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:13px 0 6px}
+  .reslist{list-style:none}
+  .reslist li{font-size:12.5px;padding:5px 0 5px 16px;position:relative;color:var(--text)}
+  .reslist li::before{content:"\2014";position:absolute;left:0;color:var(--sage)}
+  .reslist li b{color:var(--cream);font-weight:600}
+  .noteline{font-size:12px;color:var(--muted);font-style:italic;margin:10px 0 0;padding-left:2px}
+  .milestone{margin-top:11px;padding:9px 13px;border-left:3px solid var(--rust);background:rgba(196,103,60,.09);font-size:12px;color:var(--cream)}
+  .milestone .l{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:3px}
+  .milestone.warn{border-left-color:var(--rust);background:rgba(196,103,60,.14)}
+  .tracker-wrap{overflow-x:auto;margin-bottom:14px;border:1px solid var(--line);border-radius:10px}
+  table.tracker{width:100%;border-collapse:collapse;background:var(--panel);font-size:12px;min-width:480px}
+  .tracker th{text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);font-weight:600;padding:11px 12px;border-bottom:1px solid var(--line)}
+  .tracker th.c,.tracker td.c{text-align:center}
+  .tracker td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:middle}
+  .tracker tr:last-child td{border-bottom:none}
+  .tracker td.wkc{color:var(--teal);font-weight:600;white-space:nowrap}
+  .tracker td.tp{color:var(--muted);white-space:nowrap;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  button.box{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:1.5px solid var(--muted);border-radius:3px;background:transparent;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;vertical-align:middle;transition:background .12s,border-color .12s}
+  button.box:hover{border-color:var(--teal)}
+  button.box.checked{background:var(--teal);border-color:var(--teal)}
+  button.box.checked::after{content:"\2713";color:var(--bg);font-size:11px;font-weight:700;line-height:1}
+  button.box:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+  footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);letter-spacing:.03em;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  @media (max-width:560px){ .r{grid-template-columns:1fr} .r .k{padding-top:0} }
+  @media print{
+    :root{
+      --bg:#fff;--panel:#fff;--panel-2:#f6f5ee;--line:#cdd4c4;
+      --text:#2c352c;--muted:#566256;--cream:#1d2a20;
+      --teal:#2f6f6a;--rust:#a8542f;--sage:#6f8a6c;
+    }
+    body{padding:0}
+    .card,.intro,.tracker-wrap{break-inside:avoid}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast"><p class="eyebrow">Study · 12-week plan</p><h1>SQL self-study syllabus</h1><p class="standfirst">Foundations of SQL for data analysis — joins, aggregation, subqueries and data manipulation, finishing with a small portfolio project on real or sample data.</p></header>
+<div class="meta"><div class="row"><div class="k">Duration</div><div class="v"><b>12 weeks</b></div></div><div class="row"><div class="k">Weekly</div><div class="v">~2.5 hrs &mdash; Sat 11:15&ndash;12:45 + optional Sun 10:00&ndash;11:00</div></div><div class="row"><div class="k">Goal</div><div class="v">Working proficiency, ending with a documented multi-table query you can show your team or talk about in an interview.</div></div></div>
+<div class="seclabel">Setup <span class="tag">resources &amp; rhythm</span></div>
+<div class="intro"><div class="sub">The four resources</div><ul class="reslist"><li><b>Book</b> &mdash; Sams Teach Yourself SQL in 10 Minutes (Ben Forta, 22 lessons). Primary reading &amp; concept reference.</li><li><b>SQLBolt</b> &mdash; interactive lessons at sqlbolt.com. Hands-on practice in the browser.</li><li><b>Video</b> &mdash; one free video course (picks below). Reinforce each topic visually.</li><li><b>Sandbox</b> &mdash; SQLite + a sample DB (e.g. Chinook) or your SIS read-access. Apply skills to realistic data.</li></ul><div class="sub">Video picks &mdash; choose one, sample first</div><ul class="reslist"><li><b>TechTFQ</b> &mdash; topic-by-topic, clear logical explanations, includes a PostgreSQL setup guide. Best fit for this structure.</li><li><b>Alex the Analyst</b> &mdash; short ~10-min videos per topic, analyst-focused.</li><li><b>freeCodeCamp</b> &mdash; comprehensive long-form single-video courses; good as a jump-around reference.</li><li><b>Data with Baraa</b> &mdash; extensive long-form playlists, free version of paid content.</li></ul><p class="noteline">Match one focused video to the topic you are reading that week rather than a 20+ hour marathon. Sample two channels in week 1 and lock in whichever clicks.</p><div class="sub">How each week works</div><ul class="reslist"><li>Read the assigned book lesson(s) &mdash; short, ~10 min each.</li><li>Watch a video segment on the same topic.</li><li>Practice the matching SQLBolt lesson(s).</li><li>Apply &mdash; write 2&ndash;3 of your own queries against the sample DB (or your SIS data).</li><li>Log one useful query to your running personal cheat-sheet.</li></ul><p class="noteline">The optional Sunday hour is a buffer / catch-up slot &mdash; use it only if you fell behind. Not mandatory.</p></div>
+<div class="seclabel">Module 1 &mdash; Retrieving &amp; Sorting <span class="tag">Weeks 1&ndash;2</span></div>
+<div class="card" style="--accent:var(--teal)">
+<div class="ch"><span class="wk">Week 1</span><span class="ct">Getting oriented + basic retrieval</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 1 (Understanding SQL), Lesson 2 (Retrieving Data)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">Intro / what is SQL + SELECT basics; install SQLite or set up the sample DB</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Lessons 1&ndash;2 (SELECT queries)</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">Set up your sandbox. Run SELECT with LIMIT on a few tables just to see the data.</div></div>
+<div class="milestone"><span class="l">Milestone</span>Environment working; can retrieve specific columns from a table.</div>
+</div>
+<div class="card" style="--accent:var(--teal)">
+<div class="ch"><span class="wk">Week 2</span><span class="ct">Sorting &amp; first filtering</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 3 (Sorting Retrieved Data), Lesson 4 (Filtering Data)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">ORDER BY + WHERE</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Lessons 3&ndash;4 (ORDER BY, WHERE filtering)</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">Write a query like &ldquo;all records in category X, sorted by date.&rdquo;</div></div>
+<div class="milestone"><span class="l">Milestone</span>Comfortable with SELECT &hellip; WHERE &hellip; ORDER BY.</div>
+</div>
+<div class="seclabel">Module 2 &mdash; Filtering Deeper <span class="tag">Weeks 3&ndash;4</span></div>
+<div class="card" style="--accent:var(--rust)">
+<div class="ch"><span class="wk">Week 3</span><span class="ct">Advanced filtering</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 5 (Advanced Data Filtering), Lesson 6 (Wildcard Filtering)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">AND/OR/IN/NOT + LIKE wildcards</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Lessons 5&ndash;6</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">Combine conditions &mdash; &ldquo;status = A AND date &gt; X, name starting with M.&rdquo;</div></div>
+<div class="milestone"><span class="l">Milestone</span>Can build multi-condition filters confidently.</div>
+</div>
+<div class="card" style="--accent:var(--rust)">
+<div class="ch"><span class="wk">Week 4</span><span class="ct">Calculated fields</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 7 (Creating Calculated Fields)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">Concatenation, aliases, arithmetic in SELECT</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Review lessons 1&ndash;6; redo any that felt shaky</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">Create a derived column (full name from first + last, or a computed total).</div></div>
+<div class="milestone"><span class="l">Milestone</span>Comfortable shaping output, not just retrieving it. End of Module 2 &mdash; consolidate before functions.</div>
+</div>
+<div class="seclabel">Module 3 &mdash; Functions &amp; Summarizing <span class="tag">Weeks 5&ndash;6</span></div>
+<div class="card" style="--accent:var(--sage)">
+<div class="ch"><span class="wk">Week 5</span><span class="ct">Data manipulation functions</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 8 (Using Data Manipulation Functions)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">Text, numeric, and date functions</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Continue interactive review / anything function-related</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">Use a date function to find records from &ldquo;this month&rdquo;; format a text field.</div></div>
+<div class="milestone"><span class="l">Milestone</span>Know where to look for the right function (and that dialects differ).</div>
+</div>
+<div class="card" style="--accent:var(--sage)">
+<div class="ch"><span class="wk">Week 6</span><span class="ct">Summarizing data</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 9 (Summarizing Data)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">Aggregate functions &mdash; COUNT, SUM, AVG, MIN, MAX</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Aggregate functions lesson</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">&ldquo;How many records per category&rdquo;, &ldquo;average of column X.&rdquo;</div></div>
+<div class="milestone"><span class="l">Milestone</span>Can answer &ldquo;how many / how much&rdquo; questions. SQL starts feeling genuinely useful here.</div>
+</div>
+<div class="seclabel">Module 4 &mdash; Grouping &amp; Subqueries <span class="tag">Weeks 7&ndash;8</span></div>
+<div class="card" style="--accent:var(--teal)">
+<div class="ch"><span class="wk">Week 7</span><span class="ct">Grouping data</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 10 (Grouping Data)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">GROUP BY + HAVING</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Aggregate functions with GROUP BY lesson</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">&ldquo;Count of students per grade&rdquo;, then filter groups with HAVING.</div></div>
+<div class="milestone"><span class="l">Milestone</span>Comfortable with GROUP BY &hellip; HAVING.</div>
+</div>
+<div class="card" style="--accent:var(--teal)">
+<div class="ch"><span class="wk">Week 8</span><span class="ct">Subqueries</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 11 (Working with Subqueries)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">Subqueries / nested SELECTs</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Review; practice nesting a query inside a WHERE</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">&ldquo;Find records where value is above the overall average&rdquo; (subquery in WHERE).</div></div>
+<div class="milestone"><span class="l">Milestone</span>Can use a subquery to answer a two-step question.</div>
+</div>
+<div class="seclabel">Module 5 &mdash; Joins <span class="tag">Weeks 9&ndash;10 &middot; the big one</span></div>
+<p class="noteline" style="margin:-4px 0 12px">Joins are the conceptual centrepiece. Don&rsquo;t rush &mdash; if it takes both weekend slots, that&rsquo;s expected and fine.</p>
+<div class="card" style="--accent:var(--rust)">
+<div class="ch"><span class="wk">Week 9</span><span class="ct">Inner joins</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 12 (Joining Tables)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">INNER JOIN explained (watch 2 explanations if it doesn&rsquo;t click)</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">Multi-table queries with JOINs</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">Join two related tables from your data (e.g. students + enrollments).</div></div>
+<div class="milestone"><span class="l">Milestone</span>Understand why joins matter and can write a basic INNER JOIN.</div>
+</div>
+<div class="card" style="--accent:var(--rust)">
+<div class="ch"><span class="wk">Week 10</span><span class="ct">Advanced joins &amp; combining queries</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 13 (Creating Advanced Joins), Lesson 14 (Combining Queries)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">LEFT/OUTER joins + UNION</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">OUTER JOIN lessons</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">&ldquo;Show all students who have NO emergency contact&rdquo; (LEFT JOIN + NULL check).</div></div>
+<div class="milestone"><span class="l">Milestone</span>Can pick the right join type for the question. End of Module 5 &mdash; you&rsquo;re now genuinely useful at work.</div>
+</div>
+<div class="seclabel">Module 6 &mdash; Modifying Data &amp; Wrap-up <span class="tag">Weeks 11&ndash;12</span></div>
+<div class="card" style="--accent:var(--teal)">
+<div class="ch"><span class="wk">Week 11</span><span class="ct">Inserting, updating, deleting + tables</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 15 (Inserting Data), 16 (Updating &amp; Deleting Data), 17 (Creating &amp; Manipulating Tables)</div></div>
+<div class="r"><div class="k">Video</div><div class="v">INSERT / UPDATE / DELETE + CREATE TABLE</div></div>
+<div class="r"><div class="k">SQLBolt</div><div class="v">INSERT, UPDATE, DELETE, and creating tables</div></div>
+<div class="r"><div class="k">Apply</div><div class="v">In your sandbox only, create a small table, insert rows, then update and delete some.</div></div>
+<div class="milestone"><span class="l">Milestone</span>Understand the full CRUD cycle (and the danger of UPDATE/DELETE without WHERE).</div>
+<div class="milestone warn"><span class="l">Watch out</span>Never run UPDATE or DELETE against live work data while learning.</div>
+</div>
+<div class="card" style="--accent:var(--teal)">
+<div class="ch"><span class="wk">Week 12</span><span class="ct">Views + capstone project</span><span class="badge">Capstone</span></div>
+<div class="r"><div class="k">Book</div><div class="v">Lesson 18 (Using Views); skim 19&ndash;22 for awareness, not mastery</div></div>
+<div class="r"><div class="k">Video</div><div class="v">Views (and a skim of what stored procedures are)</div></div>
+<div class="r"><div class="k">Capstone</div><div class="v">Pick a question that matters to your team (or use the sample DB); write a multi-table query (join + aggregate + filter) to answer it; save it, document it in plain English, add it to your cheat-sheet.</div></div>
+<div class="milestone"><span class="l">Milestone</span>A finished query / mini-analysis you can talk about in an interview or show your team.</div>
+</div>
+<div class="seclabel">After week 12 <span class="tag">where next</span></div>
+<div class="intro"><ul class="reslist"><li><b>Window functions</b> (ROW_NUMBER, RANK, running totals) &mdash; the natural intermediate next step; high-value for analyst work.</li><li><b>Python + pandas</b> &mdash; the planned follow-on; pandas will feel familiar after SQL.</li><li><b>Keep the cheat-sheet alive</b> &mdash; your running list of useful queries is the most valuable artifact you build here.</li></ul></div>
+<div class="seclabel">Progress tracker <span class="tag">tap to tick</span></div>
+<div class="tracker-wrap"><table class="tracker"><thead><tr><th>Wk</th><th>Topic</th><th class="c">Book</th><th class="c">Bolt</th><th class="c">Video</th><th class="c">Applied</th><th class="c">Done</th></tr></thead><tbody><tr><td class="wkc">1</td><td>Intro + retrieval</td><td class="c"><button class="box" data-id="sql-w1-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w1-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w1-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w1-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w1-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">2</td><td>Sorting + filtering</td><td class="c"><button class="box" data-id="sql-w2-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w2-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w2-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w2-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w2-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">3</td><td>Advanced filtering</td><td class="c"><button class="box" data-id="sql-w3-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w3-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w3-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w3-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w3-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">4</td><td>Calculated fields</td><td class="c"><button class="box" data-id="sql-w4-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w4-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w4-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w4-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w4-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">5</td><td>Functions</td><td class="c"><button class="box" data-id="sql-w5-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w5-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w5-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w5-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w5-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">6</td><td>Summarizing</td><td class="c"><button class="box" data-id="sql-w6-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w6-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w6-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w6-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w6-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">7</td><td>Grouping</td><td class="c"><button class="box" data-id="sql-w7-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w7-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w7-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w7-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w7-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">8</td><td>Subqueries</td><td class="c"><button class="box" data-id="sql-w8-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w8-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w8-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w8-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w8-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">9</td><td>Inner joins</td><td class="c"><button class="box" data-id="sql-w9-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w9-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w9-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w9-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w9-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">10</td><td>Advanced joins</td><td class="c"><button class="box" data-id="sql-w10-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w10-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w10-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w10-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w10-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">11</td><td>Insert / update / delete</td><td class="c"><button class="box" data-id="sql-w11-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w11-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w11-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w11-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w11-done" aria-label="toggle"></button></td></tr><tr><td class="wkc">12</td><td>Views + capstone</td><td class="c"><button class="box" data-id="sql-w12-book" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w12-bolt" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w12-video" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w12-applied" aria-label="toggle"></button></td><td class="c"><button class="box" data-id="sql-w12-done" aria-label="toggle"></button></td></tr></tbody></table></div>
+<footer><span>12 weeks &middot; Sat + optional Sun</span><span>The cheat-sheet is the keeper.</span></footer>
+</div>
+
+<script>
+(function(){
+  var KEY='sql-syllabus-progress';
+  var done={};
+  try{ done=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(done)); }catch(e){} }
+  document.querySelectorAll('button.box').forEach(function(b){
+    if(done[b.dataset.id]) b.classList.add('checked');
+    b.setAttribute('aria-pressed', done[b.dataset.id] ? 'true':'false');
+  });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('button.box'); if(!b) return;
+    var id = b.dataset.id; done[id] = !done[id];
+    if(!done[id]) delete done[id];
+    b.classList.toggle('checked', !!done[id]);
+    b.setAttribute('aria-pressed', done[id] ? 'true':'false');
+    save();
+  });
+})();
+</script>
+
+</body>
+</html>
