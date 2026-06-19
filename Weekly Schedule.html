@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arms Weekly Schedule</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --forest:#3f7d5b;
+    --sage:#8ba888;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --paper:#142019;
+    --ink:#c2cfb2;
+    --line:#33493b;
+    --card:#1d2d24;
+    --cream:#ece8db;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--paper);
+    color:var(--ink);
+    padding:40px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;}
+
+  /* Masthead */
+  .masthead{
+    border-bottom:2px solid var(--cream);
+    padding-bottom:16px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  h1{
+    font-size:24px;
+    font-weight:600;
+    color:var(--cream);
+    letter-spacing:-.01em;
+  }
+  .masthead .sub{
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--rust);
+    font-weight:600;
+  }
+
+  /* Legend */
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 16px;
+    margin-bottom:26px;
+    font-size:11px;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;color:var(--teal);}
+  .dot{width:10px;height:10px;border-radius:3px;flex:none;}
+  .d-work{background:var(--forest);}
+  .d-gym{background:var(--rust);}
+  .d-job{background:#9a7b4f;}
+  .d-sql{background:var(--teal);}
+  .d-creative{background:var(--sage);}
+  .d-curiosity{background:#6a8fa3;}
+  .d-blender{background:#a8754f;}
+  .d-dinner{background:#c2b59b;}
+  .d-clean{background:#b9bfae;}
+  .d-read{background:#7d9b94;}
+  .d-write{background:var(--rust);outline:2px dotted var(--rust);outline-offset:1px;}
+
+  /* Grid */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+  }
+  .day{
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--card);
+    overflow:hidden;
+  }
+  .day-head{
+    background:var(--forest);
+    color:#fff;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding:9px 14px;
+  }
+  .slots{padding:8px 0;}
+  .slot{
+    display:grid;
+    grid-template-columns:96px 14px 1fr;
+    align-items:center;
+    gap:8px;
+    padding:5px 14px;
+    font-size:12px;
+  }
+  .slot .time{color:var(--teal);font-size:11px;white-space:nowrap;}
+  .slot .bar{width:8px;height:8px;border-radius:2px;}
+  .slot .label{color:var(--ink);}
+  .slot.free .label{color:#9aa395;}
+
+  /* overlay highlight */
+  .slot.new{
+    background:rgba(181,85,58,.10);
+    border-top:1px dashed rgba(181,85,58,.4);
+    border-bottom:1px dashed rgba(181,85,58,.4);
+  }
+  .slot.new .label{color:var(--rust);font-weight:600;}
+  .slot.new .label .tag{
+    display:inline-block;
+    font-size:9px;
+    letter-spacing:.1em;
+    background:var(--rust);
+    color:#fff;
+    border-radius:4px;
+    padding:1px 5px;
+    margin-left:6px;
+    vertical-align:middle;
+  }
+  .slot.practice{
+    background:rgba(61,112,104,.10);
+    border-top:1px dashed rgba(61,112,104,.4);
+    border-bottom:1px dashed rgba(61,112,104,.4);
+  }
+  .slot.practice .label{color:var(--teal);font-weight:600;}
+  .slot.practice .label .tag{
+    display:inline-block;
+    font-size:9px;
+    letter-spacing:.1em;
+    background:var(--teal);
+    color:#fff;
+    border-radius:4px;
+    padding:1px 5px;
+    margin-left:6px;
+    vertical-align:middle;
+  }
+
+  /* Overlay note */
+  .overlay-note{
+    margin-top:28px;
+    border:1px solid var(--line);
+    border-left:5px solid var(--rust);
+    border-radius:10px;
+    background:var(--card);
+    padding:20px 22px;
+    font-size:12.5px;
+    line-height:1.55;
+    color:var(--teal);
+  }
+  .overlay-note h3{
+    font-size:13px;
+    color:var(--forest);
+    margin-bottom:10px;
+    letter-spacing:.04em;
+  }
+  .overlay-note p{margin-bottom:9px;}
+  .overlay-note p:last-child{margin-bottom:0;}
+  .overlay-note strong{color:var(--forest);font-weight:600;}
+  .key{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:middle;margin:0 2px;}
+
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr;}
+    .slot{grid-template-columns:90px 14px 1fr;}
+  }
+  @media print{
+    :root{--forest:#2f4a3c;--sage:#6f8a6c;--teal:#2f6f6a;--rust:#b5553a;--paper:#fff;--ink:#26312b;--line:#d4d8cc;--card:#fff;--cream:#1d2a20;}
+    body{background:#fff;padding:0;}
+    .day,.overlay-note{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <h1>Arms — Weekly Schedule</h1>
+    <span class="sub">Two-week writing overlay</span>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot d-work"></i>Work</span>
+    <span><i class="dot d-gym"></i>Gym</span>
+    <span><i class="dot d-job"></i>Second job</span>
+    <span><i class="dot d-sql"></i>SQL / skills</span>
+    <span><i class="dot d-creative"></i>Writing or Drawing</span>
+    <span><i class="dot d-curiosity"></i>Curiosity Rotation</span>
+    <span><i class="dot d-blender"></i>Blender</span>
+    <span><i class="dot d-dinner"></i>Dinner</span>
+    <span><i class="dot d-clean"></i>Cleanup</span>
+    <span><i class="dot d-read"></i>Reading</span>
+    <span><i class="dot d-write"></i>Writing intensive / Weekly practice</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- MONDAY -->
+    <div class="day">
+      <div class="day-head">Monday</div>
+      <div class="slots">
+        <div class="slot"><span class="time">08:00–16:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:30–17:30</span><span class="bar d-sql"></span><span class="label">SQL practice</span></div>
+        <div class="slot"><span class="time">17:30–18:30</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot"><span class="time">18:30–19:30</span><span class="bar d-creative"></span><span class="label">Writing or Drawing</span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading</span></div>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="day">
+      <div class="day-head">Tuesday</div>
+      <div class="slots">
+        <div class="slot"><span class="time">08:00–10:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">10:00–11:30</span><span class="bar d-gym"></span><span class="label">Gym</span></div>
+        <div class="slot"><span class="time">11:30–16:30</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:30–17:30</span><span class="bar d-sql"></span><span class="label">SQL practice</span></div>
+        <div class="slot"><span class="time">17:30–18:30</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot"><span class="time">18:30–19:30</span><span class="bar d-creative"></span><span class="label">Writing or Drawing</span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading</span></div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="day">
+      <div class="day-head">Wednesday</div>
+      <div class="slots">
+        <div class="slot"><span class="time">08:00–16:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:00–18:00</span><span class="bar d-job"></span><span class="label">Second job</span></div>
+        <div class="slot"><span class="time">18:00–19:00</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot new"><span class="time">19:00–19:30</span><span class="bar d-write"></span><span class="label">Writing session<span class="tag">WK 1–2</span></span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading <span style="color:#9aa395;font-size:10px;">(light/skip on writing nights)</span></span></div>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="day">
+      <div class="day-head">Thursday</div>
+      <div class="slots">
+        <div class="slot"><span class="time">08:00–10:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">10:00–11:30</span><span class="bar d-gym"></span><span class="label">Gym</span></div>
+        <div class="slot"><span class="time">11:30–16:30</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:30–17:30</span><span class="bar d-curiosity"></span><span class="label">Curiosity Rotation</span></div>
+        <div class="slot"><span class="time">17:30–18:30</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading</span></div>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="day">
+      <div class="day-head">Friday</div>
+      <div class="slots">
+        <div class="slot"><span class="time">08:00–16:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:00–18:00</span><span class="bar d-job"></span><span class="label">Second job</span></div>
+        <div class="slot"><span class="time">18:00–19:00</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading</span></div>
+      </div>
+    </div>
+
+    <!-- SATURDAY -->
+    <div class="day">
+      <div class="day-head">Saturday</div>
+      <div class="slots">
+        <div class="slot"><span class="time">09:00–11:00</span><span class="bar d-creative"></span><span class="label">Writing or Drawing</span></div>
+        <div class="slot"><span class="time">11:15–12:45</span><span class="bar d-sql"></span><span class="label">SQL / skills</span></div>
+        <div class="slot practice"><span class="time">15:15–15:30</span><span class="bar d-write"></span><span class="label">Notice·Allow·Choose<span class="tag">WEEKLY</span></span></div>
+        <div class="slot"><span class="time">15:30–17:00</span><span class="bar d-gym"></span><span class="label">Gym</span></div>
+        <div class="slot"><span class="time">17:00–18:00</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot"><span class="time">18:00–19:30</span><span class="bar d-blender"></span><span class="label">Blender</span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+      </div>
+    </div>
+
+    <!-- SUNDAY -->
+    <div class="day">
+      <div class="day-head">Sunday</div>
+      <div class="slots">
+        <div class="slot free"><span class="time">10:00–11:00</span><span class="bar d-sql"></span><span class="label">SQL catch-up (optional)</span></div>
+        <div class="slot"><span class="time">11:00–12:00</span><span class="bar d-curiosity"></span><span class="label">Curiosity Rotation</span></div>
+        <div class="slot"><span class="time">15:30–17:00</span><span class="bar d-gym"></span><span class="label">Gym</span></div>
+        <div class="slot"><span class="time">17:30–18:30</span><span class="bar d-dinner"></span><span class="label">Dinner</span></div>
+        <div class="slot new"><span class="time">18:30–19:30</span><span class="bar d-write"></span><span class="label">Writing session<span class="tag">WK 1–2</span></span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span></div>
+        <div class="slot free"><span class="time">evening</span><span class="bar"></span><span class="label">Reading / rest / prep</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="overlay-note">
+    <h3>About the two-week overlay</h3>
+    <p>The highlighted slots are additions, not permanent changes. <strong>Sunday 18:30–19:30</strong> and <strong>Wednesday 19:00–19:30</strong> <span class="key d-write"></span> are the four expressive-writing sessions — they run for two weeks (Sun · Wed · Sun · Wed) and then come off the schedule entirely. After that, revert to your clean version.</p>
+    <p>The <strong>Saturday 15:15–15:30</strong> <span class="key" style="background:var(--teal);"></span> Notice·Allow·Choose slot is the keeper — it stays after the intensive ends, tucked in just before gym so it doesn't move anything.</p>
+    <p><strong>A couple of honest notes.</strong> Sunday's writing session sits in the hour after dinner — full and contained. Wednesday's is the tighter one at 30 minutes; if a session needs longer, either start Wednesday dinner a touch earlier or let it run into the cleanup window, which is forgiving on a light evening. And on writing nights, let before-bed reading go light or skip it — don't stack a stirred-up session on top of it.</p>
+  </div>
+
+</div>
+</body>
+</html>
