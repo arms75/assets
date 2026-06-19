@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>At-Home Alternatives — 9 Upper/Lower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3EFE4;          /* warm off-white */
+    --ink:#1C3A2B;         /* deep forest green */
+    --teal:#2D6A5B;        /* teal accent */
+    --sage:#7E9468;        /* sage */
+    --muted:#5C6B5A;       /* muted green-grey */
+    --hair:rgba(28,58,43,.18);
+    --hair-soft:rgba(28,58,43,.10);
+    --panel:#ECE7D7;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-weight:400;line-height:1.5;letter-spacing:-.1px;
+    padding:48px 24px 80px;
+  }
+  .sheet{max-width:880px;margin:0 auto;}
+
+  /* ---- masthead ---- */
+  .mast{border-top:3px solid var(--ink);padding-top:18px;margin-bottom:30px;}
+  .mast .eyebrow{
+    font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+    color:var(--teal);margin:0 0 10px;
+  }
+  .mast h1{
+    font-size:30px;font-weight:700;line-height:1.12;margin:0 0 14px;letter-spacing:-1px;
+  }
+  .kit{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;
+  }
+  .kit span{
+    font-size:11px;font-weight:500;letter-spacing:.5px;
+    border:1px solid var(--hair);border-radius:2px;
+    padding:4px 9px;color:var(--muted);background:var(--bg);
+  }
+
+  /* ---- effort key ---- */
+  .key{
+    background:var(--panel);border:1px solid var(--hair-soft);
+    padding:16px 18px;margin-bottom:34px;
+  }
+  .key h2{
+    font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+    color:var(--teal);margin:0 0 10px;
+  }
+  .key ul{margin:0;padding:0;list-style:none;display:grid;gap:7px;}
+  .key li{font-size:12.5px;color:var(--ink);padding-left:18px;position:relative;}
+  .key li::before{
+    content:"";position:absolute;left:0;top:8px;width:7px;height:7px;
+    background:var(--sage);border-radius:50%;
+  }
+  .key b{font-weight:600;}
+
+  /* ---- day blocks ---- */
+  .day{margin-bottom:38px;break-inside:avoid;}
+  .day-head{
+    display:flex;align-items:baseline;gap:14px;
+    border-bottom:1.5px solid var(--ink);padding-bottom:8px;margin-bottom:4px;
+  }
+  .day-no{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--teal);}
+  .day-head h3{font-size:18px;font-weight:600;margin:0;letter-spacing:-.4px;}
+  .day-head .focus{
+    margin-left:auto;font-size:11px;font-weight:500;letter-spacing:2px;
+    text-transform:uppercase;color:var(--muted);
+  }
+
+  .row{
+    display:grid;grid-template-columns:1fr auto;gap:6px 16px;
+    padding:13px 0;border-bottom:1px solid var(--hair-soft);
+  }
+  .row:last-child{border-bottom:none;}
+  .move{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.3px;}
+  .presc{
+    font-size:13px;font-weight:600;color:var(--teal);white-space:nowrap;
+    text-align:right;align-self:start;padding-top:1px;
+  }
+  .replaces{
+    grid-column:1 / 2;font-size:11.5px;color:var(--muted);
+  }
+  .replaces .arrow{color:var(--sage);font-weight:600;}
+  .note{
+    grid-column:1 / -1;font-size:12px;color:var(--ink);opacity:.82;
+    margin-top:3px;max-width:62ch;
+  }
+  /* tags */
+  .tag{
+    display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.6px;
+    text-transform:uppercase;padding:2px 6px;border-radius:2px;vertical-align:middle;
+    margin-left:7px;
+  }
+  .tag-same{background:rgba(126,148,104,.22);color:var(--ink);}
+  .tag-hold{background:rgba(45,106,91,.16);color:var(--teal);border:1px solid rgba(45,106,91,.3);}
+  .tag-gap{background:rgba(28,58,43,.07);color:var(--muted);border:1px dashed var(--hair);}
+
+  /* ---- gaps footer ---- */
+  .gaps{
+    border-top:3px solid var(--ink);padding-top:20px;margin-top:46px;break-inside:avoid;
+  }
+  .gaps h2{
+    font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+    color:var(--teal);margin:0 0 14px;
+  }
+  .gaps .item{margin-bottom:14px;}
+  .gaps .item:last-child{margin-bottom:0;}
+  .gaps .item h4{font-size:13.5px;font-weight:600;margin:0 0 2px;}
+  .gaps .item p{font-size:12px;color:var(--ink);opacity:.82;margin:0;max-width:70ch;}
+
+  .foot{
+    margin-top:40px;font-size:10.5px;color:var(--muted);letter-spacing:.4px;
+    display:flex;justify-content:space-between;border-top:1px solid var(--hair-soft);padding-top:12px;
+  }
+
+  @media (max-width:560px){
+    body{padding:28px 16px 60px;}
+    .mast h1{font-size:24px;}
+    .row{grid-template-columns:1fr;}
+    .presc{text-align:left;}
+  }
+  @media print{
+    body{padding:0;background:#fff;}
+    .sheet{max-width:none;}
+    .key,.gaps{background:transparent;}
+    .day,.gaps{break-inside:avoid;}
+    a{color:inherit;}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="mast">
+    <p class="eyebrow">Arms · Home Training Reference</p>
+    <h1>At-Home Alternatives<br>9 Upper/Lower</h1>
+    <div class="kit">
+      <span>Dumbbells</span><span>Barbell</span><span>EZ bar</span><span>Weight bench</span>
+    </div>
+  </header>
+
+  <section class="key">
+    <h2>Effort &amp; RIR</h2>
+    <ul>
+      <li>Working sets before the last run at about <b>1 rep in reserve</b>.</li>
+      <li><b>Last set to failure</b> — on isolation and stable movements only.</li>
+      <li>Heavy barbell lifts (sumo, RDL, bent-over row) stay at <b>1–2 RIR, never to failure</b> — most fatigue cost, least to gain from grinding.</li>
+      <li>Cycle 5 is the failure peak; back off into your deload after it.</li>
+    </ul>
+  </section>
+
+  <!-- TUESDAY -->
+  <section class="day">
+    <div class="day-head"><span class="day-no">DAY 01</span><h3>Tuesday</h3><span class="focus">Upper</span></div>
+
+    <div class="row">
+      <div class="move">Dumbbell Bench Press <span class="tag tag-same">no change</span></div>
+      <div class="presc">3 × 6–10</div>
+      <div class="note">Flat press on the bench, as in the gym.</div>
+    </div>
+    <div class="row">
+      <div class="move">Seated Dumbbell Overhead Press <span class="tag tag-same">no change</span></div>
+      <div class="presc">3 × 8–12</div>
+    </div>
+    <div class="row">
+      <div class="move">Dumbbell Pullover <span class="tag tag-gap">vertical-pull gap</span></div>
+      <div class="presc">3 × 8–12</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Neutral-Grip Assisted Pull-Up</div>
+      <div class="note">Lie back along the bench, lower one DB overhead for a big lat stretch. Closest loadable vertical pull without a bar — see fixes below.</div>
+    </div>
+    <div class="row">
+      <div class="move">Dumbbell Lateral Raise</div>
+      <div class="presc">2 × 12–20</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Single-Arm High Cable Lateral Raise</div>
+      <div class="note">Lean away from a fixed post for cable-like tension at the bottom, or just standing.</div>
+    </div>
+    <div class="row">
+      <div class="move">Chest-Supported DB Rear-Delt Raise</div>
+      <div class="presc">2 × 12–20</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Cable Face Pull</div>
+      <div class="note">Chest on an inclined bench, raise the DBs wide. Same rear-delt / upper-back job as the face pull.</div>
+    </div>
+    <div class="row">
+      <div class="move">Incline Dumbbell Curl</div>
+      <div class="presc">2 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Single-Arm Bayesian Curl</div>
+      <div class="note">Lie back on the incline so the arms hang behind you — the same stretched-biceps position the Bayesian gives.</div>
+    </div>
+    <div class="row">
+      <div class="move">EZ-Bar Skull Crusher</div>
+      <div class="presc">2 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Single-Arm Cable Triceps Pushdown</div>
+      <div class="note">Lying on the bench, lower the EZ bar to the forehead. Take it behind the head for more stretch if you prefer.</div>
+    </div>
+    <div class="row">
+      <div class="move">Bent-Over Underhand Barbell Row <span class="tag tag-hold">1–2 RIR · no failure</span></div>
+      <div class="presc">3 × 6–10</div>
+      <div class="note">Unchanged — already a barbell lift.</div>
+    </div>
+  </section>
+
+  <!-- THURSDAY -->
+  <section class="day">
+    <div class="day-head"><span class="day-no">DAY 02</span><h3>Thursday</h3><span class="focus">Lower</span></div>
+
+    <div class="row">
+      <div class="move">DB Bulgarian Split Squat <span class="tag tag-gap">no rack</span></div>
+      <div class="presc">3 × 8–12 / leg</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Quad-Biased Leg Press</div>
+      <div class="note">Rear foot on the bench, DBs at your sides. Your main loaded quad movement at home — no rack needed. Barbell front squat if you can clean it to the shoulders safely.</div>
+    </div>
+    <div class="row">
+      <div class="move">Barbell Romanian Deadlift <span class="tag tag-hold">1–2 RIR · no failure</span></div>
+      <div class="presc">3 × 8–12</div>
+      <div class="note">Unchanged — already a barbell lift.</div>
+    </div>
+    <div class="row">
+      <div class="move">Barbell Hip Thrust</div>
+      <div class="presc">3 × 8–12</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Machine Hip Thrust</div>
+      <div class="note">Upper back on the bench edge, barbell over the hips (pad it). Single-leg DB version if the bar's awkward to set up.</div>
+    </div>
+    <div class="row">
+      <div class="move">Reverse Nordic Curl</div>
+      <div class="presc">3 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Leg Extension</div>
+      <div class="note">Kneel tall and lean straight back from the knees. Bodyweight rectus-femoris work — the same head the leg extension targets. DB sissy squat is an alternative.</div>
+    </div>
+    <div class="row">
+      <div class="move">Nordic Ham Curl</div>
+      <div class="presc">3 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Seated Hamstring Curl</div>
+      <div class="note">Anchor your feet under a loaded barbell or the bench, lower slowly, push back up with your hands. Expect fewer reps at first — assist as needed. Lying DB leg curl is a gentler option.</div>
+    </div>
+    <div class="row">
+      <div class="move">Bench Knee Lift <span class="tag tag-same">no change</span></div>
+      <div class="presc">3 × 10–15</div>
+      <div class="note">Lying on the bench, as in the gym.</div>
+    </div>
+  </section>
+
+  <!-- SATURDAY -->
+  <section class="day">
+    <div class="day-head"><span class="day-no">DAY 03</span><h3>Saturday</h3><span class="focus">Upper</span></div>
+
+    <div class="row">
+      <div class="move">Wide Dumbbell Pullover <span class="tag tag-gap">vertical-pull gap</span></div>
+      <div class="presc">3 × 8–12</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Underhand Cable Lat Pulldown</div>
+      <div class="note">Same vertical-pull stand-in as Tuesday. Soft elbows, drive from the lats through the stretch.</div>
+    </div>
+    <div class="row">
+      <div class="move">Incline DB or Barbell Bench Press</div>
+      <div class="presc">3 × 8–12</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Machine Chest Press</div>
+      <div class="note">Set the bench to an incline to vary the angle from Tuesday's flat press.</div>
+    </div>
+    <div class="row">
+      <div class="move">Chest-Supported Incline DB Row</div>
+      <div class="presc">3 × 8–12</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Single-Arm Low-to-High Machine Row</div>
+      <div class="note">Chest on the incline bench, row the DBs up and slightly back to mimic the low-to-high path.</div>
+    </div>
+    <div class="row">
+      <div class="move">EZ-Bar Reverse Curl</div>
+      <div class="presc">2 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Cable Reverse Curl</div>
+      <div class="note">Overhand grip on the EZ bar — same brachioradialis and forearm target.</div>
+    </div>
+    <div class="row">
+      <div class="move">EZ-Bar Overhead Triceps Extension</div>
+      <div class="presc">2 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Cable Overhead Triceps Extension</div>
+      <div class="note">Seated on the bench, EZ bar lowered behind the head, elbows tucked.</div>
+    </div>
+    <div class="row">
+      <div class="move">Chest-Supported DB Rear-Delt Raise</div>
+      <div class="presc">2 × 12–20</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Cable Face Pull</div>
+      <div class="note">As Tuesday.</div>
+    </div>
+    <div class="row">
+      <div class="move">Standing Dumbbell Lateral Raise <span class="tag tag-same">no change</span></div>
+      <div class="presc">2 × 12–20</div>
+    </div>
+  </section>
+
+  <!-- SUNDAY -->
+  <section class="day">
+    <div class="day-head"><span class="day-no">DAY 04</span><h3>Sunday</h3><span class="focus">Lower</span></div>
+
+    <div class="row">
+      <div class="move">Barbell Sumo Deadlift <span class="tag tag-hold">1–2 RIR · no failure</span></div>
+      <div class="presc">4 × 6–10</div>
+      <div class="note">Unchanged — already a barbell lift.</div>
+    </div>
+    <div class="row">
+      <div class="move">Dumbbell Goblet Squat <span class="tag tag-same">no change</span></div>
+      <div class="presc">3 × 8–15</div>
+      <div class="note">Your free-squat progression lift — same as the gym.</div>
+    </div>
+    <div class="row">
+      <div class="move">Single-Leg DB Hip Thrust</div>
+      <div class="presc">3 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Machine Glute Kickback</div>
+      <div class="note">One foot on the bench, DB on the hips, drive through the heel. Quadruped DB kickback works too.</div>
+    </div>
+    <div class="row">
+      <div class="move">Side-Lying Hip Abduction <span class="tag tag-gap">band would help</span></div>
+      <div class="presc">3 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Machine Hip Abduction</div>
+      <div class="note">Bodyweight, slow and controlled — add an ankle weight if you have one. A resistance band restores proper loading cheaply (see fixes).</div>
+    </div>
+    <div class="row">
+      <div class="move">Standing DB Calf Raise</div>
+      <div class="presc">4 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Leg Press Calf Raise</div>
+      <div class="note">Toes on a plate or step for a full stretch, DB in hand. Add a seated DB calf raise (DB resting on the knees) if you want the soleus too.</div>
+    </div>
+    <div class="row">
+      <div class="move">Dumbbell Lateral Raise</div>
+      <div class="presc">2 × 12–20</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Single-Arm High Cable Lateral Raise</div>
+      <div class="note">As Tuesday's side-delt work.</div>
+    </div>
+    <div class="row">
+      <div class="move">Weighted Crunch</div>
+      <div class="presc">3 × 10–15</div>
+      <div class="replaces"><span class="arrow">↳ replaces</span> Machine Crunch</div>
+      <div class="note">Hold a DB or plate at your chest. Use the bench for a longer range if it's comfortable.</div>
+    </div>
+  </section>
+
+  <!-- GAPS -->
+  <section class="gaps">
+    <h2>Equipment gaps &amp; cheap fixes</h2>
+    <div class="item">
+      <h4>Vertical pulling — the one real hole</h4>
+      <p>Without a bar there's no true pull-up or pulldown; the DB pullover only partly covers the lats. A doorway or wall-mounted pull-up bar is the single best addition — it restores chin-ups and brings back proper vertical pulling on both upper days.</p>
+    </div>
+    <div class="item">
+      <h4>A resistance band</h4>
+      <p>Restores loaded hip abduction, and doubles as a band face pull and as assistance for chin-ups once you have a bar. Cheap, packs flat, fills several gaps at once.</p>
+    </div>
+    <div class="item">
+      <h4>Heavy bilateral squatting</h4>
+      <p>No rack caps how much you can load on a back or front squat. Bulgarian split squats and goblet squats carry the quad load one leg at a time in the meantime — and the split squat in particular can be pushed surprisingly hard with just the DBs.</p>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>Strength + hypertrophy · Tue / Thu / Sat / Sun</span>
+    <span>Progress: add reps to the top of each range, then load.</span>
+  </div>
+
+</div>
+</body>
+</html>
