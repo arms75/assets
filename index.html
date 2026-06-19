@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asset Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F1E8;
+    --card:#FBF9F2;
+    --ink:#26271F;
+    --muted:#6E7163;
+    --forest:#213D2C;
+    --sage:#93A488;
+    --line:#D7DCCB;
+    --teal:#2F6F6A;
+    --rust:#B5532A;
+    --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:var(--mono);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(1.5rem,5vw,4rem) clamp(1.25rem,5vw,2rem) 4rem;
+  }
+
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* ---- Header ---- */
+  header{margin-bottom:2.5rem;}
+  .wordmark{
+    font-size:clamp(1.4rem,4vw,1.75rem);
+    font-weight:600;
+    color:var(--forest);
+    letter-spacing:-0.02em;
+    display:flex;align-items:baseline;gap:0.5rem;
+  }
+  .wordmark .slash{color:var(--rust);font-weight:500;}
+  .subtitle{
+    color:var(--muted);
+    font-size:0.8rem;
+    margin-top:0.6rem;
+    max-width:46ch;
+  }
+  .meta{
+    font-size:0.7rem;
+    color:var(--sage);
+    margin-top:0.9rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+  }
+
+  /* ---- Filter ---- */
+  .filter{
+    margin:2rem 0 2.5rem;
+    position:relative;
+  }
+  .filter input{
+    width:100%;
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:var(--ink);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:0.7rem 0.9rem 0.7rem 2rem;
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  .filter input:focus{border-color:var(--teal);}
+  .filter input::placeholder{color:var(--sage);}
+  .filter::before{
+    content:"/";
+    position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);
+    color:var(--rust);font-weight:600;pointer-events:none;
+  }
+
+  /* ---- Category sections ---- */
+  .group{margin-bottom:2.75rem;}
+  .group-label{
+    display:flex;align-items:center;gap:0.75rem;
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    color:var(--forest);
+    margin-bottom:1rem;
+  }
+  .group-label::after{
+    content:"";flex:1;height:1px;background:var(--line);
+  }
+  .group-label .count{color:var(--sage);letter-spacing:0.1em;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+    gap:0.9rem;
+  }
+
+  /* ---- Card ---- */
+  .card{
+    display:flex;flex-direction:column;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:1.1rem 1.15rem 0.95rem;
+    text-decoration:none;
+    color:inherit;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .card:hover,.card:focus-visible{
+    border-color:var(--rust);
+    transform:translateY(-2px);
+    outline:none;
+  }
+  .card-title{
+    font-size:0.95rem;font-weight:500;color:var(--forest);
+    display:flex;align-items:center;justify-content:space-between;gap:0.5rem;
+  }
+  .card:hover .arrow,.card:focus-visible .arrow{opacity:1;transform:translateX(0);}
+  .arrow{color:var(--rust);opacity:0;transform:translateX(-4px);transition:all .15s ease;}
+  .card-desc{
+    font-size:0.78rem;color:var(--muted);margin-top:0.45rem;flex:1;
+  }
+  .card-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:0.5rem;
+    margin-top:0.9rem;padding-top:0.7rem;border-top:1px dashed var(--line);
+  }
+  .path{font-size:0.7rem;color:var(--sage);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .chip{
+    font-size:0.62rem;font-weight:600;letter-spacing:0.08em;
+    padding:0.15rem 0.45rem;border-radius:2px;flex-shrink:0;
+    text-transform:uppercase;
+  }
+  .chip.html{background:rgba(47,111,106,0.12);color:var(--teal);}
+  .chip.pdf{background:rgba(181,83,42,0.12);color:var(--rust);}
+  .chip.other{background:rgba(147,164,136,0.18);color:var(--forest);}
+
+  .empty{
+    color:var(--muted);font-size:0.82rem;
+    border:1px dashed var(--line);border-radius:3px;
+    padding:1.5rem;text-align:center;
+  }
+
+  footer{
+    margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);
+    font-size:0.7rem;color:var(--sage);line-height:1.7;
+  }
+  footer code{color:var(--teal);}
+
+  /* ---- Motion ---- */
+  .card{animation:rise .4s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="wordmark"><span class="slash">/</span> Asset Library</div>
+    <p class="subtitle">A single front door to everything we build. Click any card to open the live version.</p>
+    <p class="meta" id="meta">—</p>
+  </header>
+
+  <div class="filter">
+    <input type="text" id="filter" placeholder="Filter by name or description…" autocomplete="off" aria-label="Filter assets">
+  </div>
+
+  <main id="library"></main>
+
+  <footer>
+    To add or regenerate an asset, edit the <code>ASSETS</code> list at the top of this file's script.<br>
+    Keep a file's <code>file</code> path the same when regenerating so existing links never break.
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   ASSETS — your library index. This is the only thing you edit.
+
+   To ADD an asset:      copy a block below, change the fields.
+   To REGENERATE one:    keep "file" identical, just replace the
+                         actual file in the repo — no change needed here.
+   To REMOVE one:        delete its block.
+
+   Fields:
+     title    — what shows on the card
+     file     — path relative to this page (e.g. "case-tracker.html")
+     type     — "html" | "pdf" | "other"  (controls the colour chip)
+     category — groups cards under a heading
+     desc     — one short line of context
+   ============================================================ */
+const ASSETS = [
+  // ---- Work ----
+  {
+    title: "Case Processing Tracker",
+    file: "Case Processing Tracker.html",
+    type: "html",
+    category: "Work",
+    desc: "Daily 25-case goal tracker with hourly progress and totals."
+  },
+
+  // ---- Finance ----
+  {
+    title: "Route to Clear",
+    file: "Route to Clear — Debt Tracker.html",
+    type: "html",
+    category: "Finance",
+    desc: "Phased debt payoff route with monthly logging and live ETAs."
+  },
+  {
+    title: "Three-Tier Budget Workbook",
+    file: "Three-Tier Budget Workbook.xlsx",
+    type: "other",
+    category: "Finance",
+    desc: "Budget separating guaranteed-income essentials from flexible spend."
+  },
+
+  // ---- Training ----
+  {
+    title: "Upper/Lower Training Program",
+    file: "UpperLower (June 2026) Training Program.xlsx",
+    type: "other",
+    category: "Training",
+    desc: "4-day upper/lower split with sets, reps and RIR targets."
+  },
+  {
+    title: "At-Home Program Alternatives",
+    file: "At Home Program Alts.html",
+    type: "html",
+    category: "Training",
+    desc: "Home-equipment swaps for each gym exercise."
+  },
+
+  // ---- Emotions ----
+  {
+    title: "Notice / Allow / Choose",
+    file: "Notice Allow Choose Practice.html",
+    type: "html",
+    category: "Emotions",
+    desc: "Weekly 10-minute notice, allow, choose review practice."
+  },
+  {
+    title: "Two-Week Writing Intensive",
+    file: "Writing Processing Intensive.html",
+    type: "html",
+    category: "Emotions",
+    desc: "Four-session bounded expressive-writing block."
+  },
+
+  // ---- Study ----
+  {
+    title: "SQL Self-Study Syllabus",
+    file: "SQL Syllabus.pdf",
+    type: "pdf",
+    category: "Study",
+    desc: "12-week SQL plan with a weekly progress tracker."
+  },
+  {
+    title: "Curiosity Rotation Syllabus",
+    file: "Curiosity Rotation Syllabus.pdf",
+    type: "pdf",
+    category: "Study",
+    desc: "Deep-time, physics and Blender rotation with essay prompts."
+  },
+
+  // ---- Scheduling ----
+  {
+    title: "Weekly Schedule",
+    file: "Weekly Schedule.html",
+    type: "html",
+    category: "Scheduling",
+    desc: "Full weekly schedule with the two-week writing overlay."
+  },
+
+  // ---- Home ----
+  {
+    title: "Houseplant Care Guide",
+    file: "Plant Care.pdf",
+    type: "pdf",
+    category: "Home",
+    desc: "Care quick-reference for four houseplants plus coriander."
+  },
+
+  // ---- Personal Care ----
+  {
+    title: "Skincare Routine",
+    file: "Skincare Routine.html",
+    type: "html",
+    category: "Personal Care",
+    desc: "AM/PM steps and weekly actives rhythm for sensitive skin."
+  },
+  {
+    title: "Curl Wash-Day Routine",
+    file: "Hair Wash Routine.html",
+    type: "html",
+    category: "Personal Care",
+    desc: "Wash-day and refresh routine for fine 3A curls."
+  },
+];
+
+/* ---- Rendering (no need to edit below) ---- */
+const library = document.getElementById("library");
+const meta = document.getElementById("meta");
+const filterInput = document.getElementById("filter");
+
+function render(query = ""){
+  const q = query.trim().toLowerCase();
+  const visible = ASSETS.filter(a =>
+    !q || a.title.toLowerCase().includes(q) || (a.desc || "").toLowerCase().includes(q)
+  );
+
+  meta.textContent = ASSETS.length + " asset" + (ASSETS.length === 1 ? "" : "s") +
+    (q ? " · " + visible.length + " matching" : "");
+
+  library.innerHTML = "";
+
+  if (!visible.length){
+    library.innerHTML = '<p class="empty">Nothing matches that. Try a different word.</p>';
+    return;
+  }
+
+  // group by category, preserving first-seen order
+  const groups = {};
+  const order = [];
+  visible.forEach(a => {
+    const cat = a.category || "Uncategorised";
+    if (!groups[cat]){ groups[cat] = []; order.push(cat); }
+    groups[cat].push(a);
+  });
+
+  order.forEach(cat => {
+    const section = document.createElement("section");
+    section.className = "group";
+
+    const label = document.createElement("div");
+    label.className = "group-label";
+    label.innerHTML = cat + ' <span class="count">' + groups[cat].length + '</span>';
+    section.appendChild(label);
+
+    const grid = document.createElement("div");
+    grid.className = "grid";
+
+    groups[cat].forEach((a, i) => {
+      const card = document.createElement("a");
+      card.className = "card";
+      card.href = encodeURI(a.file);
+      card.style.animationDelay = (i * 0.04) + "s";
+      const type = ["html","pdf","other"].includes(a.type) ? a.type : "other";
+      card.innerHTML =
+        '<div class="card-title">' + escapeHtml(a.title) + '<span class="arrow">→</span></div>' +
+        '<div class="card-desc">' + escapeHtml(a.desc || "") + '</div>' +
+        '<div class="card-foot">' +
+          '<span class="path">/' + escapeHtml(a.file) + '</span>' +
+          '<span class="chip ' + type + '">' + type + '</span>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    library.appendChild(section);
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]
+  ));
+}
+
+filterInput.addEventListener("input", e => render(e.target.value));
+render();
+</script>
+</body>
+</html>
