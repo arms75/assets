@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Houseplant Care Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#142019; --panel:#1d2d24; --line:#33493b;
+    --text:#c2cfb2; --muted:#8b9c7e; --cream:#ece8db;
+    --teal:#5fa39a; --rust:#c4673c; --sage:#8ba888;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--mono);background:var(--bg);color:var(--text);line-height:1.5;padding:36px 20px 56px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto}
+
+  header.head{border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:24px}
+  .eyebrow{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:9px}
+  h1{font-size:27px;font-weight:600;letter-spacing:-.01em;color:var(--cream);line-height:1.1}
+  .standfirst{font-size:12px;color:var(--teal);margin-top:9px;max-width:64ch}
+
+  .plant{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px 14px;margin-bottom:14px;break-inside:avoid}
+  .plant-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:6px}
+  .plant-head h2{font-size:16px;font-weight:600;color:var(--cream);letter-spacing:.01em}
+  .latin{font-size:11px;font-style:italic;color:var(--sage)}
+  .badge{margin-left:auto;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);border:1px solid var(--line);border-radius:100px;padding:3px 10px;white-space:nowrap}
+
+  .row{display:grid;grid-template-columns:108px 1fr;gap:14px;padding:9px 0;font-size:12.5px}
+  .row + .row{border-top:1px dashed var(--line)}
+  .row .k{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--rust);font-weight:600;padding-top:2px}
+  .row .v{color:var(--text)}
+  .row.warn .k{color:var(--cream)}
+
+  .intro{font-size:12px;color:var(--muted);margin:2px 0 12px}
+
+  .foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--line);font-size:10px;letter-spacing:.02em;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @media (max-width:560px){.row{grid-template-columns:1fr}.row .k{padding-top:0}}
+  @media print{
+    :root{
+      --bg:#fff;--panel:#fff;--line:#cdd4c4;--text:#2c352c;--muted:#566256;
+      --cream:#1d2a20;--teal:#2f6f6a;--rust:#a8542f;--sage:#4f7a55;
+    }
+    body{padding:0}
+    .plant{break-inside:avoid}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="eyebrow">Home reference · Houseplants</div>
+    <h1>Houseplant care guide</h1>
+    <p class="standfirst">A quick-reference summary for watering, light, pruning, seasonal adjustments, and what to avoid.</p>
+  </header>
+
+  <section class="plant">
+    <div class="plant-head"><h2>Korean Rock Fern</h2><span class="latin">Polystichum tsus-simense</span><span class="badge">Fern</span></div>
+    <div class="row"><div class="k">Watering</div><div class="v">Keep the soil consistently moist but not waterlogged. Let the top inch dry slightly between waterings, but never let it dry out completely — ferns are unforgiving about drought.</div></div>
+    <div class="row"><div class="k">Light</div><div class="v">Bright, indirect light or partial shade. Avoid direct sun, which will scorch the fronds.</div></div>
+    <div class="row"><div class="k">Pruning</div><div class="v">Snip off brown or dead fronds at the base to keep the plant tidy and redirect energy into new growth.</div></div>
+    <div class="row"><div class="k">Seasonal</div><div class="v">In winter, water slightly less but keep humidity up — central heating dries the air considerably.</div></div>
+    <div class="row warn"><div class="k">Dislikes</div><div class="v">Dry air, direct sun, cold draughts, and sitting right next to radiators or heating vents.</div></div>
+  </section>
+
+  <section class="plant">
+    <div class="plant-head"><h2>Heart-Leaf Philodendron</h2><span class="latin">Philodendron hederaceum</span><span class="badge">Trailing</span></div>
+    <div class="row"><div class="k">Watering</div><div class="v">Water when the top 2–3 cm of soil feels dry. If unsure, err on the dry side — it tolerates light neglect far better than overwatering.</div></div>
+    <div class="row"><div class="k">Light</div><div class="v">Bright, indirect light is ideal. It will survive in lower light but growth will be slower and less leafy.</div></div>
+    <div class="row"><div class="k">Pruning</div><div class="v">Trim back long, leggy vines to encourage bushier growth. Cuttings root easily in water if you want more plants.</div></div>
+    <div class="row"><div class="k">Seasonal</div><div class="v">Reduce watering frequency in winter, as growth slows and soil stays damp for longer.</div></div>
+    <div class="row warn"><div class="k">Dislikes</div><div class="v">Direct sun (leaf scorch/bleaching), cold draughts, and waterlogged soil — root rot is its most common killer.</div></div>
+  </section>
+
+  <section class="plant">
+    <div class="plant-head"><h2>Crassula ovata (Jade Plant)</h2><span class="latin">Crassula ovata</span><span class="badge">Succulent</span></div>
+    <div class="row"><div class="k">Watering</div><div class="v">Water deeply, then let the soil dry out completely before watering again. This is the plant most likely to suffer from overwatering.</div></div>
+    <div class="row"><div class="k">Light</div><div class="v">Bright light, ideally with a few hours of direct sun. Very intense afternoon sun through glass can occasionally scorch leaves, so watch for that.</div></div>
+    <div class="row"><div class="k">Pruning</div><div class="v">Pinch growing tips to encourage a bushier, more tree-like shape. Tolerates being cut back well.</div></div>
+    <div class="row"><div class="k">Seasonal</div><div class="v">Semi-dormant in winter — water only about once a month and keep somewhere cool but frost-free. A sheltered, sunny spot outdoors in summer is a bonus, but bring it in before the cold sets in.</div></div>
+    <div class="row warn"><div class="k">Dislikes</div><div class="v">Cold and frost (can cause mushy, blackened leaves), and cold, wet soil in winter.</div></div>
+  </section>
+
+  <section class="plant">
+    <div class="plant-head"><h2>Cylindrical Snake Plant</h2><span class="latin">Sansevieria cylindrica</span><span class="badge">Succulent</span></div>
+    <div class="row"><div class="k">Watering</div><div class="v">Very low needs — let the soil dry out fully between waterings, roughly every 2–3 weeks (less in winter). Overwatering and root rot are by far its biggest risks.</div></div>
+    <div class="row"><div class="k">Light</div><div class="v">Prefers bright, indirect light but tolerates low light well. Long periods of direct sun can occasionally cause bleaching.</div></div>
+    <div class="row"><div class="k">Pruning</div><div class="v">Minimal — just remove any damaged or mushy leaves at the base.</div></div>
+    <div class="row"><div class="k">Seasonal</div><div class="v">Cut watering back further in winter, when the plant is essentially dormant.</div></div>
+    <div class="row warn"><div class="k">Dislikes</div><div class="v">Cold draughts and temperatures below about 10°C, as well as overwatering.</div></div>
+  </section>
+
+  <section class="plant">
+    <div class="plant-head"><h2>Keeping Coriander (Cilantro) Alive</h2><span class="latin">Coriandrum sativum</span><span class="badge">Herb</span></div>
+    <p class="intro">Coriander has a reputation for dying quickly, but this is mostly down to its biology rather than anything you're doing wrong:</p>
+    <div class="row"><div class="k">Sow direct</div><div class="v">Coriander has a long taproot and resents being transplanted. Sow seeds directly into their final pot rather than moving seedlings.</div></div>
+    <div class="row"><div class="k">Keep it cool</div><div class="v">Heat and stress cause it to bolt (run to seed) quickly. A bright spot out of intense midday sun, especially in summer, helps slow this down.</div></div>
+    <div class="row"><div class="k">Water</div><div class="v">Avoid letting the pot dry out completely — inconsistent watering is another common trigger for bolting.</div></div>
+    <div class="row"><div class="k">Succession sow</div><div class="v">Individual plants don't last long before bolting, so sow a new batch every 2–3 weeks for a continuous supply.</div></div>
+    <div class="row"><div class="k">Harvest</div><div class="v">Snip outer leaves little and often rather than stripping the whole plant — this also helps delay bolting.</div></div>
+    <div class="row"><div class="k">Let it seed</div><div class="v">If it does bolt and flower, the seeds it produces are coriander spice — and great for starting your next batch.</div></div>
+  </section>
+
+  <div class="foot">
+    <span>Compiled for general reference — your home's light, humidity and central heating may need some adjustment.</span>
+    <span>Arms · houseplants</span>
+  </div>
+
+</div>
+</body>
+</html>
