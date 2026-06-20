@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym Cue Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#142019; --panel:#1d2d24; --panel-2:#233a2e; --line:#33493b;
+    --text:#c2cfb2; --muted:#8b9c7e; --cream:#ece8db;
+    --teal:#5fa39a; --rust:#c4673c; --sage:#8ba888;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--mono);background:var(--bg);color:var(--text);line-height:1.5;padding:38px 20px 60px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto}
+  header.mast{border-bottom:2px solid var(--line);padding-bottom:18px;margin-bottom:6px}
+  .eyebrow{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:10px}
+  h1{font-size:28px;font-weight:600;color:var(--cream);letter-spacing:-.01em;line-height:1.12}
+  .standfirst{font-size:13px;color:var(--teal);margin-top:8px;max-width:70ch}
+  .daynav{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 4px}
+  .daynav a{font-size:12px;letter-spacing:.04em;color:var(--text);text-decoration:none;border:1px solid var(--line);background:var(--panel);border-radius:100px;padding:8px 16px;transition:border-color .15s,color .15s}
+  .daynav a:hover{border-color:var(--teal);color:var(--cream)}
+  .seclabel{display:flex;align-items:center;gap:.75rem;font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:var(--cream);margin:34px 0 14px;font-weight:600;scroll-margin-top:16px}
+  .seclabel::after{content:"";flex:1;height:1px;background:var(--line)}
+  .seclabel .tag{font-size:10px;letter-spacing:.12em;flex:none;font-weight:600}
+  .seclabel .tag.up{color:var(--teal)}
+  .seclabel .tag.lo{color:var(--rust)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 18px 13px;margin-bottom:12px;position:relative;overflow:hidden;break-inside:avoid}
+  .ex::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+  .exh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+  .exname{font-size:15px;font-weight:600;color:var(--cream)}
+  .badge{margin-left:auto;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:3px 10px;white-space:nowrap}
+  .cues{list-style:none}
+  .cues li{font-size:12.5px;padding:4px 0 4px 18px;position:relative;color:var(--text)}
+  .cues li::before{content:"\25B8";position:absolute;left:0;top:6px;font-size:9px;color:var(--accent)}
+  .cues li b{color:var(--cream);font-weight:600}
+  footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.6}
+  @media (max-width:560px){ .exname{font-size:14px} }
+  @media print{
+    :root{
+      --bg:#fff;--panel:#fff;--panel-2:#f6f5ee;--line:#cdd4c4;
+      --text:#2c352c;--muted:#566256;--cream:#1d2a20;
+      --teal:#2f6f6a;--rust:#a8542f;--sage:#4f7a55;
+    }
+    body{padding:0}
+    .ex{break-inside:avoid}
+    .daynav{display:none}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast"><p class="eyebrow">Training · Form cues</p><h1>Gym cue library</h1></header>
+<nav class="daynav" aria-label="Jump to session"><a href="#tuesday">Tuesday</a><a href="#thursday">Thursday</a><a href="#saturday">Saturday</a><a href="#sunday">Sunday</a></nav>
+<div class="seclabel" id="tuesday">Tuesday <span class="tag up">Upper · 8 exercises</span></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Dumbbell Bench Press</span><span class="badge">6–10 reps</span></div><ul class="cues"><li>Shoulder blades <b>pinned back and down</b> into the bench</li><li>Slight arch, feet planted, drive through the floor</li><li>Lower to mid-chest with elbows ~45° — not flared to 90°</li><li>Wrists stacked over elbows; press up and slightly together</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Seated Dumbbell Overhead Press</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Brace the core and keep <b>ribs down</b> — don’t flare the ribcage</li><li>Start at ear height, elbows just in front of the body</li><li>Press up and slightly in; stop just short of lockout</li><li>No lower-back arch lifting off the seat</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Neutral Grip Machine-Assisted Pull-Up</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Start from a full dead hang, shoulders <b>engaged not shrugged</b></li><li>Lead with the elbows driving down to the ribs</li><li>Chest toward the bar — think “elbows to pockets”</li><li>Control the descent to a full stretch</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Single Arm High Cable Lateral Raise</span><span class="badge">12–20 reps</span></div><ul class="cues"><li>High pulley, working arm starts across the body</li><li>Soft elbow; raise out to shoulder height, <b>lead with the elbow</b></li><li>Pinky slightly up; squeeze the side delt</li><li>No torso lean or swing — control it back down</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Cable Face Pull</span><span class="badge">12–20 reps</span></div><ul class="cues"><li>Rope at face height; pull toward the eyes/forehead</li><li>Elbows high, <b>rotate so knuckles face the ceiling</b> at the end</li><li>Squeeze the rear delts; don’t shrug the traps</li><li>Slow controlled return to a full reach</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Single Arm Bayesian Curl</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Low pulley behind you; arm stretched back for a big stretch</li><li><b>Upper arm stays fixed</b> — curl from the elbow only</li><li>Hard squeeze at the top, full stretch at the bottom</li><li>No body swing or shoulder drifting forward</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Single Arm Neutral Grip Cable Triceps Pushdown</span><span class="badge">10–15 reps</span></div><ul class="cues"><li><b>Elbow tucked and pinned</b> to your side throughout</li><li>Neutral grip; extend fully and squeeze at lockout</li><li>Only the forearm moves — upper arm stays still</li><li>Control the return to a full stretch</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Bent-Over Underhand Grip Barbell Row</span><span class="badge">6–10 reps</span></div><ul class="cues"><li>Hinge to ~45° with a <b>flat back</b> and braced core</li><li>Underhand grip; pull the bar to the lower ribs/belly</li><li>Lead with the elbows, squeeze the mid-back</li><li>Don’t jerk with the lower back or stand up as you pull</li></ul></div>
+<div class="seclabel" id="thursday">Thursday <span class="tag lo">Lower · 5 exercises</span></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Pin-Loaded Quad-Biased Leg Press</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Feet lower and ~shoulder-width for quad bias</li><li>Lower under control to a deep but safe knee bend</li><li>Keep the <b>lower back flat</b> on the pad — no rounding at the bottom</li><li>Press through mid-foot; don’t snap the knees into lockout</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Barbell Romanian Deadlift</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Soft knees; <b>push the hips back</b> — hinge, don’t squat</li><li>Bar stays close to the legs, flat back throughout</li><li>Lower until you feel the hamstring stretch (~mid-shin)</li><li>Drive the hips forward to stand; squeeze glutes at the top</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Plate-Loaded Machine Hip Thrust</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Shoulder blades on the pad, chin tucked, starting from the top</li><li><b>Ribs down, posterior tilt</b> — don’t overarch the back</li><li>Drive through the heels to a full glute squeeze</li><li>Control the descent; knees track over the toes</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Leg Extension</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Back flat to the pad, knee joint aligned with the pivot</li><li>Extend fully and <b>squeeze the quads</b> at the top</li><li>Control the lower — don’t let the stack slam</li><li>Keep hips down; don’t jerk off the seat</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Seated Hamstring Curl</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Pad just above the heels, thighs secured</li><li>Curl fully and squeeze; <b>keep the hips down</b></li><li>Control the return to a full stretch</li><li>Consistent foot position each rep</li></ul></div>
+<div class="seclabel" id="saturday">Saturday <span class="tag up">Upper · 7 exercises</span></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Underhand Close Grip Cable Lat Pulldown</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Underhand ~shoulder-width grip; chest tall, slight lean back</li><li>Pull to the upper chest, <b>elbows down and back</b></li><li>Lead with the elbows; squeeze the lats at the bottom</li><li>Control up to a full stretch — don’t over-lean</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Pin-Loaded Machine Chest Press</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Seat set so the handles sit at mid-chest</li><li><b>Shoulder blades back and down</b> against the pad</li><li>Press out and slightly together; don’t roll the shoulders forward</li><li>Stop just short of lockout; control the return</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Single Arm Low-To-High Machine Low Row</span><span class="badge">8–12 reps</span></div><ul class="cues"><li>Set up tall and <b>brace against rotating</b> the torso</li><li>Drive the elbow back and slightly up; squeeze the mid-back</li><li>Keep the shoulder down — no shrug</li><li>Full stretch forward each rep without twisting the spine</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Cable Reverse Curl</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Overhand (pronated) grip; <b>elbows pinned</b> to your sides</li><li>Curl up keeping the wrists firm and straight</li><li>Squeeze at the top, control to a full stretch</li><li>No swinging — only the forearms move</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Cable Straight Bar Overhead Triceps Extension</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Face away, bar overhead, upper arms beside the ears</li><li><b>Keep the elbows in</b> and pointing forward — don’t flare</li><li>Extend fully and squeeze; only the forearms move</li><li>Control the stretch behind the head; brace the core</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Cable Face Pull</span><span class="badge">12–20 reps</span></div><ul class="cues"><li>Pull to the eyes; elbows high</li><li>Rotate so knuckles finish toward the ceiling</li><li>Squeeze rear delts; <b>no trap shrug</b></li><li>Slow controlled return</li></ul></div>
+<div class="ex" style="--accent:var(--teal)"><div class="exh"><span class="exname">Standing Dumbbell Lateral Raise</span><span class="badge">12–20 reps</span></div><ul class="cues"><li>Slight forward lean, soft elbows, <b>lead with the elbows</b></li><li>Raise to shoulder height — “pour the jug”, pinky slightly up</li><li>No swinging or shrugging the traps up</li><li>Control the lower for constant tension</li></ul></div>
+<div class="seclabel" id="sunday">Sunday <span class="tag lo">Lower · 7 exercises</span></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Sumo Deadlift</span><span class="badge">6–10 reps</span></div><ul class="cues"><li>Wide stance, toes out, hands grip inside the knees</li><li>Hips down, chest up, <b>flat back</b>; take the slack out first</li><li>Push the floor away, knees out, bar dragging close</li><li>Lock out with the hips/glutes — don’t hyperextend the back</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Goblet Squat</span><span class="badge">8–15 reps</span></div><ul class="cues"><li>Dumbbell at the chest, elbows tucked in</li><li>Brace and sit between the hips; <b>knees track over the toes</b></li><li>Depth to ~parallel or just below, heels down</li><li>Drive up through mid-foot; chest stays tall</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Standing Machine Glute Kickback</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Hips square to the pad, slight forward lean</li><li><b>Drive from the glute</b>, not the lower back</li><li>Full squeeze at the top; don’t arch the spine</li><li>Control the return; movement stays at the hip</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Seated Machine Hip Abduction</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Sit tall — a slight forward lean hits the glutes more</li><li>Push the knees out under control, full range</li><li><b>Squeeze the glutes</b> at the end position</li><li>Slow the return — don’t let the pads snap back</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Pin-Loaded Leg Press Calf Raise</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Balls of the feet on the edge, heels free</li><li><b>Full stretch</b> at the bottom, press to a high contraction</li><li>Brief pause at the top — no bouncing</li><li>Knees mostly fixed; drive through the calves</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Single Arm High Cable Lateral Raise</span><span class="badge">12–20 reps</span></div><ul class="cues"><li>High pulley, working arm across the body</li><li>Soft elbow; raise to shoulder height, lead with the elbow</li><li>Pinky slightly up; squeeze the side delt</li><li>No lean or swing — control it back</li></ul></div>
+<div class="ex" style="--accent:var(--rust)"><div class="exh"><span class="exname">Machine Crunch (Overhead Handles)</span><span class="badge">10–15 reps</span></div><ul class="cues"><li>Grip the handles but <b>flex through the abs</b>, don’t pull with the arms</li><li>Round the spine — ribs toward the pelvis</li><li>Control the return; don’t let it yank you back up</li><li>Steady tempo, exhale as you crunch</li></ul></div>
+<footer>Cues are general technique reminders to pair with the 9 Upper/Lower program — not a substitute for a coach’s eyes on your individual form. Adjust ranges of motion to what your joints tolerate comfortably.</footer>
+</div>
+</body>
+</html>
