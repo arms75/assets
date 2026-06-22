@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Migraine Pain Map — Reference</title>
+<style>
+  :root {
+    --bg: #0f1611;
+    --surface: #18211b;
+    --surface-2: #1f2a23;
+    --border: #2f3d33;
+    --text: #d8e0d8;
+    --muted: #9aa89c;
+    --green: #5a8a6a;
+    --teal: #4a9d9d;
+    --rust: #c2683c;
+    --heading: #e8efe6;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    font-size: 14px;
+  }
+
+  header {
+    border-bottom: 2px solid var(--teal);
+    padding-bottom: 20px;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    color: var(--heading);
+    font-size: 24px;
+    margin: 0 0 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .disclaimer {
+    background: var(--surface);
+    border-left: 3px solid var(--rust);
+    padding: 14px 18px;
+    margin: 24px 0 32px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  h2 {
+    color: var(--teal);
+    font-size: 16px;
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.3px;
+  }
+
+  .map-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+
+  .map-entry .sensation {
+    color: var(--heading);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .map-entry .location {
+    color: var(--rust);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .map-entry .structures {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .term {
+    color: var(--teal);
+  }
+
+  .mechanism-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+
+  .mechanism-box strong { color: var(--teal); }
+
+  ul { padding-left: 22px; margin: 10px 0; }
+  li { margin-bottom: 8px; }
+
+  .takeaway {
+    background: var(--surface);
+    border-left: 3px solid var(--green);
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+
+  .flag {
+    background: var(--surface);
+    border-left: 3px solid var(--rust);
+    padding: 16px 20px;
+    margin: 24px 0;
+  }
+
+  .flag .flag-title {
+    color: var(--rust);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+
+  @media print {
+    :root {
+      --bg: #ffffff;
+      --surface: #f4f6f3;
+      --surface-2: #eef1ec;
+      --border: #c8d2c8;
+      --text: #1a221b;
+      --muted: #4a554c;
+      --green: #2f6b41;
+      --teal: #1d6f6f;
+      --rust: #a0451e;
+      --heading: #0f1611;
+    }
+    body { padding: 24px; font-size: 11pt; }
+    .map-entry, .mechanism-box { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Migraine Pain Map</h1>
+  <p class="subtitle">A structured description of a consistent, recurring pain pattern — prepared as a reference to bring to a physiotherapy, GP, or neurology appointment.</p>
+</header>
+
+<div class="disclaimer">
+  This document records one person&#8217;s self-observed pain pattern and a plain-language mapping of which anatomical structures those sensations may correspond to. It is a starting point for discussion with a qualified clinician — not a diagnosis. The reproducibility of the pattern (the same locations every time) is the key feature worth highlighting to whoever assesses it.
+</div>
+
+<h2>1. The Pain Map — Sensation to Structure</h2>
+
+<div class="map-entry">
+  <div class="sensation">Dense, knotty bundle of tightness</div>
+  <div class="location">Just above the collarbone, where the neck meets the shoulder</div>
+  <p class="structures">Most consistent with the <span class="label">scalenes</span> and the junction of the <span class="label">levator scapulae / upper trapezius</span>. The scalenes are a recognised migraine trigger-point site and sit exactly in this region; they lie close to the <span class="term">brachial plexus</span> and nearby blood vessels.</p>
+</div>
+
+<div class="map-entry">
+  <div class="sensation">Thick muscle, painful peak</div>
+  <div class="location">Behind the ear</div>
+  <p class="structures">Likely the <span class="label">splenius capitis</span> and the upper attachment of the <span class="label">sternocleidomastoid (SCM)</span> at the mastoid process. The SCM is well known for referring pain <span class="term">behind the eyes, into the temple, and into the teeth</span> — which matches the facial symptoms below.</p>
+</div>
+
+<div class="map-entry">
+  <div class="sensation">Two ridge-like muscles, pain intensifying at the &#8220;knobbly bits&#8221;</div>
+  <div class="location">Back of the neck, up to the base of the skull</div>
+  <p class="structures">The ridges correspond to <span class="label">splenius</span> and <span class="label">semispinalis</span>; the knobbly attachment points are the <span class="label">suboccipital muscles</span> at the skull base. This is the classic <span class="term">cervicogenic headache</span> region. These small muscles have a direct fascial connection to the <span class="term">dura mater</span> (the brain&#8217;s covering), one proposed route by which neck tension becomes head pain.</p>
+</div>
+
+<div class="map-entry">
+  <div class="sensation">Pain following the head round; very bad behind the eyes; into teeth and jaw</div>
+  <div class="location">Front of head / face</div>
+  <p class="structures">The combined referral zone of the <span class="label">SCM</span> and <span class="label">suboccipital muscles</span>, with likely <span class="term">trigeminal nerve</span> involvement (it supplies the face, teeth, and the lining around the brain). See the mechanism note below.</p>
+</div>
+
+<div class="map-entry">
+  <div class="sensation">Strong pulse and the visible outline of a vein</div>
+  <div class="location">Just below the temple, next to the ear, on the affected side</div>
+  <p class="structures">Most likely the <span class="label">superficial temporal artery</span>. Visible pulsation and throbbing here during an attack is a recognised <span class="term">vascular feature</span> of migraine, layered on top of the muscular pattern.</p>
+</div>
+
+<div class="map-entry">
+  <div class="sensation">Clustered pain points along the spine (same locations each time)</div>
+  <div class="location">Lower back and mid-back</div>
+  <p class="structures">
+    Base of the back, between spine and pelvis: the <span class="label">quadratus lumborum (QL)</span> and the <span class="label">SI joint / iliolumbar region</span>.<br>
+    Midway up, beside the spine: the <span class="label">erector spinae / thoracic paraspinals</span>.<br>
+    Their consistency suggests a whole-spine postural pattern rather than isolated local pain.
+  </p>
+</div>
+
+<h2>2. The Likely Connecting Mechanism</h2>
+
+<div class="mechanism-box">
+  <p>The upper neck nerves (<strong>C1&#8211;C3</strong>) and the <strong>trigeminal nerve</strong> converge on the same region in the brainstem — the <strong>trigeminocervical complex</strong>. This convergence is the leading explanation for why a neck/muscular problem can produce front-of-head and facial migraine symptoms (behind the eyes, throbbing temple, jaw and teeth).</p>
+  <p style="margin-bottom:0;">In plain terms: tension and irritation in the neck muscles can feed into — or amplify — the migraine system, while the throbbing temple artery adds the vascular layer on top. The whole-spine cluster pattern suggests a <strong>postural chain</strong> running the length of the back, potentially the same asymmetry felt in the shoulder.</p>
+</div>
+
+<div class="takeaway">
+  <strong>Why this is somewhat hopeful:</strong> the muscular and postural contributors are <em>modifiable</em>, in a way that pure migraine sometimes is not. Treatment targeting the cervical component reduces migraine frequency for some people.
+</div>
+
+<h2>3. Additional Observations Worth Mentioning</h2>
+<ul>
+  <li><span class="label">Visible muscular asymmetry:</span> rolling the right shoulder forward makes a distinct cord-like muscle (likely <span class="term">levator scapulae</span>) pop up; the same motion on the left shows nothing. Suggests the right side is hypertrophied or chronically contracted.</li>
+  <li><span class="label">Pattern is reproducible:</span> the same pain locations recur with every attack — a feature that points toward a structural/myofascial contribution rather than random activity.</li>
+  <li><span class="label">Pain consistently involves the neck, and usually the lower back too</span> — pointing to a full postural chain rather than a purely local issue.</li>
+</ul>
+
+<h2>4. Suggested Next Steps</h2>
+<ul>
+  <li><span class="label">Physiotherapist specialising in headache / cervicogenic pain</span> — to assess the asymmetry, the upper cervical spine, and the postural chain, and to guide safe loading and release work.</li>
+  <li><span class="label">GP or neurologist</span> — particularly if the migraines are not already being formally managed. The same-every-time mapping plus the vascular features (throbbing, visible temporal artery) are worth them knowing.</li>
+</ul>
+
+<div class="flag">
+  <div class="flag-title">One caution</div>
+  Because this involves the upper cervical spine, and a pulsating artery can be felt at the temple, avoid aggressive self-manipulation and do not let anyone forcefully &#8220;crack&#8221; the neck without a proper assessment first. Gentle, guided work is appropriate; force in this region is not.
+</div>
+
+<footer>
+  Prepared as a personal reference for clinical discussion. Not a diagnosis. Anatomical mappings are general and approximate — a hands-on assessment is needed to confirm what is actually driving the pattern.
+</footer>
+
+</body>
+</html>

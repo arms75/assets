@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rizatriptan Tracker</title>
+<style>
+  :root {
+    --bg: #0f1611;
+    --surface: #18211b;
+    --surface-2: #1f2a23;
+    --border: #2f3d33;
+    --text: #d8e0d8;
+    --muted: #9aa89c;
+    --green: #5a8a6a;
+    --teal: #4a9d9d;
+    --rust: #c2683c;
+    --heading: #e8efe6;
+    --flag: #d08a4a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    font-size: 14px;
+  }
+  header { border-bottom: 2px solid var(--teal); padding-bottom: 18px; margin-bottom: 22px; }
+  h1 { color: var(--heading); font-size: 22px; margin: 0 0 6px; letter-spacing: 0.5px; }
+  .subtitle { color: var(--muted); font-size: 12.5px; margin: 0; }
+
+  /* Month summary dial */
+  .summary {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+  }
+  .dial { position: relative; width: 104px; height: 104px; }
+  .dial svg { transform: rotate(-90deg); }
+  .dial .count {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .dial .count .big { font-size: 30px; font-weight: 700; color: var(--heading); line-height: 1; }
+  .dial .count .small { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 3px; }
+
+  .summary-text .mlabel { color: var(--heading); font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .summary-text .status { font-size: 12.5px; line-height: 1.5; }
+  .status.ok { color: var(--green); }
+  .status.watch { color: var(--flag); }
+  .status.over { color: var(--rust); }
+  .month-nav { display: flex; gap: 8px; align-items: center; margin-bottom: 22px; }
+  .month-nav button { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 4px; padding: 5px 12px; cursor: pointer; font-family: inherit; font-size: 12px; }
+  .month-nav button:hover { color: var(--text); border-color: var(--muted); }
+  .month-nav .spacer { flex: 1; }
+
+  h2 { color: var(--teal); font-size: 14px; margin: 30px 0 14px; padding-bottom: 7px; border-bottom: 1px solid var(--border); letter-spacing: 0.3px; }
+
+  .logger { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin-bottom: 14px; }
+  label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  input, select, textarea {
+    width: 100%; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 4px; color: var(--text); font-family: inherit; font-size: 13px; padding: 8px 10px;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
+  textarea { resize: vertical; min-height: 42px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .field { margin-bottom: 14px; }
+
+  button { font-family: inherit; font-size: 13px; border: none; border-radius: 4px; padding: 10px 18px; cursor: pointer; letter-spacing: 0.3px; }
+  .btn-primary { background: var(--teal); color: #0c1310; font-weight: 600; }
+  .btn-primary:hover { background: #5bb0b0; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+  .btn-danger { background: transparent; color: var(--rust); border: 1px solid var(--border); font-size: 11px; padding: 4px 9px; }
+  .btn-danger:hover { border-color: var(--rust); }
+  .actions { display: flex; gap: 12px; }
+
+  .dup-warn { color: var(--flag); font-size: 11.5px; margin-top: 10px; display: none; }
+  .dup-warn.show { display: block; }
+
+  .dose-entry { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; margin-bottom: 9px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .dose-main { font-size: 12.5px; }
+  .dose-date { color: var(--heading); font-weight: 600; }
+  .dose-meta { color: var(--muted); font-size: 11.5px; margin-top: 3px; }
+  .dose-doses { color: var(--teal); font-size: 11px; }
+  .empty { color: var(--muted); font-size: 12.5px; font-style: italic; padding: 8px 0; }
+
+  .context { background: var(--surface); border-left: 3px solid var(--teal); padding: 13px 16px; font-size: 12px; color: var(--text); margin-bottom: 26px; line-height: 1.55; }
+  .context strong { color: var(--teal); }
+
+  .trend { display: flex; gap: 6px; align-items: flex-end; height: 60px; margin-top: 6px; }
+  .trend .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .trend .bar { width: 100%; background: var(--green); border-radius: 2px 2px 0 0; min-height: 2px; }
+  .trend .bar.watch { background: var(--flag); }
+  .trend .bar.over { background: var(--rust); }
+  .trend .blabel { font-size: 9px; color: var(--muted); }
+  .trend .bval { font-size: 10px; color: var(--text); }
+
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } .summary { grid-template-columns: 1fr; justify-items: center; text-align: center; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Rizatriptan Tracker</h1>
+  <p class="subtitle">Tracking treatment days per month — the number that matters for medication-overuse risk.</p>
+</header>
+
+<div class="context">
+  <strong>Why days, not doses:</strong> medication-overuse headache risk is counted in <em>days used per month</em>, not total tablets. For triptans the commonly cited threshold is <strong>10 or more treatment days per month, sustained over 3+ months.</strong> Two tablets on one day is still one treatment day. This is a personal log to spot trends and inform a conversation with your doctor — not medical advice or a dosing guide.
+</div>
+
+<div class="month-nav">
+  <button onclick="changeMonth(-1)">&#8592; Prev</button>
+  <button onclick="changeMonth(1)">Next &#8594;</button>
+  <div class="spacer"></div>
+  <button onclick="goCurrentMonth()">This month</button>
+</div>
+
+<div class="summary">
+  <div class="dial">
+    <svg width="104" height="104" viewBox="0 0 104 104">
+      <circle cx="52" cy="52" r="46" fill="none" stroke="#2f3d33" stroke-width="9"/>
+      <circle id="dial-arc" cx="52" cy="52" r="46" fill="none" stroke="#5a8a6a" stroke-width="9" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289"/>
+    </svg>
+    <div class="count">
+      <span class="big" id="day-count">0</span>
+      <span class="small">days</span>
+    </div>
+  </div>
+  <div class="summary-text">
+    <div class="mlabel" id="month-label">—</div>
+    <div class="status" id="status-text">No treatment days logged.</div>
+  </div>
+</div>
+
+<h2>6-month trend (treatment days)</h2>
+<div class="trend" id="trend"></div>
+
+<h2>Log a treatment day</h2>
+<div class="logger">
+  <div class="row">
+    <div>
+      <label for="date">Date</label>
+      <input type="date" id="date">
+    </div>
+    <div>
+      <label for="doses">Tablets that day</label>
+      <select id="doses">
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <label for="effect">Did it work?</label>
+    <select id="effect">
+      <option value="">—</option>
+      <option>Fully resolved</option>
+      <option>Partly helped</option>
+      <option>Didn&#8217;t work</option>
+      <option>Came back later (recurrence)</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="context">Context / suspected trigger</label>
+    <input type="text" id="context-in" placeholder="e.g. neck tight beforehand, cycle day 26, hot day, stress">
+  </div>
+  <div class="field">
+    <label for="notes">Notes</label>
+    <textarea id="notes" placeholder="Anything worth remembering"></textarea>
+  </div>
+  <div class="dup-warn" id="dup-warn">A treatment day is already logged for this date. Saving will update it rather than add a second.</div>
+  <div class="actions">
+    <button class="btn-primary" onclick="saveDose()">Save day</button>
+    <button class="btn-ghost" onclick="clearForm()">Clear</button>
+  </div>
+</div>
+
+<h2>This month&#8217;s days</h2>
+<div id="list"></div>
+
+<div style="margin-top:18px;">
+  <button class="btn-ghost" onclick="exportText()">Copy summary for doctor</button>
+</div>
+
+<script>
+const KEY = 'rizatriptanLog_v1';
+let viewYM = ymOf(new Date());
+
+function ymOf(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+function todayISO() { return new Date().toISOString().slice(0,10); }
+function monthName(ym) {
+  const [y,m] = ym.split('-').map(Number);
+  return new Date(y, m-1, 1).toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+}
+document.getElementById('date').value = todayISO();
+
+function getLog() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+function setLog(a) { localStorage.setItem(KEY, JSON.stringify(a)); }
+
+function daysInMonth(ym) {
+  return getLog().filter(e => e.date.slice(0,7) === ym);
+}
+
+function changeMonth(dir) {
+  const [y,m] = viewYM.split('-').map(Number);
+  const d = new Date(y, m-1+dir, 1);
+  viewYM = ymOf(d);
+  render();
+}
+function goCurrentMonth() { viewYM = ymOf(new Date()); render(); }
+
+function checkDup() {
+  const date = document.getElementById('date').value;
+  const exists = getLog().some(e => e.date === date);
+  document.getElementById('dup-warn').className = 'dup-warn' + (exists ? ' show' : '');
+}
+document.getElementById('date').addEventListener('change', checkDup);
+
+function saveDose() {
+  const date = document.getElementById('date').value;
+  if (!date) { alert('Pick a date.'); return; }
+  const entry = {
+    date,
+    doses: Number(document.getElementById('doses').value),
+    effect: document.getElementById('effect').value,
+    context: document.getElementById('context-in').value.trim(),
+    notes: document.getElementById('notes').value.trim()
+  };
+  let log = getLog().filter(e => e.date !== date); // one entry per day
+  log.push(entry);
+  log.sort((a,b) => b.date.localeCompare(a.date));
+  setLog(log);
+  viewYM = date.slice(0,7);
+  clearForm();
+  render();
+}
+
+function clearForm() {
+  document.getElementById('date').value = todayISO();
+  document.getElementById('doses').value = '1';
+  document.getElementById('effect').value = '';
+  document.getElementById('context-in').value = '';
+  document.getElementById('notes').value = '';
+  checkDup();
+}
+
+function del(date) {
+  setLog(getLog().filter(e => e.date !== date));
+  render();
+}
+
+function statusFor(n) {
+  if (n >= 10) return { cls: 'over', arc: 'var(--rust)', col: '#c2683c',
+    msg: 'At or above the 10-day threshold. If this keeps up across months, it&#8217;s worth raising with your doctor.' };
+  if (n >= 7) return { cls: 'watch', arc: 'var(--flag)', col: '#d08a4a',
+    msg: 'Getting into the range worth watching. Still under 10, but trending up.' };
+  if (n >= 1) return { cls: 'ok', arc: 'var(--green)', col: '#5a8a6a',
+    msg: 'Within a typical range. Keep logging to see the monthly pattern.' };
+  return { cls: 'ok', arc: 'var(--green)', col: '#5a8a6a', msg: 'No treatment days logged this month yet.' };
+}
+
+function renderTrend() {
+  const el = document.getElementById('trend');
+  const months = [];
+  const base = new Date();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(base.getFullYear(), base.getMonth()-i, 1);
+    const ym = ymOf(d);
+    const n = daysInMonth(ym).length;
+    months.push({ ym, n, label: new Date(d).toLocaleString('en-GB',{month:'short'}) });
+  }
+  const max = Math.max(10, ...months.map(m => m.n));
+  el.innerHTML = months.map(m => {
+    const h = Math.round((m.n / max) * 52);
+    const cls = m.n >= 10 ? 'over' : (m.n >= 7 ? 'watch' : '');
+    return `<div class="bar-wrap">
+      <span class="bval">${m.n || ''}</span>
+      <div class="bar ${cls}" style="height:${h}px"></div>
+      <span class="blabel">${m.label}</span>
+    </div>`;
+  }).join('');
+}
+
+function render() {
+  const entries = daysInMonth(viewYM).sort((a,b) => b.date.localeCompare(a.date));
+  const n = entries.length;
+  document.getElementById('month-label').textContent = monthName(viewYM);
+  document.getElementById('day-count').textContent = n;
+
+  const st = statusFor(n);
+  const arc = document.getElementById('dial-arc');
+  const frac = Math.min(n / 10, 1);
+  arc.style.strokeDashoffset = String(289 - 289 * frac);
+  arc.style.stroke = st.col;
+  const statusEl = document.getElementById('status-text');
+  statusEl.className = 'status ' + st.cls;
+  statusEl.innerHTML = st.msg;
+
+  const totalDoses = entries.reduce((s,e) => s + (e.doses||1), 0);
+  const list = document.getElementById('list');
+  if (!n) { list.innerHTML = '<div class="empty">No treatment days logged for this month.</div>'; }
+  else {
+    list.innerHTML = entries.map(e => {
+      const dlabel = new Date(e.date+'T00:00').toLocaleDateString('en-GB',{weekday:'short', day:'numeric', month:'short'});
+      const bits = [e.effect, e.context].filter(Boolean).join(' · ');
+      return `<div class="dose-entry">
+        <div class="dose-main">
+          <span class="dose-date">${dlabel}</span> <span class="dose-doses">${e.doses} tablet${e.doses>1?'s':''}</span>
+          ${bits ? `<div class="dose-meta">${bits}</div>` : ''}
+          ${e.notes ? `<div class="dose-meta">${e.notes}</div>` : ''}
+        </div>
+        <button class="btn-danger" onclick="del('${e.date}')">Del</button>
+      </div>`;
+    }).join('') + `<div class="dose-meta" style="margin-top:10px">${n} treatment day${n>1?'s':''} · ${totalDoses} tablet${totalDoses>1?'s':''} total this month</div>`;
+  }
+  renderTrend();
+}
+
+function exportText() {
+  const log = getLog();
+  if (!log.length) { alert('Nothing logged yet.'); return; }
+  // group by month
+  const byMonth = {};
+  log.forEach(e => { const ym = e.date.slice(0,7); (byMonth[ym] = byMonth[ym] || []).push(e); });
+  let out = 'RIZATRIPTAN USAGE LOG\n(Treatment days per month — threshold of concern: 10+ days/month sustained)\n\n';
+  Object.keys(byMonth).sort().reverse().forEach(ym => {
+    const ents = byMonth[ym].sort((a,b)=>a.date.localeCompare(b.date));
+    const tablets = ents.reduce((s,e)=>s+(e.doses||1),0);
+    out += `${monthName(ym)}: ${ents.length} treatment days (${tablets} tablets)\n`;
+    ents.forEach(e => {
+      out += `  ${e.date} — ${e.doses} tab${e.doses>1?'s':''}${e.effect ? ', '+e.effect : ''}${e.context ? ', '+e.context : ''}\n`;
+    });
+    out += '\n';
+  });
+  navigator.clipboard.writeText(out).then(
+    () => alert('Summary copied to clipboard.'),
+    () => { const w = window.open('', '_blank'); w.document.write('<pre>'+out.replace(/</g,'&lt;')+'</pre>'); }
+  );
+}
+
+checkDup();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stand Test Tracker</title>
+<style>
+  :root {
+    --bg: #0f1611;
+    --surface: #18211b;
+    --surface-2: #1f2a23;
+    --border: #2f3d33;
+    --text: #d8e0d8;
+    --muted: #9aa89c;
+    --green: #5a8a6a;
+    --teal: #4a9d9d;
+    --rust: #c2683c;
+    --heading: #e8efe6;
+    --flag: #d08a4a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    font-size: 14px;
+  }
+  header { border-bottom: 2px solid var(--teal); padding-bottom: 18px; margin-bottom: 24px; }
+  h1 { color: var(--heading); font-size: 22px; margin: 0 0 6px; letter-spacing: 0.5px; }
+  .subtitle { color: var(--muted); font-size: 12.5px; margin: 0; }
+
+  .safety {
+    background: var(--surface);
+    border-left: 3px solid var(--rust);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 12.5px;
+    color: var(--text);
+  }
+  .safety strong { color: var(--rust); }
+
+  h2 {
+    color: var(--teal);
+    font-size: 15px;
+    margin: 32px 0 14px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.3px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  label { display: block; color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
+  textarea { resize: vertical; min-height: 48px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .field { margin-bottom: 14px; }
+
+  .timepoints {
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { padding: 7px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--teal); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+  td input { padding: 6px 8px; font-size: 12.5px; }
+  .tp-label { color: var(--heading); white-space: nowrap; font-weight: 600; }
+
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary { background: var(--teal); color: #0c1310; font-weight: 600; }
+  .btn-primary:hover { background: #5bb0b0; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+  .btn-danger { background: transparent; color: var(--rust); border: 1px solid var(--border); font-size: 11px; padding: 5px 10px; }
+  .btn-danger:hover { border-color: var(--rust); }
+
+  .actions { display: flex; gap: 12px; margin-top: 8px; }
+
+  .result {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    display: none;
+  }
+  .result.show { display: block; }
+  .result.flag { background: rgba(208,138,74,0.12); border: 1px solid var(--flag); color: var(--flag); }
+  .result.normal { background: rgba(90,138,106,0.12); border: 1px solid var(--green); color: var(--green); }
+  .result .delta { color: var(--heading); font-weight: 600; }
+
+  .log-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .log-entry.flagged { border-left-color: var(--flag); }
+  .log-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .log-date { color: var(--heading); font-weight: 600; font-size: 13px; }
+  .log-verdict { font-size: 11px; padding: 2px 8px; border-radius: 3px; }
+  .log-verdict.flag { background: rgba(208,138,74,0.15); color: var(--flag); }
+  .log-verdict.normal { background: rgba(90,138,106,0.15); color: var(--green); }
+  .log-meta { color: var(--muted); font-size: 11.5px; margin-bottom: 8px; }
+  .log-grid { font-size: 11.5px; color: var(--text); }
+  .log-grid span { color: var(--muted); }
+  .empty { color: var(--muted); font-size: 12.5px; font-style: italic; padding: 8px 0; }
+
+  .export-row { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Stand Test Tracker</h1>
+  <p class="subtitle">Lying-to-standing orthostatic log — heart rate &amp; blood pressure across timepoints, for discussion with a clinician.</p>
+</header>
+
+<div class="safety">
+  <strong>Before you start:</strong> Don&#8217;t do this alone — have someone with you. Stand near a wall or corner for support. The moment you feel genuinely faint or grey-out, <strong>stop and lie back down.</strong> Reproducing mild symptoms is informative; an actual faint is not worth it. Do it well-hydrated, having eaten normally, and not straight after a hot night. This log is a record to bring to a doctor — it is not a diagnosis.
+</div>
+
+<h2>New Test</h2>
+<div class="card">
+  <div class="row">
+    <div>
+      <label for="date">Date</label>
+      <input type="date" id="date">
+    </div>
+    <div>
+      <label for="timeofday">Time of day</label>
+      <input type="text" id="timeofday" placeholder="e.g. 8am, on waking">
+    </div>
+  </div>
+
+  <div class="field timepoints">
+    <label>Readings — rest lying down 10 min, then stand</label>
+    <table>
+      <thead>
+        <tr><th>Timepoint</th><th>Heart rate (bpm)</th><th>BP (sys/dia)</th><th>Symptoms felt</th></tr>
+      </thead>
+      <tbody id="tp-body">
+        <tr>
+          <td class="tp-label">Lying (baseline)</td>
+          <td><input type="number" class="hr" data-tp="lying" placeholder="bpm"></td>
+          <td><input type="text" class="bp" data-tp="lying" placeholder="120/80"></td>
+          <td><input type="text" class="sym" data-tp="lying" placeholder="—"></td>
+        </tr>
+        <tr>
+          <td class="tp-label">Stand +1 min</td>
+          <td><input type="number" class="hr" data-tp="1" placeholder="bpm"></td>
+          <td><input type="text" class="bp" data-tp="1" placeholder="—"></td>
+          <td><input type="text" class="sym" data-tp="1" placeholder="—"></td>
+        </tr>
+        <tr>
+          <td class="tp-label">Stand +3 min</td>
+          <td><input type="number" class="hr" data-tp="3" placeholder="bpm"></td>
+          <td><input type="text" class="bp" data-tp="3" placeholder="—"></td>
+          <td><input type="text" class="sym" data-tp="3" placeholder="—"></td>
+        </tr>
+        <tr>
+          <td class="tp-label">Stand +5 min</td>
+          <td><input type="number" class="hr" data-tp="5" placeholder="bpm"></td>
+          <td><input type="text" class="bp" data-tp="5" placeholder="—"></td>
+          <td><input type="text" class="sym" data-tp="5" placeholder="—"></td>
+        </tr>
+        <tr>
+          <td class="tp-label">Stand +10 min</td>
+          <td><input type="number" class="hr" data-tp="10" placeholder="bpm"></td>
+          <td><input type="text" class="bp" data-tp="10" placeholder="—"></td>
+          <td><input type="text" class="sym" data-tp="10" placeholder="—"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="font-size:13px;border:none;margin:18px 0 12px;">Conditions</h2>
+  <div class="row">
+    <div>
+      <label for="hydration">Hydration</label>
+      <select id="hydration">
+        <option value="">—</option>
+        <option>Well hydrated</option>
+        <option>Average</option>
+        <option>Under-hydrated</option>
+      </select>
+    </div>
+    <div>
+      <label for="food">Last eaten</label>
+      <input type="text" id="food" placeholder="e.g. 1hr ago, fasted">
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label for="heat">Temperature / heat</label>
+      <select id="heat">
+        <option value="">—</option>
+        <option>Cool / normal</option>
+        <option>Warm</option>
+        <option>Hot</option>
+      </select>
+    </div>
+    <div>
+      <label for="cycleday">Cycle day (if known)</label>
+      <input type="text" id="cycleday" placeholder="e.g. day 24">
+    </div>
+  </div>
+  <div class="field">
+    <label for="general">General state today</label>
+    <input type="text" id="general" placeholder="e.g. rough day, migraine yesterday, sluggish, fine">
+  </div>
+  <div class="field">
+    <label for="notes">Notes</label>
+    <textarea id="notes" placeholder="Anything else — when symptoms peaked, whether you had to stop early, etc."></textarea>
+  </div>
+
+  <div id="result" class="result"></div>
+
+  <div class="actions">
+    <button class="btn-primary" onclick="saveTest()">Save test</button>
+    <button class="btn-ghost" onclick="clearForm()">Clear</button>
+  </div>
+</div>
+
+<h2>History</h2>
+<div id="log"></div>
+<div class="export-row">
+  <button class="btn-ghost" onclick="exportText()">Copy summary for doctor</button>
+</div>
+
+<script>
+const KEY = 'standTestLog_v1';
+
+function todayISO() {
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+document.getElementById('date').value = todayISO();
+
+function getLog() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+  catch { return []; }
+}
+function setLog(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+
+// POTS: sustained HR rise >=30 bpm without major BP drop.
+// OH: systolic drop >=20 or diastolic drop >=10.
+function assess(readings) {
+  const lying = readings.lying;
+  if (!lying || !lying.hr) return null;
+  const baseHR = Number(lying.hr);
+  const standTps = ['1','3','5','10'].map(t => readings[t]).filter(r => r && r.hr);
+  if (!standTps.length) return null;
+
+  let maxRise = 0, maxRiseTp = null;
+  standTps.forEach((r, i) => {
+    const rise = Number(r.hr) - baseHR;
+    if (rise > maxRise) { maxRise = rise; maxRiseTp = ['1','3','5','10'][i]; }
+  });
+
+  // BP drop check
+  let bpDrop = null;
+  if (lying.bp && lying.bp.includes('/')) {
+    const [bs, bd] = lying.bp.split('/').map(n => parseInt(n));
+    standTps.forEach(r => {
+      if (r.bp && r.bp.includes('/')) {
+        const [ss, sd] = r.bp.split('/').map(n => parseInt(n));
+        if (!isNaN(bs) && !isNaN(ss) && (bs - ss) >= 20) bpDrop = 'systolic';
+        if (!isNaN(bd) && !isNaN(sd) && (bd - sd) >= 10 && !bpDrop) bpDrop = 'diastolic';
+      }
+    });
+  }
+
+  const potsFlag = maxRise >= 30;
+  return { maxRise, maxRiseTp, baseHR, potsFlag, bpDrop };
+}
+
+function readForm() {
+  const readings = {};
+  ['lying','1','3','5','10'].forEach(tp => {
+    readings[tp] = {
+      hr: document.querySelector(`.hr[data-tp="${tp}"]`).value.trim(),
+      bp: document.querySelector(`.bp[data-tp="${tp}"]`).value.trim(),
+      sym: document.querySelector(`.sym[data-tp="${tp}"]`).value.trim()
+    };
+  });
+  return {
+    date: document.getElementById('date').value,
+    timeofday: document.getElementById('timeofday').value.trim(),
+    readings,
+    hydration: document.getElementById('hydration').value,
+    food: document.getElementById('food').value.trim(),
+    heat: document.getElementById('heat').value,
+    cycleday: document.getElementById('cycleday').value.trim(),
+    general: document.getElementById('general').value.trim(),
+    notes: document.getElementById('notes').value.trim()
+  };
+}
+
+function showResult(a) {
+  const el = document.getElementById('result');
+  if (!a) { el.className = 'result'; return; }
+  let msg = `<span class="delta">Max HR rise: +${a.maxRise} bpm</span> (from ${a.baseHR}, at +${a.maxRiseTp} min). `;
+  if (a.potsFlag && !a.bpDrop) {
+    msg += `This meets the &#8805;30 bpm threshold often associated with a POTS-type pattern, without a major BP drop. Worth showing a doctor.`;
+    el.className = 'result show flag';
+  } else if (a.bpDrop) {
+    msg += `A ${a.bpDrop} BP drop on standing was detected — an orthostatic hypotension pattern. Worth showing a doctor.`;
+    el.className = 'result show flag';
+  } else {
+    msg += `Below the &#8805;30 bpm threshold and no significant BP drop — not a clear orthostatic pattern this run. Repeating on different days is still useful.`;
+    el.className = 'result show normal';
+  }
+  msg += `<br><br><em style="opacity:0.8">Thresholds are general guides, not a diagnosis.</em>`;
+  el.innerHTML = msg;
+}
+
+function saveTest() {
+  const entry = readForm();
+  const a = assess(entry.readings);
+  entry.assessment = a;
+  showResult(a);
+  const log = getLog();
+  log.unshift(entry);
+  setLog(log);
+  renderLog();
+}
+
+function clearForm() {
+  document.querySelectorAll('.hr, .bp, .sym').forEach(i => i.value = '');
+  ['timeofday','food','cycleday','general','notes'].forEach(id => document.getElementById(id).value = '');
+  ['hydration','heat'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('date').value = todayISO();
+  document.getElementById('result').className = 'result';
+}
+
+function renderLog() {
+  const log = getLog();
+  const el = document.getElementById('log');
+  if (!log.length) { el.innerHTML = '<div class="empty">No tests logged yet. Your saved runs will appear here.</div>'; return; }
+  el.innerHTML = log.map((e, idx) => {
+    const a = e.assessment;
+    const flagged = a && (a.potsFlag || a.bpDrop);
+    let verdict = a ? (flagged ? 'flag' : 'normal') : 'normal';
+    let vtext = a ? (flagged ? `+${a.maxRise} bpm${a.bpDrop ? ' / BP drop' : ''}` : `+${a.maxRise} bpm`) : 'incomplete';
+    const cond = [e.heat, e.hydration, e.cycleday && 'cycle '+e.cycleday, e.general].filter(Boolean).join(' · ');
+    const hrLine = ['lying','1','3','5','10'].map(tp => {
+      const r = e.readings[tp];
+      if (!r || !r.hr) return null;
+      const lbl = tp === 'lying' ? 'lie' : '+'+tp;
+      return `${lbl}: ${r.hr}${r.bp ? ' ('+r.bp+')' : ''}`;
+    }).filter(Boolean).join('  |  ');
+    return `<div class="log-entry ${flagged ? 'flagged' : ''}">
+      <div class="log-head">
+        <span class="log-date">${e.date}${e.timeofday ? ' · '+e.timeofday : ''}</span>
+        <span class="log-verdict ${verdict}">${vtext}</span>
+      </div>
+      ${cond ? `<div class="log-meta">${cond}</div>` : ''}
+      <div class="log-grid">${hrLine}</div>
+      ${e.notes ? `<div class="log-meta" style="margin-top:8px">${e.notes}</div>` : ''}
+      <button class="btn-danger" style="margin-top:10px" onclick="del(${idx})">Delete</button>
+    </div>`;
+  }).join('');
+}
+
+function del(idx) {
+  const log = getLog();
+  log.splice(idx, 1);
+  setLog(log);
+  renderLog();
+}
+
+function exportText() {
+  const log = getLog();
+  if (!log.length) { alert('No tests to export yet.'); return; }
+  let out = 'STAND TEST LOG\n\n';
+  log.forEach(e => {
+    out += `${e.date}${e.timeofday ? ' ('+e.timeofday+')' : ''}\n`;
+    ['lying','1','3','5','10'].forEach(tp => {
+      const r = e.readings[tp];
+      if (r && r.hr) {
+        const lbl = tp === 'lying' ? 'Lying' : 'Stand +'+tp+'min';
+        out += `  ${lbl}: HR ${r.hr}${r.bp ? ', BP '+r.bp : ''}${r.sym ? ', sym: '+r.sym : ''}\n`;
+      }
+    });
+    if (e.assessment) out += `  -> Max HR rise +${e.assessment.maxRise} bpm${e.assessment.bpDrop ? ', BP drop ('+e.assessment.bpDrop+')' : ''}\n`;
+    const cond = [e.heat && 'heat: '+e.heat, e.hydration, e.food && 'eaten: '+e.food, e.cycleday && 'cycle '+e.cycleday, e.general].filter(Boolean).join(', ');
+    if (cond) out += `  Conditions: ${cond}\n`;
+    if (e.notes) out += `  Notes: ${e.notes}\n`;
+    out += '\n';
+  });
+  navigator.clipboard.writeText(out).then(
+    () => alert('Summary copied to clipboard.'),
+    () => { const w = window.open('', '_blank'); w.document.write('<pre>'+out.replace(/</g,'&lt;')+'</pre>'); }
+  );
+}
+
+renderLog();
+</script>
+</body>
+</html>
