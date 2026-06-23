@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parts Map — IFS Session Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#131d18;
+  --surface:#1b2a23;
+  --surface-2:#213328;
+  --border:#2f4339;
+  --text:#dbe3d8;
+  --muted:#8ea394;
+  --sage:#a7be9b;
+  --teal:#5fb0a6;
+  --rust:#cc6638;
+  --rust-dim:#a8552f;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:14px;
+  line-height:1.6;
+  padding:32px 20px 80px;
+}
+.wrap{max-width:780px;margin:0 auto;}
+header{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px;}
+h1{font-size:22px;font-weight:600;margin:0 0 4px;letter-spacing:0.5px;}
+h1 .dot{color:var(--rust);}
+.sub{color:var(--muted);font-size:12px;margin:0;}
+h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--sage);margin:34px 0 14px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:18px;margin-bottom:14px;}
+label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:0 0 5px;}
+input[type=text],input[type=date],textarea,select{
+  width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;
+  color:var(--text);font-family:inherit;font-size:13px;padding:8px 10px;margin-bottom:14px;
+}
+textarea{resize:vertical;min-height:54px;line-height:1.5;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal);}
+.field-row{display:flex;gap:12px;flex-wrap:wrap;}
+.field-row > div{flex:1;min-width:130px;}
+.intro{color:var(--muted);font-size:12.5px;line-height:1.65;}
+.intro details summary{cursor:pointer;color:var(--sage);list-style:none;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.intro details summary::-webkit-details-marker{display:none;}
+.intro details summary::before{content:"▸ ";}
+.intro details[open] summary::before{content:"▾ ";}
+.intro p{margin:8px 0;}
+/* part cards in the form */
+.part-card{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:14px;margin-bottom:12px;position:relative;}
+.part-card .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.part-card .ph span{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.btn{font-family:inherit;font-size:12px;border-radius:4px;cursor:pointer;border:1px solid var(--border);
+  background:transparent;color:var(--text);padding:7px 14px;transition:all .12s;}
+.btn:hover{border-color:var(--teal);color:var(--teal);}
+.btn-rust:hover{border-color:var(--rust);color:var(--rust);}
+.btn-primary{background:var(--teal);border-color:var(--teal);color:#0e1714;font-weight:600;}
+.btn-primary:hover{background:var(--sage);border-color:var(--sage);color:#0e1714;}
+.btn-x{border:none;background:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 6px;}
+.btn-x:hover{color:var(--rust);}
+.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+/* 8 Cs chips */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.chip{font-size:11px;padding:5px 11px;border:1px solid var(--border);border-radius:20px;cursor:pointer;color:var(--muted);user-select:none;transition:all .12s;}
+.chip.on{background:var(--sage);border-color:var(--sage);color:#0e1714;font-weight:500;}
+/* exile flag */
+.flag{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border:1px dashed var(--rust-dim);border-radius:5px;padding:12px;margin-bottom:14px;}
+.flag input{margin-top:3px;accent-color:var(--rust);}
+.flag div{font-size:11.5px;color:var(--muted);line-height:1.55;}
+.flag strong{color:var(--rust);font-weight:500;}
+/* saved sessions */
+.session{background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:12px;overflow:hidden;}
+.session > summary{cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.session > summary::-webkit-details-marker{display:none;}
+.session .s-date{font-weight:600;color:var(--text);}
+.session .s-meta{font-size:11px;color:var(--muted);}
+.session .s-body{padding:0 16px 16px;border-top:1px solid var(--border);margin-top:2px;}
+.s-moment{font-style:italic;color:var(--muted);margin:12px 0 16px;padding-left:12px;border-left:2px solid var(--border);}
+.part-tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:2px 8px;border-radius:3px;border:1px solid;margin-left:8px;vertical-align:middle;}
+.part-tag[data-type=manager]{color:var(--sage);border-color:var(--sage);}
+.part-tag[data-type=firefighter]{color:var(--rust);border-color:var(--rust-dim);}
+.part-tag[data-type=exile]{color:var(--teal);border-color:var(--teal);}
+.part-tag[data-type=unsure]{color:var(--muted);border-color:var(--border);}
+.s-part{background:var(--surface-2);border-radius:4px;padding:11px 13px;margin-bottom:9px;}
+.s-part .pname{font-weight:600;}
+.s-part dl{margin:8px 0 0;font-size:12px;}
+.s-part dl div{display:flex;gap:8px;margin-bottom:2px;}
+.s-part dl dt{color:var(--muted);min-width:74px;flex-shrink:0;}
+.s-part dl dd{margin:0;}
+.s-self{font-size:12.5px;margin:12px 0;}
+.s-self .clab{color:var(--muted);}
+.s-flag{font-size:11.5px;color:var(--rust);border:1px dashed var(--rust-dim);border-radius:4px;padding:8px 11px;margin-top:10px;}
+.s-actions{margin-top:12px;display:flex;gap:8px;}
+/* regulars */
+.regular{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
+.regular:last-child{border-bottom:none;}
+.regular .rname{font-weight:500;}
+.regular .rcount{font-size:11px;color:var(--muted);}
+.regular .rcount b{color:var(--teal);font-weight:600;}
+.empty{color:var(--muted);font-size:12.5px;font-style:italic;}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+footer{margin-top:46px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:11px;line-height:1.6;}
+@media print{
+  :root{--bg:#f6f3eb;--surface:#fff;--surface-2:#f0ece2;--border:#d3ccbc;--text:#1d2823;--muted:#5b6c60;--sage:#3d6644;--teal:#2c736b;--rust:#a8481f;--rust-dim:#a8481f;}
+  body{padding:0;font-size:12px;}
+  .no-print{display:none !important;}
+  .session > summary{cursor:default;}
+  .session[open] .s-body, .session .s-body{border-top:1px solid var(--border);}
+  details.session:not([open]) .s-body{display:block;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Parts Map<span class="dot">.</span></h1>
+  <p class="sub">IFS session log — meet the system, watch for regulars</p>
+</header>
+
+<div class="intro no-print">
+  <details>
+    <summary>How to use this</summary>
+    <p>Pick a recent moment with some charge to it — a snippy reply, a wave of dread, the urge to clean instead of doing the thing. Write it down, then map the parts that were active. For each one: where you feel it in the body, what it's trying to <em>do</em> for you, how old it feels, how long it's been on the job.</p>
+    <p>The pivotal step is the Self-check: <em>how do I feel toward this part?</em> Curiosity, warmth, or neutral openness means you're in Self. Anything else — irritation, fear, "this part is the problem" — means another part has blended in. That's not a failure; it's another member of the system. Note it.</p>
+    <p>You're building a map, not healing anything in one pass. The regulars panel below surfaces parts that recur across sessions — that recognition is most of the value, and it compounds.</p>
+    <p><strong style="color:var(--rust)">The boundary:</strong> if mapping a protector opens a younger, rawer feeling faster than you want, stop. Tick the exile flag, leave it closed, and bring that to a trained practitioner rather than pushing in alone.</p>
+  </details>
+</div>
+
+<h2 id="form-title">New session</h2>
+<div class="card no-print">
+  <div class="field-row">
+    <div style="flex:0 0 160px;">
+      <label>Date</label>
+      <input type="date" id="f-date">
+    </div>
+  </div>
+  <label>The moment</label>
+  <textarea id="f-moment" placeholder="What happened? What reaction felt bigger or more automatic than the trigger warranted?"></textarea>
+
+  <h2 style="margin-top:18px;">Parts present</h2>
+  <div id="parts-container"></div>
+  <button class="btn" id="add-part">+ Add a part</button>
+
+  <h2 style="margin-top:24px;">Self-check</h2>
+  <label>Which of the 8 Cs were present? (tap to toggle)</label>
+  <div class="chips" id="cs-chips"></div>
+  <label>Did a part step in front of you? (blending)</label>
+  <textarea id="f-blend" placeholder="e.g. a critic that thinks this exercise is silly; a part scared of the first one. What did you notice, and did it step back when asked?"></textarea>
+
+  <h2 style="margin-top:18px;">Closing</h2>
+  <label>Closing notes</label>
+  <textarea id="f-closing" placeholder="Anything you want to remember. Thanking the parts you met goes here too."></textarea>
+
+  <div class="flag">
+    <input type="checkbox" id="f-exile">
+    <div><strong>An exile surfaced — left closed.</strong> Tick this if a vulnerable/younger part opened up. It's logged as present, not entered. This is the line to hold solo.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="save-session">Save session</button>
+    <button class="btn" id="cancel-edit" style="display:none;">Cancel edit</button>
+  </div>
+</div>
+
+<div class="toolbar">
+  <h2 style="margin:0;">Regulars</h2>
+  <button class="btn no-print" id="export-btn" style="font-size:11px;padding:5px 11px;">Export JSON</button>
+</div>
+<div class="card" id="regulars">
+  <div class="empty">Parts appearing in two or more sessions will surface here.</div>
+</div>
+
+<h2>Sessions <span id="session-count" class="sub" style="text-transform:none;letter-spacing:0;"></span></h2>
+<div id="sessions">
+  <div class="empty">No sessions logged yet.</div>
+</div>
+
+<footer>
+  Parts Map · IFS protector-level inventory · data stored locally in your browser.
+  Built for self-understanding and everyday protectors — not a substitute for a trained IFS practitioner when exiles or trauma are in reach.
+</footer>
+</div>
+
+<script>
+const STORE_KEY = 'ifs-parts-log-v1';
+const CS = ['calm','curiosity','compassion','confidence','courage','clarity','creativity','connectedness'];
+let editingId = null;
+
+function load(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch(e){ return []; } }
+function save(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function esc(t){ const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; }
+function fmtDate(d){ if(!d) return ''; const dt=new Date(d+'T00:00'); return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+
+// ---- 8 Cs chips ----
+const csWrap = document.getElementById('cs-chips');
+CS.forEach(c => {
+  const el = document.createElement('span');
+  el.className = 'chip'; el.dataset.c = c; el.textContent = c;
+  el.onclick = () => el.classList.toggle('on');
+  csWrap.appendChild(el);
+});
+function getCs(){ return [...csWrap.querySelectorAll('.chip.on')].map(e=>e.dataset.c); }
+function setCs(arr){ csWrap.querySelectorAll('.chip').forEach(e => e.classList.toggle('on', (arr||[]).includes(e.dataset.c))); }
+
+// ---- part cards in form ----
+const partsContainer = document.getElementById('parts-container');
+function addPartCard(data){
+  data = data || {};
+  const card = document.createElement('div');
+  card.className = 'part-card';
+  card.innerHTML = `
+    <div class="ph"><span>part</span><button class="btn-x" title="remove">✕</button></div>
+    <div class="field-row">
+      <div style="flex:2;"><label>Label</label><input type="text" class="p-label" placeholder="the tidier / the critic" value="${esc(data.label)}"></div>
+      <div style="flex:1;"><label>Type</label>
+        <select class="p-type">
+          <option value="unsure">not sure</option>
+          <option value="manager">manager</option>
+          <option value="firefighter">firefighter</option>
+          <option value="exile">exile</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div><label>Where in the body</label><input type="text" class="p-body" placeholder="tightness in chest" value="${esc(data.body)}"></div>
+      <div><label>How old it feels</label><input type="text" class="p-age" placeholder="maybe 8?" value="${esc(data.age)}"></div>
+      <div><label>How long on the job</label><input type="text" class="p-tenure" placeholder="years" value="${esc(data.tenure)}"></div>
+    </div>
+    <label>What it's trying to do for you</label>
+    <textarea class="p-job" placeholder="keep you safe / keep you liked / stay ahead of criticism">${esc(data.job)}</textarea>
+  `;
+  card.querySelector('.p-type').value = data.type || 'unsure';
+  card.querySelector('.btn-x').onclick = () => card.remove();
+  partsContainer.appendChild(card);
+}
+function readParts(){
+  return [...partsContainer.querySelectorAll('.part-card')].map(c => ({
+    label: c.querySelector('.p-label').value.trim(),
+    type: c.querySelector('.p-type').value,
+    body: c.querySelector('.p-body').value.trim(),
+    age: c.querySelector('.p-age').value.trim(),
+    tenure: c.querySelector('.p-tenure').value.trim(),
+    job: c.querySelector('.p-job').value.trim()
+  })).filter(p => p.label);
+}
+document.getElementById('add-part').onclick = () => addPartCard();
+
+// ---- form helpers ----
+function resetForm(){
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-moment').value = '';
+  document.getElementById('f-blend').value = '';
+  document.getElementById('f-closing').value = '';
+  document.getElementById('f-exile').checked = false;
+  setCs([]);
+  partsContainer.innerHTML = '';
+  addPartCard();
+  editingId = null;
+  document.getElementById('form-title').textContent = 'New session';
+  document.getElementById('save-session').textContent = 'Save session';
+  document.getElementById('cancel-edit').style.display = 'none';
+}
+document.getElementById('cancel-edit').onclick = resetForm;
+
+document.getElementById('save-session').onclick = () => {
+  const parts = readParts();
+  const moment = document.getElementById('f-moment').value.trim();
+  if(!moment && parts.length === 0){ alert('Add the moment or at least one part before saving.'); return; }
+  const session = {
+    id: editingId || uid(),
+    date: document.getElementById('f-date').value || new Date().toISOString().slice(0,10),
+    moment, parts,
+    cs: getCs(),
+    blend: document.getElementById('f-blend').value.trim(),
+    closing: document.getElementById('f-closing').value.trim(),
+    exile: document.getElementById('f-exile').checked,
+    created: Date.now()
+  };
+  let sessions = load();
+  if(editingId){ sessions = sessions.filter(s => s.id !== editingId); }
+  sessions.push(session);
+  save(sessions);
+  resetForm();
+  render();
+  document.getElementById('form-title').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+function editSession(id){
+  const s = load().find(x => x.id === id);
+  if(!s) return;
+  document.getElementById('f-date').value = s.date;
+  document.getElementById('f-moment').value = s.moment || '';
+  document.getElementById('f-blend').value = s.blend || '';
+  document.getElementById('f-closing').value = s.closing || '';
+  document.getElementById('f-exile').checked = !!s.exile;
+  setCs(s.cs || []);
+  partsContainer.innerHTML = '';
+  (s.parts && s.parts.length ? s.parts : [null]).forEach(p => addPartCard(p));
+  editingId = s.id;
+  document.getElementById('form-title').textContent = 'Editing session — ' + fmtDate(s.date);
+  document.getElementById('save-session').textContent = 'Update session';
+  document.getElementById('cancel-edit').style.display = 'inline-block';
+  document.getElementById('form-title').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function deleteSession(id){
+  if(!confirm('Delete this session?')) return;
+  save(load().filter(s => s.id !== id));
+  render();
+}
+
+// ---- rendering ----
+function render(){
+  const sessions = load().sort((a,b) => (b.date+b.created).localeCompare(a.date+a.created));
+  const wrap = document.getElementById('sessions');
+  document.getElementById('session-count').textContent = sessions.length ? '· ' + sessions.length : '';
+  if(!sessions.length){ wrap.innerHTML = '<div class="empty">No sessions logged yet.</div>'; }
+  else {
+    wrap.innerHTML = sessions.map(s => {
+      const parts = (s.parts||[]).map(p => `
+        <div class="s-part">
+          <span class="pname">${esc(p.label)}</span><span class="part-tag" data-type="${p.type}">${p.type}</span>
+          <dl>
+            ${p.job ? `<div><dt>job</dt><dd>${esc(p.job)}</dd></div>`:''}
+            ${p.body ? `<div><dt>body</dt><dd>${esc(p.body)}</dd></div>`:''}
+            ${p.age ? `<div><dt>age</dt><dd>${esc(p.age)}</dd></div>`:''}
+            ${p.tenure ? `<div><dt>tenure</dt><dd>${esc(p.tenure)}</dd></div>`:''}
+          </dl>
+        </div>`).join('');
+      const cs = (s.cs&&s.cs.length) ? `<div class="s-self"><span class="clab">in Self — </span>${s.cs.map(esc).join(', ')}</div>` : '';
+      return `<details class="session">
+        <summary>
+          <span class="s-date">${fmtDate(s.date)}</span>
+          <span class="s-meta">${(s.parts||[]).length} part${(s.parts||[]).length===1?'':'s'}${s.exile?' · exile flagged':''}</span>
+        </summary>
+        <div class="s-body">
+          ${s.moment ? `<div class="s-moment">${esc(s.moment)}</div>`:''}
+          ${parts || '<div class="empty">No parts recorded.</div>'}
+          ${cs}
+          ${s.blend ? `<div class="s-self"><span class="clab">blending — </span>${esc(s.blend)}</div>`:''}
+          ${s.closing ? `<div class="s-self"><span class="clab">closing — </span>${esc(s.closing)}</div>`:''}
+          ${s.exile ? `<div class="s-flag">An exile surfaced and was left closed.</div>`:''}
+          <div class="s-actions no-print">
+            <button class="btn" onclick="editSession('${s.id}')">Edit</button>
+            <button class="btn btn-rust" onclick="deleteSession('${s.id}')">Delete</button>
+          </div>
+        </div>
+      </details>`;
+    }).join('');
+  }
+  renderRegulars(sessions);
+}
+
+function renderRegulars(sessions){
+  const map = {};
+  sessions.forEach(s => (s.parts||[]).forEach(p => {
+    const key = p.label.trim().toLowerCase();
+    if(!key) return;
+    if(!map[key]) map[key] = { label:p.label, count:0, types:{} };
+    map[key].count++;
+    map[key].types[p.type] = (map[key].types[p.type]||0)+1;
+  }));
+  const regulars = Object.values(map).filter(r => r.count >= 2).sort((a,b) => b.count - a.count);
+  const el = document.getElementById('regulars');
+  if(!regulars.length){ el.innerHTML = '<div class="empty">Parts appearing in two or more sessions will surface here.</div>'; return; }
+  el.innerHTML = regulars.map(r => {
+    const topType = Object.entries(r.types).sort((a,b)=>b[1]-a[1])[0][0];
+    return `<div class="regular">
+      <span class="rname">${esc(r.label)}<span class="part-tag" data-type="${topType}">${topType}</span></span>
+      <span class="rcount">seen <b>${r.count}×</b></span>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('export-btn').onclick = () => {
+  const blob = new Blob([JSON.stringify(load(),null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'parts-map-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+};
+
+// init
+resetForm();
+render();
+</script>
+</body>
+</html>
