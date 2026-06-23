@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masc Identity — Reading List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1714;
+    --surface: #15231c;
+    --surface-2: #1b2d24;
+    --line: #2a3d33;
+    --ink: #d7e0d2;
+    --ink-muted: #8b9788;
+    --ink-faint: #5f6c5c;
+    --sage: #9caf88;
+    --teal: #5fab9b;
+    --rust: #c06a3e;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* ---- Header ---- */
+  .masthead { border-bottom: 1px solid var(--line); padding-bottom: 1.5rem; margin-bottom: 1.75rem; }
+  .eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--teal); margin: 0 0 0.7rem;
+  }
+  h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.25; margin: 0 0 0.6rem; color: var(--ink); }
+  .lede { color: var(--ink-muted); font-size: 0.9rem; font-style: italic; margin: 0; max-width: 60ch; }
+
+  /* ---- Progress ---- */
+  .progress { margin: 1.5rem 0 2.25rem; }
+  .progress-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-muted); margin-bottom: 0.55rem;
+  }
+  .progress-count { color: var(--sage); }
+  .track { height: 4px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--rust); transition: width 0.45s cubic-bezier(.4,0,.2,1); }
+
+  /* ---- Sections ---- */
+  section { margin-bottom: 2.25rem; }
+  .sec-head { display: flex; align-items: baseline; gap: 0.75rem; margin: 0 0 1rem; }
+  .sec-no { font-size: 0.72rem; color: var(--rust); letter-spacing: 0.1em; padding-top: 0.15rem; }
+  .sec-title { font-size: 0.82rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sage); margin: 0; font-weight: 600; }
+  .sec-note { font-size: 0.8rem; color: var(--ink-faint); font-style: italic; margin: -0.5rem 0 1rem; }
+
+  /* ---- Book item ---- */
+  .item {
+    display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.85rem;
+    padding: 0.9rem 0; border-top: 1px solid var(--line);
+  }
+  .item:last-child { border-bottom: 1px solid var(--line); }
+
+  .check {
+    appearance: none; -webkit-appearance: none;
+    width: 1.05rem; height: 1.05rem; margin-top: 0.28rem;
+    border: 1px solid var(--ink-faint); border-radius: 2px;
+    background: transparent; cursor: pointer; position: relative; flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .check:hover { border-color: var(--teal); }
+  .check:checked { background: var(--teal); border-color: var(--teal); }
+  .check:checked::after {
+    content: ""; position: absolute; left: 4px; top: 1px;
+    width: 4px; height: 8px; border: solid var(--bg);
+    border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+  .check:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  .body .title { font-weight: 600; color: var(--ink); }
+  .body .meta { color: var(--ink-muted); font-size: 0.8rem; }
+  .body .anno { color: var(--ink-muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
+  .body .flag {
+    display: inline-block; margin-top: 0.4rem; font-size: 0.74rem;
+    color: var(--rust); border-left: 2px solid var(--rust); padding-left: 0.55rem; font-style: italic;
+  }
+  /* read state */
+  .item.done .title, .item.done .meta { color: var(--ink-faint); text-decoration: line-through; text-decoration-color: var(--ink-faint); }
+  .item.done .anno { color: var(--ink-faint); }
+
+  /* ---- Footer / controls ---- */
+  .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--ink-faint); }
+  .footer p { margin: 0 0 0.8rem; }
+  .controls { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+  button {
+    font-family: inherit; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-muted); background: transparent; border: 1px solid var(--line);
+    padding: 0.5rem 0.9rem; border-radius: 3px; cursor: pointer; transition: all 0.15s;
+  }
+  button:hover { color: var(--ink); border-color: var(--ink-muted); }
+  button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* ---- Print flip: dark -> light ---- */
+  @media print {
+    :root {
+      --bg: #f4f2ea; --surface: #fff; --surface-2: #e8e6dc; --line: #c9c5b6;
+      --ink: #1a241f; --ink-muted: #4a574a; --ink-faint: #8a8576;
+      --sage: #4f6340; --teal: #2c6b5e; --rust: #9a4a24;
+    }
+    body { padding: 0; font-size: 11pt; }
+    .controls, .progress .track, .fill { display: none; }
+    .item { break-inside: avoid; }
+    a { color: var(--teal); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Reading List · Queer Studies</p>
+    <h1>Masc Identity Through a Queer Lens</h1>
+    <p class="lede">Curated around identity and relational dynamics: butch/femme, the butch–trans border, the racial history, the feminist sex wars, and masculinity detached from maleness.</p>
+  </header>
+
+  <div class="progress">
+    <div class="progress-row">
+      <span>Progress</span>
+      <span class="progress-count" id="count">0 of 0 read</span>
+    </div>
+    <div class="track"><div class="fill" id="fill"></div></div>
+  </div>
+
+  <!-- START HERE -->
+  <section>
+    <div class="sec-head"><span class="sec-no">00</span><h2 class="sec-title">Start Here — The Spine</h2></div>
+    <p class="sec-note">If you read only three. They map the whole territory between them.</p>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="halberstam-fm">
+      <div class="body">
+        <span class="title">Female Masculinity</span> <span class="meta">· Jack Halberstam · 1998</span>
+        <p class="anno">The anchor. Masculinity isn't the property of men; recovers a centuries-long history of masculine women as a genre of gender in its own right. Close-reading method — will suit how you think.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="feinberg-sbb">
+      <div class="body">
+        <span class="title">Stone Butch Blues</span> <span class="meta">· Leslie Feinberg · 1993</span>
+        <p class="anno">What the theory does abstractly, this does emotionally. Working-class butch life, the ambivalence of passing and transition, the tenderness and difficulty of butch–femme dynamics. Free online, legitimately.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="nestle-pd">
+      <div class="body">
+        <span class="title">The Persistent Desire: A Femme–Butch Reader</span> <span class="meta">· ed. Joan Nestle · 1992</span>
+        <p class="anno">The reclamation document — written against the lesbian-feminist dismissal of butch–femme as "aping heterosexuality." The dynamics argued out by the people living them.</p>
+      </div>
+    </label>
+  </section>
+
+  <!-- THEORY -->
+  <section>
+    <div class="sec-head"><span class="sec-no">01</span><h2 class="sec-title">Non-Fiction · Theory & the Queer Lens</h2></div>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="butler-gt">
+      <div class="body">
+        <span class="title">Gender Trouble</span> <span class="meta">· Judith Butler · 1990</span>
+        <p class="anno">The denaturalising move: gender as something done, not something one is. Dense, field-defining — almost certainly your uni encounter.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="butler-ug">
+      <div class="body">
+        <span class="title">Undoing Gender</span> <span class="meta">· Judith Butler · 2004</span>
+        <p class="anno">Butler at her warmest and most readable, directly concerned with what makes a liveable gendered life. Pair it with <em>Gender Trouble</em>.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="rubin-dev">
+      <div class="body">
+        <span class="title">Deviations: A Gayle Rubin Reader</span> <span class="meta">· Gayle Rubin · 2011</span>
+        <p class="anno">Contains "Of Catamites and Kings" — the sharpest short piece on the butch–trans boundary, decades ahead of the current "border wars" — plus the landmark "Thinking Sex."</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="newton-mmm">
+      <div class="body">
+        <span class="title">Margaret Mead Made Me Gay</span> <span class="meta">· Esther Newton · 2000</span>
+        <p class="anno">Collects "The Mythic Mannish Lesbian" — on how the mannish lesbian became the legible image of female homosexuality, and what that cost.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="ahmed-qp">
+      <div class="body">
+        <span class="title">Queer Phenomenology</span> <span class="meta">· Sara Ahmed · 2006</span>
+        <p class="anno">On orientation in the literal sense — how bodies get directed, how being read against the grain feels. Connects to the "it's about how others read you" point.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="halberstam-trans">
+      <div class="body">
+        <span class="title">Trans*: A Quick and Quirky Account of Gender Variability</span> <span class="meta">· Jack Halberstam · 2018</span>
+        <p class="anno">Short, current, the best on-ramp to where the butch / transmasc / nonbinary conversation actually sits now.</p>
+      </div>
+    </label>
+  </section>
+
+  <!-- HISTORY -->
+  <section>
+    <div class="sec-head"><span class="sec-no">02</span><h2 class="sec-title">Non-Fiction · History & Lived Testimony</h2></div>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="kennedy-davis-boots">
+      <div class="body">
+        <span class="title">Boots of Leather, Slippers of Gold</span> <span class="meta">· Kennedy &amp; Davis · 1993</span>
+        <p class="anno">Oral history of the working-class butch–femme bar community in Buffalo, 1930s–60s. The richest single source on how these relationships actually worked.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="faderman-ogtl">
+      <div class="body">
+        <span class="title">Odd Girls and Twilight Lovers</span> <span class="meta">· Lillian Faderman · 1991</span>
+        <p class="anno">The standard history of 20th-c. lesbian life in America. Read knowing Faderman is more skeptical of butch–femme than Nestle or Kennedy/Davis — the disagreement <em>is</em> the field.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="schilt-jotg">
+      <div class="body">
+        <span class="title">Just One of the Guys?</span> <span class="meta">· Kristen Schilt · 2010</span>
+        <p class="anno">Sociology of trans men at work — what's revealed about gender itself when the same person is read first as a woman, then as a man. Ties to the labour-market thread.</p>
+      </div>
+    </label>
+  </section>
+
+  <!-- RACE -->
+  <section>
+    <div class="sec-head"><span class="sec-no">03</span><h2 class="sec-title">Non-Fiction · Race & Masculine Identity</h2></div>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="snorton-bobs">
+      <div class="body">
+        <span class="title">Black on Both Sides: A Racial History of Trans Identity</span> <span class="meta">· C. Riley Snorton · 2017</span>
+        <p class="anno">Essential for this thread. Race and gender-nonconformity are historically inseparable in the US — you can't tell the story of gender crossing without slavery and Black embodiment.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="munoz-disid">
+      <div class="body">
+        <span class="title">Disidentifications</span> <span class="meta">· José Esteban Muñoz · 1999</span>
+        <p class="anno">How queers of colour work on and against dominant culture rather than assimilating or rejecting. The best frame for identities like "AG/aggressive" the mainstream butch story leaves out.</p>
+      </div>
+    </label>
+  </section>
+
+  <!-- FICTION CANON -->
+  <section>
+    <div class="sec-head"><span class="sec-no">04</span><h2 class="sec-title">Fiction · The Canon</h2></div>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="hall-well">
+      <div class="body">
+        <span class="title">The Well of Loneliness</span> <span class="meta">· Radclyffe Hall · 1928</span>
+        <p class="anno">The ur-text of the "mannish lesbian." Melancholy, dated, indispensable — every later book is in conversation with it.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="lorde-zami">
+      <div class="body">
+        <span class="title">Zami: A New Spelling of My Name</span> <span class="meta">· Audre Lorde · 1982</span>
+        <p class="anno">"Biomythography." Black lesbian coming-of-age through the butch–femme world of 1950s Greenwich Village. The best fiction on race <em>inside</em> the scene.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="waters-ttv">
+      <div class="body">
+        <span class="title">Tipping the Velvet</span> <span class="meta">· Sarah Waters · 1998</span>
+        <p class="anno">Victorian male-impersonator picaresque. Lush and propulsive, entirely about the pleasures and dynamics of masculine presentation. Your most purely enjoyable entry point.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="brown-rj">
+      <div class="body">
+        <span class="title">Rubyfruit Jungle</span> <span class="meta">· Rita Mae Brown · 1973</span>
+        <p class="anno">Brash, funny coming-of-age that rejects gender roles outright — a counterpoint to <em>The Well</em>'s sorrow.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="bannon-bb">
+      <div class="body">
+        <span class="title">The Beebo Brinker Chronicles</span> <span class="meta">· Ann Bannon · 1950s–60s</span>
+        <p class="anno">The pulp era, with Beebo Brinker as one of literature's first iconic butch characters. Read as both story and artefact of how the type circulated.</p>
+      </div>
+    </label>
+  </section>
+
+  <!-- FICTION CONTEMPORARY -->
+  <section>
+    <div class="sec-head"><span class="sec-no">05</span><h2 class="sec-title">Fiction · Contemporary</h2></div>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="evaristo-gwo">
+      <div class="body">
+        <span class="title">Girl, Woman, Other</span> <span class="meta">· Bernardine Evaristo · 2019</span>
+        <p class="anno">British, Booker-winning, polyphonic. Moves across generations through a nonbinary/masculine-of-centre character and older butch lives — strong on dynamics between eras.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="winterson-wotb">
+      <div class="body">
+        <span class="title">Written on the Body</span> <span class="meta">· Jeanette Winterson · 1992</span>
+        <p class="anno">A narrator whose gender is never specified — a formal experiment that makes you feel how much reading relies on gendering.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="peters-db">
+      <div class="body">
+        <span class="title">Detransition, Baby</span> <span class="meta">· Torrey Peters · 2021</span>
+        <p class="anno">Major contemporary novel on transition, detransition, and the messy dynamics of who gets to be what to whom. Transfeminine-centred, but indispensable to the current conversation.</p>
+      </div>
+    </label>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="machado-idh">
+      <div class="body">
+        <span class="title">In the Dream House</span> <span class="meta">· Carmen Maria Machado · 2019</span>
+        <p class="anno">A memoir written with the formal daring of fiction. One of the finest books on queer relational dynamics.</p>
+        <span class="flag">Its subject is psychological abuse in a relationship — a read-when-you're-ready, not a casual pick.</span>
+      </div>
+    </label>
+  </section>
+
+  <!-- PRIMARY -->
+  <section>
+    <div class="sec-head"><span class="sec-no">06</span><h2 class="sec-title">Primary Source · To the Root</h2></div>
+
+    <label class="item">
+      <input type="checkbox" class="check" data-id="lister-diaries">
+      <div class="body">
+        <span class="title">I Know My Own Heart: The Diaries of Anne Lister</span> <span class="meta">· Anne Lister · 1791–1840</span>
+        <p class="anno">The coded diaries of an early-19th-c. landowner who lived openly masculine and desired women — first-person evidence of female masculinity long before any vocabulary existed for it.</p>
+      </div>
+    </label>
+  </section>
+
+  <div class="footer">
+    <p><strong style="color:var(--ink-muted)">How to read this:</strong> the disagreements between these books are the actual content of the field — Faderman vs. Nestle on whether butch–femme liberates or imitates; Rubin and Halberstam circling whether the trans man and the butch are kin; Snorton insisting none of it can be told without race. You're watching a community argue, across decades, about what masculinity is and who gets to hold it.</p>
+    <p><em>Two Judiths:</em> Judith Butler did the "gender is performative" groundwork; Judith Halberstam wrote <em>Female Masculinity</em> before going by Jack. Both are here.</p>
+    <div class="controls">
+      <button id="reset" type="button">Reset progress</button>
+      <button id="print" type="button">Print / save PDF</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const STORE_KEY = 'qm_reading_v1';
+  const checks = Array.from(document.querySelectorAll('.check'));
+  const countEl = document.getElementById('count');
+  const fillEl = document.getElementById('fill');
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function save(state) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function render() {
+    const state = load();
+    let done = 0;
+    checks.forEach(cb => {
+      const on = !!state[cb.dataset.id];
+      cb.checked = on;
+      cb.closest('.item').classList.toggle('done', on);
+      if (on) done++;
+    });
+    const total = checks.length;
+    countEl.textContent = done + ' of ' + total + ' read';
+    fillEl.style.width = (total ? (done / total * 100) : 0) + '%';
+  }
+
+  checks.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const state = load();
+      if (cb.checked) state[cb.dataset.id] = true;
+      else delete state[cb.dataset.id];
+      save(state);
+      render();
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    save({});
+    render();
+  });
+  document.getElementById('print').addEventListener('click', () => window.print());
+
+  render();
+</script>
+</body>
+</html>
