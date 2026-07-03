@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch Route — Chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1611;
+    --panel:#16201a;
+    --panel-2:#1d2922;
+    --border:#2b3a30;
+    --border-soft:#233029;
+    --text:#e6ece3;
+    --muted:#8fa389;
+    --muted-dim:#647462;
+    --teal:#57a99a;
+    --teal-bright:#74c6b5;
+    --sage:#a8bf94;
+    --rust:#c47155;
+    --rust-dim:#9a5741;
+    --gold:#cda34a;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 18px 64px;
+  }
+  .wrap{max-width:860px;margin:0 auto;}
+
+  header.top{margin-bottom:26px;}
+  .eyebrow{color:var(--teal);font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;}
+  h1{font-size:24px;font-weight:600;margin:0 0 4px;letter-spacing:.01em;}
+  .sub{color:var(--muted);font-size:12.5px;margin:0;}
+
+  /* progress summary */
+  .summary{
+    margin-top:20px;background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:18px 18px 16px;
+  }
+  .sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .sum-total{font-size:13px;color:var(--muted);}
+  .sum-total b{color:var(--sage);font-weight:600;font-size:15px;}
+  .banked b{color:var(--teal-bright);}
+  .bar{height:8px;background:var(--panel-2);border-radius:6px;margin-top:14px;overflow:hidden;border:1px solid var(--border-soft);}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-bright));width:0%;transition:width .35s ease;}
+  .chain-mini{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  .chip{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;}
+  .chip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted-dim);margin-right:6px;vertical-align:middle;}
+  .chain-mini .arrow{color:var(--muted-dim);font-size:12px;}
+
+  /* legs */
+  .leg{
+    background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--muted-dim);
+    border-radius:var(--radius);padding:18px 18px 4px;margin-top:18px;position:relative;transition:border-color .2s,opacity .2s;
+  }
+  .leg.locked{opacity:.62;}
+  .leg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .leg-title{font-size:16px;font-weight:600;margin:0;}
+  .leg-flow{color:var(--muted);font-size:12px;margin:3px 0 0;}
+  .leg-flow .to{color:var(--teal-bright);}
+  .leg-amt{color:var(--sage);font-weight:600;}
+  .pill{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:20px;border:1px solid;white-space:nowrap;font-weight:500;}
+  .pill.locked{color:var(--muted-dim);border-color:var(--border);}
+  .pill.ready{color:var(--teal-bright);border-color:var(--teal);}
+  .pill.progress{color:var(--gold);border-color:var(--gold);}
+  .pill.await{color:var(--rust);border-color:var(--rust-dim);}
+  .pill.rcvd{color:var(--sage);border-color:#4f7346;}
+  .pill.cleared{color:#0e1611;background:var(--teal-bright);border-color:var(--teal-bright);}
+
+  .lock-note{color:var(--gold);font-size:11.5px;margin:10px 0 2px;padding:8px 10px;background:rgba(205,163,74,.08);border:1px solid rgba(205,163,74,.25);border-radius:7px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin:16px 0 6px;}
+  @media(max-width:560px){.grid{grid-template-columns:1fr;}}
+  .field label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
+  .field input[type=date],.field input[type=number]{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);color:var(--text);
+    font-family:inherit;font-size:13px;padding:8px 10px;border-radius:7px;
+  }
+  .field input:focus{outline:none;border-color:var(--teal);}
+  .field .derived{font-size:12px;color:var(--teal-bright);margin-top:6px;min-height:16px;}
+  .field .derived.warn{color:var(--rust);}
+  .field .derived.muted{color:var(--muted-dim);}
+
+  .reqs{margin:14px 0 6px;border-top:1px solid var(--border-soft);padding-top:14px;}
+  .reqs-h{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+  .req{display:flex;align-items:flex-start;gap:10px;padding:5px 0;cursor:pointer;font-size:13px;}
+  .req input{margin:2px 0 0;accent-color:var(--teal);width:15px;height:15px;flex:0 0 auto;cursor:pointer;}
+  .req span{transition:color .15s;}
+  .req.done span{color:var(--muted-dim);text-decoration:line-through;}
+
+  details.notes{margin:6px 0 14px;}
+  details.notes summary{color:var(--muted);font-size:12px;cursor:pointer;list-style:none;padding:4px 0;}
+  details.notes summary::-webkit-details-marker{display:none;}
+  details.notes summary::before{content:"+ ";color:var(--teal);}
+  details.notes[open] summary::before{content:"– ";}
+  textarea{width:100%;background:var(--panel-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:13px;padding:9px 10px;border-radius:7px;resize:vertical;min-height:60px;margin-top:6px;}
+  textarea:focus{outline:none;border-color:var(--teal);}
+
+  .foot{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  button{font-family:inherit;font-size:12px;padding:9px 16px;border-radius:7px;cursor:pointer;border:1px solid var(--border);background:var(--panel-2);color:var(--text);transition:.15s;}
+  button:hover{border-color:var(--teal);color:var(--teal-bright);}
+  button.reset:hover{border-color:var(--rust-dim);color:var(--rust);}
+  .disclaimer{margin-top:22px;color:var(--muted-dim);font-size:11.5px;line-height:1.6;border-top:1px solid var(--border-soft);padding-top:16px;}
+
+  @media print{
+    body{background:#fff;color:#111;padding:0;}
+    .leg,.summary{background:#fff;border-color:#ccc;box-shadow:none;}
+    .eyebrow,.leg-flow .to,.derived{color:#333 !important;}
+    .foot,details.notes summary::before{display:none;}
+    .pill{border-color:#999;color:#111 !important;background:none !important;}
+    .bar-fill{background:#555 !important;}
+    a{color:#111;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Switch Route</div>
+    <h1>Switching Chain</h1>
+    <p class="sub">One Starling seed → three sequential CASS switches. Each leg unlocks only once the previous bonus has landed and its retention window has passed.</p>
+
+    <div class="summary">
+      <div class="sum-row">
+        <span class="sum-total banked">Banked: <b id="banked">£0</b></span>
+        <span class="sum-total">Target: <b id="target">£575</b></span>
+      </div>
+      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+      <div class="chain-mini" id="chainMini"></div>
+    </div>
+  </header>
+
+  <div id="legs"></div>
+
+  <div class="foot">
+    <button onclick="window.print()">Print / PDF</button>
+    <button class="reset" onclick="resetAll()">Reset all</button>
+  </div>
+
+  <div class="disclaimer">
+    Switch completion assumes 7 working days (Sat/Sun skipped; bank holidays not counted — treat as approximate).
+    Target payout = switch completion + the payout window you set. Offer amounts, deposit sums and eligibility change often — <b>confirm each bank's live T&amp;Cs before you start that leg.</b>
+    Golden rule: never switch an account onward until its bonus has arrived <em>and</em> any keep-open / keep-DDs-active window has cleared.
+  </div>
+</div>
+
+<script>
+const TARGET_ORDER = ["Barclays","NatWest","Nationwide"];
+
+const DEFAULTS = [
+  {
+    id:"leg1", source:"Starling", dest:"Barclays", amount:200,
+    payoutDays:30, retentionMonths:3,
+    switchStart:"", bonusReceived:"", notes:"",
+    reqs:[
+      {label:"Open Barclays account via the app", done:false},
+      {label:"Eligible? (no Barclays a/c since 9 Jun 2026; no prior Barclays switch bonus)", done:false},
+      {label:"2 direct debits live on Starling before switching", done:false},
+      {label:"Start full CASS switch from Starling", done:false},
+      {label:"Deposit qualifying amount (≈£1,000 — confirm)", done:false},
+      {label:"Make 1+ debit card payment", done:false},
+      {label:"Verify live T&Cs on barclays.co.uk", done:false}
+    ]
+  },
+  {
+    id:"leg2", source:"Barclays", dest:"NatWest", amount:200,
+    payoutDays:60, retentionMonths:3,
+    switchStart:"", bonusReceived:"", notes:"",
+    reqs:[
+      {label:"Open NatWest account (check which type qualifies)", done:false},
+      {label:"Eligible? (no prior NatWest Group switch bonus)", done:false},
+      {label:"2 direct debits live on Barclays before switching", done:false},
+      {label:"Start full CASS switch from Barclays", done:false},
+      {label:"Deposit qualifying amount (≈£1,250 — confirm)", done:false},
+      {label:"Log into mobile banking", done:false},
+      {label:"Verify live T&Cs on natwest.com", done:false}
+    ]
+  },
+  {
+    id:"leg3", source:"NatWest", dest:"Nationwide", amount:175,
+    payoutDays:30, retentionMonths:3,
+    switchStart:"", bonusReceived:"", notes:"",
+    reqs:[
+      {label:"Open Nationwide FlexDirect / FlexAccount / FlexPlus", done:false},
+      {label:"Eligible? (check new-customer / member terms)", done:false},
+      {label:"2 direct debits live on NatWest before switching", done:false},
+      {label:"Start full CASS switch from NatWest", done:false},
+      {label:"Meet any deposit / DD conditions", done:false},
+      {label:"Verify live T&Cs on nationwide.co.uk", done:false}
+    ]
+  }
+];
+
+const KEY="switchRouteChain_v1";
+let mem=null; // in-memory fallback if storage blocked
+
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){ if(mem) return mem; }
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+function save(state){
+  mem=state;
+  try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+}
+
+let STATE=load();
+
+/* ---------- date helpers ---------- */
+function parseD(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
+function addWorkingDays(d,n){ const r=new Date(d); let added=0; while(added<n){ r.setDate(r.getDate()+1); const wd=r.getDay(); if(wd!==0&&wd!==6) added++; } return r; }
+function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function addMonths(d,n){ const r=new Date(d); r.setMonth(r.getMonth()+n); return r; }
+function fmt(d){ if(!d) return "—"; return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function today(){ const t=new Date(); t.setHours(0,0,0,0); return t; }
+
+/* ---------- status logic ---------- */
+function safeDate(leg){ const b=parseD(leg.bonusReceived); return b?addMonths(b,Number(leg.retentionMonths)||0):null; }
+function isCleared(leg){ const s=safeDate(leg); return !!(parseD(leg.bonusReceived) && s && s<=today()); }
+function isUnlocked(i){ if(i===0) return true; return isCleared(STATE[i-1]); }
+
+function statusOf(i){
+  const leg=STATE[i];
+  if(!isUnlocked(i)) return {k:"locked",t:"Locked"};
+  if(isCleared(leg)) return {k:"cleared",t:"Cleared ✓"};
+  if(parseD(leg.bonusReceived)) return {k:"rcvd",t:"Bonus in · retention"};
+  const st=parseD(leg.switchStart);
+  if(!st) return {k:"ready",t:"Ready to start"};
+  const complete=addWorkingDays(st,7);
+  if(complete>today()) return {k:"progress",t:"Switching"};
+  return {k:"await",t:"Awaiting bonus"};
+}
+
+/* ---------- render ---------- */
+function render(){
+  // summary
+  let banked=0; STATE.forEach(l=>{ if(parseD(l.bonusReceived)) banked+=Number(l.amount)||0; });
+  const target=STATE.reduce((a,l)=>a+(Number(l.amount)||0),0);
+  document.getElementById('banked').textContent="£"+banked;
+  document.getElementById('target').textContent="£"+target;
+  document.getElementById('barFill').style.width=(target?Math.round(banked/target*100):0)+"%";
+
+  // mini chain
+  const mini=document.getElementById('chainMini'); mini.innerHTML="";
+  STATE.forEach((l,i)=>{
+    const s=statusOf(i);
+    const colorMap={locked:'var(--muted-dim)',ready:'var(--teal-bright)',progress:'var(--gold)',await:'var(--rust)',rcvd:'var(--sage)',cleared:'var(--teal-bright)'};
+    const chip=document.createElement('span'); chip.className="chip";
+    chip.innerHTML=`<span class="dot" style="background:${colorMap[s.k]}"></span>${l.dest} £${l.amount}`;
+    mini.appendChild(chip);
+    if(i<STATE.length-1){ const a=document.createElement('span'); a.className="arrow"; a.textContent="→"; mini.appendChild(a); }
+  });
+
+  // legs
+  const box=document.getElementById('legs'); box.innerHTML="";
+  STATE.forEach((leg,i)=>{
+    const s=statusOf(i);
+    const unlocked=isUnlocked(i);
+    const st=parseD(leg.switchStart);
+    const complete=st?addWorkingDays(st,7):null;
+    const payout=complete?addDays(complete,Number(leg.payoutDays)||0):null;
+    const safe=safeDate(leg);
+
+    const el=document.createElement('div');
+    el.className="leg"+(unlocked?"":" locked");
+    el.style.borderLeftColor=({locked:'var(--muted-dim)',ready:'var(--teal)',progress:'var(--gold)',await:'var(--rust)',rcvd:'var(--sage)',cleared:'var(--teal-bright)'})[s.k];
+
+    let html=`
+      <div class="leg-head">
+        <div>
+          <p class="leg-title">Leg ${i+1} · <span class="leg-amt">£${leg.amount}</span></p>
+          <p class="leg-flow">${leg.source} <span style="color:var(--muted-dim)">→</span> <span class="to">${leg.dest}</span></p>
+        </div>
+        <span class="pill ${s.k}">${s.t}</span>
+      </div>`;
+
+    if(!unlocked){
+      html+=`<div class="lock-note">Locked until Leg ${i} clears (bonus received + retention window passed). You can pre-fill now, but don't start the switch yet.</div>`;
+    }
+
+    html+=`
+      <div class="grid">
+        <div class="field">
+          <label>Switch started</label>
+          <input type="date" value="${leg.switchStart}" onchange="upd(${i},'switchStart',this.value)">
+          <div class="derived ${complete?'':'muted'}">${complete?'Completes ~ '+fmt(complete):'set a start date'}</div>
+        </div>
+        <div class="field">
+          <label>Payout window (days)</label>
+          <input type="number" min="0" value="${leg.payoutDays}" onchange="upd(${i},'payoutDays',this.value)">
+          <div class="derived ${payout?'':'muted'}">${payout?'Target payout ~ '+fmt(payout):'—'}</div>
+        </div>
+        <div class="field">
+          <label>Bonus received</label>
+          <input type="date" value="${leg.bonusReceived}" onchange="upd(${i},'bonusReceived',this.value)">
+          <div class="derived ${parseD(leg.bonusReceived)?'':'muted'}">${parseD(leg.bonusReceived)?'£'+leg.amount+' banked':'awaiting'}</div>
+        </div>
+        <div class="field">
+          <label>Retention window (months)</label>
+          <input type="number" min="0" step="1" value="${leg.retentionMonths}" onchange="upd(${i},'retentionMonths',this.value)">
+          <div class="derived ${safe?(isCleared(leg)?'':'warn'):'muted'}">${safe?(isCleared(leg)?'Safe to re-switch ✓':'Hold until '+fmt(safe)):'—'}</div>
+        </div>
+      </div>
+
+      <div class="reqs">
+        <div class="reqs-h">Requirements</div>
+        ${leg.reqs.map((r,ri)=>`
+          <label class="req ${r.done?'done':''}">
+            <input type="checkbox" ${r.done?'checked':''} onchange="updReq(${i},${ri},this.checked)">
+            <span>${r.label}</span>
+          </label>`).join('')}
+      </div>
+
+      <details class="notes">
+        <summary>Notes</summary>
+        <textarea placeholder="Reference numbers, DDs used, dates, anything to remember…" onchange="upd(${i},'notes',this.value)">${leg.notes||''}</textarea>
+      </details>
+    `;
+    el.innerHTML=html;
+    box.appendChild(el);
+  });
+}
+
+function upd(i,field,val){ STATE[i][field]=val; save(STATE); render(); }
+function updReq(i,ri,val){ STATE[i].reqs[ri].done=val; save(STATE); render(); }
+function resetAll(){
+  if(confirm("Reset the whole chain? This clears all dates, checkboxes and notes.")){
+    STATE=JSON.parse(JSON.stringify(DEFAULTS)); save(STATE); render();
+  }
+}
+
+render();
+</script>
+</body>
+</html>
