@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arms Weekly Schedule — Draft Season</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --forest:#3f7d5b;
+    --sage:#8ba888;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --paper:#142019;
+    --ink:#c2cfb2;
+    --line:#33493b;
+    --card:#1d2d24;
+    --cream:#ece8db;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--paper);
+    color:var(--ink);
+    padding:40px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;}
+
+  .masthead{
+    border-bottom:2px solid var(--cream);
+    padding-bottom:16px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  h1{font-size:24px;font-weight:600;color:var(--cream);letter-spacing:-.01em;}
+  .masthead .sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);font-weight:600;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:26px;font-size:11px;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;color:var(--teal);}
+  .dot{width:10px;height:10px;border-radius:3px;flex:none;}
+  .d-work{background:var(--forest);}
+  .d-gym{background:var(--rust);}
+  .d-job{background:#9a7b4f;}
+  .d-sql{background:var(--teal);}
+  .d-curiosity{background:#6a8fa3;}
+  .d-blender{background:#a8754f;}
+  .d-clean{background:#b9bfae;}
+  .d-read{background:#7d9b94;}
+  .d-draft{background:var(--rust);outline:2px dotted var(--rust);outline-offset:1px;}
+  .d-lecture{background:var(--sage);}
+  .d-review{background:#c9a24a;}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+  .day{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden;}
+  .day-head{
+    background:var(--forest);color:#fff;font-weight:600;font-size:13px;
+    letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .day-head .daytag{font-size:9.5px;letter-spacing:.1em;opacity:.85;font-weight:500;text-transform:none;}
+  .slots{padding:8px 0;}
+  .slot{
+    display:grid;grid-template-columns:96px 14px 1fr 18px;
+    align-items:center;gap:8px;padding:5px 14px;font-size:12px;
+  }
+  .slot .time{color:var(--teal);font-size:11px;white-space:nowrap;}
+  .slot .bar{width:8px;height:8px;border-radius:2px;}
+  .slot .label{color:var(--ink);}
+  .slot.free .label{color:#9aa395;}
+
+  .slot.draft{
+    background:rgba(196,103,60,.10);
+    border-top:1px dashed rgba(196,103,60,.4);
+    border-bottom:1px dashed rgba(196,103,60,.4);
+  }
+  .slot.draft .label{color:var(--rust);font-weight:600;}
+  .slot.lecture-slot{
+    background:rgba(139,168,136,.08);
+  }
+  .slot.lecture-slot .label{color:var(--sage);font-weight:600;}
+  .slot.review-slot{
+    background:rgba(201,162,74,.08);
+  }
+  .slot.review-slot .label{color:#c9a24a;font-weight:600;}
+  .slot .tag{
+    display:inline-block;font-size:9px;letter-spacing:.1em;
+    background:var(--rust);color:#fff;border-radius:4px;
+    padding:1px 5px;margin-left:6px;vertical-align:middle;
+  }
+  .slot .tag.g{background:var(--sage);}
+  .slot .tag.y{background:#c9a24a;}
+  .slot .tag.t{background:var(--teal);}
+
+  .overlay-note{
+    margin-top:28px;border:1px solid var(--line);border-left:5px solid var(--rust);
+    border-radius:10px;background:var(--card);padding:20px 22px;
+    font-size:12.5px;line-height:1.55;color:var(--teal);
+  }
+  .overlay-note h3{font-size:13px;color:var(--forest);margin-bottom:10px;letter-spacing:.04em;}
+  .overlay-note p{margin-bottom:9px;}
+  .overlay-note p:last-child{margin-bottom:0;}
+  .overlay-note strong{color:var(--forest);font-weight:600;}
+
+  .slot .chk{
+    appearance:none;-webkit-appearance:none;
+    width:14px;height:14px;border:1.5px solid var(--line);border-radius:3px;
+    background:transparent;cursor:pointer;flex:none;margin:0;padding:0;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:background .12s,border-color .12s;
+  }
+  .slot .chk:checked{background:var(--teal);border-color:var(--teal);}
+  .slot .chk:checked::after{content:"\2713";color:var(--paper);font-size:10px;font-weight:700;line-height:1;}
+  .slot .chk:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  .slot.work-slot .chk{display:none;}
+  .sched-actions{display:flex;justify-content:flex-end;margin-bottom:18px;gap:10px;}
+  .sched-actions button{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;
+    background:var(--card);border:1px solid var(--line);color:var(--teal);
+    border-radius:6px;padding:7px 14px;cursor:pointer;transition:border-color .15s,color .15s;
+  }
+  .sched-actions button:hover{border-color:var(--teal);color:var(--cream);}
+
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr;}
+    .slot{grid-template-columns:90px 14px 1fr 18px;}
+  }
+  @media print{
+    :root{--forest:#2f4a3c;--sage:#6f8a6c;--teal:#2f6f6a;--rust:#b5553a;--paper:#fff;--ink:#26312b;--line:#d4d8cc;--card:#fff;--cream:#1d2a20;}
+    body{background:#fff;padding:0;}
+    .chk,.sched-actions{display:none!important;}
+    .day,.overlay-note{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <h1>Arms — Weekly Schedule</h1>
+    <span class="sub">Draft season · Jul–Dec 2026</span>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot d-work"></i>Work</span>
+    <span><i class="dot d-gym"></i>Gym</span>
+    <span><i class="dot d-job"></i>Second job</span>
+    <span><i class="dot d-sql"></i>SQL / skills</span>
+    <span><i class="dot d-draft"></i>Novel session</span>
+    <span><i class="dot d-lecture"></i>Craft lecture (audio)</span>
+    <span><i class="dot d-review"></i>Weekly review</span>
+    <span><i class="dot d-curiosity"></i>Curiosity Rotation</span>
+    <span><i class="dot d-blender"></i>Blender</span>
+    <span><i class="dot d-clean"></i>Cleanup</span>
+    <span><i class="dot d-read"></i>Reading</span>
+  </div>
+
+  <div class="sched-actions"><button id="resetDay">New day</button></div>
+  <div class="grid">
+
+    <!-- MONDAY -->
+    <div class="day">
+      <div class="day-head">Monday</div>
+      <div class="slots">
+        <div class="slot work-slot"><span class="time">08:00–16:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:30–17:30</span><span class="bar d-sql"></span><span class="label">SQL practice</span><input type="checkbox" class="chk" data-id="s2" aria-label="done"></div>
+        <div class="slot draft"><span class="time">18:30–19:30</span><span class="bar d-draft"></span><span class="label">Novel session<span class="tag">DAILY</span></span><input type="checkbox" class="chk" data-id="s3" aria-label="done"></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s4" aria-label="done"></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading (Hero Book)</span><input type="checkbox" class="chk" data-id="s5" aria-label="done"></div>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="day">
+      <div class="day-head">Tuesday</div>
+      <div class="slots">
+        <div class="slot work-slot"><span class="time">08:00–10:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">10:00–11:30</span><span class="bar d-gym"></span><span class="label">Gym</span><input type="checkbox" class="chk" data-id="s7" aria-label="done"></div>
+        <div class="slot work-slot"><span class="time">11:30–16:30</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:30–17:30</span><span class="bar d-sql"></span><span class="label">SQL practice</span><input type="checkbox" class="chk" data-id="s9" aria-label="done"></div>
+        <div class="slot draft"><span class="time">18:30–19:30</span><span class="bar d-draft"></span><span class="label">Novel session<span class="tag">DAILY</span></span><input type="checkbox" class="chk" data-id="s10" aria-label="done"></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s11" aria-label="done"></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading (Hero Book)</span><input type="checkbox" class="chk" data-id="s12" aria-label="done"></div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="day">
+      <div class="day-head">Wednesday <span class="daytag">short session</span></div>
+      <div class="slots">
+        <div class="slot work-slot"><span class="time">08:00–16:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:00–18:00</span><span class="bar d-job"></span><span class="label">Second job</span><input type="checkbox" class="chk" data-id="s14" aria-label="done"></div>
+        <div class="slot draft"><span class="time">19:00–19:45</span><span class="bar d-draft"></span><span class="label">Novel session<span class="tag">45 MIN</span></span><input type="checkbox" class="chk" data-id="s15" aria-label="done"></div>
+        <div class="slot"><span class="time">19:45–20:15</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s16" aria-label="done"></div>
+        <div class="slot free"><span class="time">20:15–20:30</span><span class="bar d-read"></span><span class="label">Reading (light / optional)</span><input type="checkbox" class="chk" data-id="s17" aria-label="done"></div>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="day">
+      <div class="day-head">Thursday</div>
+      <div class="slots">
+        <div class="slot work-slot"><span class="time">08:00–10:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">10:00–11:30</span><span class="bar d-gym"></span><span class="label">Gym</span><input type="checkbox" class="chk" data-id="s19" aria-label="done"></div>
+        <div class="slot work-slot"><span class="time">11:30–16:30</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot lecture-slot"><span class="time">16:30–17:15</span><span class="bar d-lecture"></span><span class="label">Craft lecture — Hynes audio<span class="tag g">LISTEN</span></span><input type="checkbox" class="chk" data-id="s21" aria-label="done"></div>
+        <div class="slot draft"><span class="time">18:30–19:30</span><span class="bar d-draft"></span><span class="label">Novel session<span class="tag">DAILY</span></span><input type="checkbox" class="chk" data-id="s22" aria-label="done"></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s23" aria-label="done"></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading</span><input type="checkbox" class="chk" data-id="s24" aria-label="done"></div>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="day">
+      <div class="day-head">Friday <span class="daytag">rest day — no novel</span></div>
+      <div class="slots">
+        <div class="slot work-slot"><span class="time">08:00–16:00</span><span class="bar d-work"></span><span class="label">Work</span></div>
+        <div class="slot"><span class="time">16:00–18:00</span><span class="bar d-job"></span><span class="label">Second job</span><input type="checkbox" class="chk" data-id="s26" aria-label="done"></div>
+        <div class="slot free"><span class="time">evening</span><span class="bar"></span><span class="label">Off. Genuinely off.</span></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s27" aria-label="done"></div>
+        <div class="slot"><span class="time">20:00–20:30</span><span class="bar d-read"></span><span class="label">Reading</span><input type="checkbox" class="chk" data-id="s28" aria-label="done"></div>
+      </div>
+    </div>
+
+    <!-- SATURDAY -->
+    <div class="day">
+      <div class="day-head">Saturday <span class="daytag">long session</span></div>
+      <div class="slots">
+        <div class="slot lecture-slot"><span class="time">09:00–09:30</span><span class="bar d-lecture"></span><span class="label">Craft lecture — Hynes / Sanderson<span class="tag g">LISTEN</span></span><input type="checkbox" class="chk" data-id="s29" aria-label="done"></div>
+        <div class="slot draft"><span class="time">09:30–11:00</span><span class="bar d-draft"></span><span class="label">Novel session — long<span class="tag">90 MIN</span></span><input type="checkbox" class="chk" data-id="s30" aria-label="done"></div>
+        <div class="slot"><span class="time">11:15–12:45</span><span class="bar d-sql"></span><span class="label">SQL / skills</span><input type="checkbox" class="chk" data-id="s31" aria-label="done"></div>
+        <div class="slot"><span class="time">15:15–15:30</span><span class="bar d-sql"></span><span class="label">Notice·Allow·Choose<span class="tag t">WEEKLY</span></span><input type="checkbox" class="chk" data-id="s32" aria-label="done"></div>
+        <div class="slot"><span class="time">15:30–17:00</span><span class="bar d-gym"></span><span class="label">Gym</span><input type="checkbox" class="chk" data-id="s33" aria-label="done"></div>
+        <div class="slot"><span class="time">18:00–19:30</span><span class="bar d-blender"></span><span class="label">Blender</span><input type="checkbox" class="chk" data-id="s34" aria-label="done"></div>
+        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s35" aria-label="done"></div>
+      </div>
+    </div>
+
+    <!-- SUNDAY -->
+    <div class="day">
+      <div class="day-head">Sunday <span class="daytag">write + review</span></div>
+      <div class="slots">
+        <div class="slot free"><span class="time">10:00–11:00</span><span class="bar d-sql"></span><span class="label">SQL catch-up (optional)</span><input type="checkbox" class="chk" data-id="s36" aria-label="done"></div>
+        <div class="slot"><span class="time">11:00–12:00</span><span class="bar d-curiosity"></span><span class="label">Curiosity Rotation</span><input type="checkbox" class="chk" data-id="s37" aria-label="done"></div>
+        <div class="slot"><span class="time">15:30–17:00</span><span class="bar d-gym"></span><span class="label">Gym</span><input type="checkbox" class="chk" data-id="s38" aria-label="done"></div>
+        <div class="slot draft"><span class="time">18:00–19:00</span><span class="bar d-draft"></span><span class="label">Novel session<span class="tag">DAILY</span></span><input type="checkbox" class="chk" data-id="s39" aria-label="done"></div>
+        <div class="slot review-slot"><span class="time">19:00–19:15</span><span class="bar d-review"></span><span class="label">Weekly review — log word count, plan next scenes<span class="tag y">WEEKLY</span></span><input type="checkbox" class="chk" data-id="s40" aria-label="done"></div>
+        <div class="slot"><span class="time">19:15–19:45</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="s41" aria-label="done"></div>
+        <div class="slot free"><span class="time">evening</span><span class="bar"></span><span class="label">Reading / rest / prep</span><input type="checkbox" class="chk" data-id="s42" aria-label="done"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="overlay-note">
+    <h3>What changed, and why</h3>
+    <p><strong>The novel is now the daily spine:</strong> six sessions a week (Mon, Tue, Wed, Thu, Sat, Sun), one fixed rest day. Same evening cue on weekdays — after dinner, 18:30 — because a fixed time-and-place cue is the single strongest predictor of a habit sticking. Wednesday is deliberately short (45 min after the second job); Saturday morning is the long, fresh-brain session with the lecture stacked directly in front of it.</p>
+    <p><strong>Friday is a real rest day.</strong> Planned rest isn't a broken chain — it's what prevents the missed-day guilt spiral. Everywhere else, the rule is never miss twice.</p>
+    <p><strong>SQL is untouched:</strong> Mon/Tue 16:30, Sat 11:15, Sun optional catch-up — exactly as before.</p>
+    <p><strong>Paused for draft season:</strong> drawing (it shared the writing slot — one creative focus until THE END) and the Thursday Curiosity Rotation (Sunday's session stays). Blender keeps its Saturday slot but is officially the first thing to trim in a week that slips. Notice·Allow·Choose, gym, and reading are all untouched — reading is upgraded to your Hero Book once you choose one in Week 6.</p>
+    <p><strong>The two-week expressive-writing overlay</strong> from the previous version has ended and is removed; Notice·Allow·Choose remains as the keeper, as planned.</p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var KEY='weekly-schedule-draft-season-checks';
+  var done={};
+  try{ done=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(done)); }catch(e){} }
+  document.querySelectorAll('.chk').forEach(function(c){
+    if(done[c.dataset.id]) c.checked=true;
+  });
+  document.addEventListener('change',function(e){
+    var c=e.target; if(!c.classList.contains('chk')) return;
+    if(c.checked) done[c.dataset.id]=true; else delete done[c.dataset.id];
+    save();
+  });
+  document.getElementById('resetDay').addEventListener('click',function(){
+    done={}; save();
+    document.querySelectorAll('.chk').forEach(function(c){ c.checked=false; });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The First Draft Programme — Syllabus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --forest:#3f7d5b;
+    --sage:#8ba888;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --paper:#142019;
+    --ink:#c2cfb2;
+    --line:#33493b;
+    --card:#1d2d24;
+    --cream:#ece8db;
+    --gold:#c9a24a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--paper);
+    color:var(--ink);
+    padding:40px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+
+  .masthead{
+    border-bottom:2px solid var(--cream);
+    padding-bottom:16px;margin-bottom:16px;
+    display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  }
+  h1{font-size:24px;font-weight:600;color:var(--cream);letter-spacing:-.01em;}
+  .masthead .sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);font-weight:600;}
+
+  /* Progress */
+  .progress{
+    margin-bottom:14px;
+  }
+  .progress .ptop{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:11px;color:var(--teal);margin-bottom:6px;
+  }
+  .progress .ptop b{color:var(--cream);font-weight:600;font-size:13px;}
+  .pbar{
+    height:10px;border:1px solid var(--line);border-radius:6px;
+    background:var(--card);overflow:hidden;
+  }
+  .pbar .fill{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,var(--forest),var(--teal));
+    border-radius:5px;transition:width .3s ease;
+  }
+
+  .now{
+    margin:0 0 30px;
+    border:1px solid var(--rust);
+    border-radius:10px;
+    background:rgba(196,103,60,.08);
+    padding:12px 18px;
+    display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline;
+    font-size:12px;
+  }
+  .now .wk{font-size:17px;font-weight:600;color:var(--rust);}
+  .now .detail{color:var(--teal);}
+  .now .phase-name{color:var(--cream);font-weight:600;}
+
+  h2.sec{
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin:30px 0 12px;font-weight:600;
+  }
+
+  /* Reading list */
+  .readlist{
+    border:1px solid var(--line);border-radius:12px;background:var(--card);
+    padding:16px 18px;margin-bottom:8px;
+  }
+  .readlist .r{
+    display:grid;grid-template-columns:1fr auto;gap:4px 16px;
+    padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;
+  }
+  .readlist .r:last-child{border-bottom:none;}
+  .readlist .r .t{color:var(--cream);font-weight:600;}
+  .readlist .r .m{color:var(--teal);font-size:11px;grid-column:1 / -1;line-height:1.5;}
+  .readlist .r .where{color:var(--sage);font-size:11px;white-space:nowrap;align-self:start;}
+
+  /* Phases */
+  .phase{
+    border:1px solid var(--line);border-radius:12px;background:var(--card);
+    margin-bottom:24px;overflow:hidden;
+  }
+  .phase.current{border-color:var(--rust);}
+  .phase-head{
+    background:var(--forest);color:#fff;padding:10px 16px;
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;
+  }
+  .phase.current .phase-head{background:var(--rust);}
+  .phase-head .pname{font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;}
+  .phase-head .pdates{font-size:11px;opacity:.85;}
+  .phase-goal{
+    padding:14px 18px 4px;font-size:12.5px;color:var(--teal);line-height:1.6;
+  }
+
+  /* Weeks */
+  .week{
+    margin:14px 14px 18px;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  }
+  .week.thisweek{border-color:var(--rust);}
+  .week-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:8px 14px;background:rgba(63,125,91,.18);
+    font-size:12px;font-weight:600;color:var(--cream);
+  }
+  .week.thisweek .week-head{background:rgba(196,103,60,.18);}
+  .week.thisweek .week-head .wnum{color:var(--rust);}
+  .week-head .wdates{font-size:11px;color:var(--teal);font-weight:400;}
+  .wsec{padding:8px 14px 4px;}
+  .wsec h4{
+    font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:4px;
+  }
+  .wsec .grp{
+    font-size:11.5px;color:var(--sage);font-weight:600;margin:6px 0 2px;
+  }
+  .item{
+    display:grid;grid-template-columns:18px 1fr auto;gap:10px;
+    align-items:start;padding:4px 0;font-size:12px;line-height:1.5;
+  }
+  .item .label{color:var(--ink);}
+  .item .slot{
+    font-size:9.5px;letter-spacing:.08em;color:var(--teal);
+    border:1px solid var(--line);border-radius:4px;padding:1px 6px;
+    white-space:nowrap;margin-top:2px;
+  }
+  .item.sub{padding-left:14px;}
+  .wsec:last-child{padding-bottom:12px;}
+
+  .chk{
+    appearance:none;-webkit-appearance:none;
+    width:15px;height:15px;border:1.5px solid var(--line);border-radius:3px;
+    background:transparent;cursor:pointer;flex:none;margin:1px 0 0;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:background .12s,border-color .12s;
+  }
+  .chk:checked{background:var(--teal);border-color:var(--teal);}
+  .chk:checked::after{content:"\2713";color:var(--paper);font-size:10px;font-weight:700;line-height:1;}
+  .chk:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  .chk:checked ~ .label{color:#8d977f;text-decoration:line-through;text-decoration-color:rgba(141,151,127,.5);}
+
+  /* Deliverable */
+  .deliv{
+    margin:0 14px 16px;border:1px solid var(--gold);border-radius:10px;
+    background:rgba(201,162,74,.07);padding:12px 14px;
+  }
+  .deliv h4{
+    font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:6px;
+  }
+  .deliv .item .label{color:var(--cream);font-weight:600;}
+
+  @media (max-width:640px){
+    .item{grid-template-columns:18px 1fr;}
+    .item .slot{grid-column:2;justify-self:start;margin-top:0;}
+  }
+  @media print{
+    :root{--forest:#2f4a3c;--sage:#6f8a6c;--teal:#2f6f6a;--rust:#b5553a;--paper:#fff;--ink:#26312b;--line:#d4d8cc;--card:#fff;--cream:#1d2a20;--gold:#7a5f3a;}
+    body{background:#fff;padding:0;}
+    .phase,.week,.deliv,.readlist{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <h1>The First Draft Programme</h1>
+    <span class="sub">04 Jul — 04 Dec 2026 · 22 weeks</span>
+  </div>
+
+  <div class="progress">
+    <div class="ptop"><b id="pctLabel">0%</b><span id="countLabel">0 of 0 complete</span></div>
+    <div class="pbar"><div class="fill" id="pfill"></div></div>
+  </div>
+
+  <div class="now" id="nowBanner">
+    <span class="wk" id="nowWeek">Week —</span>
+    <span class="detail" id="nowDates"></span>
+    <span class="detail">Phase: <span class="phase-name" id="nowPhase"></span></span>
+  </div>
+
+  <h2 class="sec">Reading &amp; Listening List</h2>
+  <div class="readlist">
+    <div class="r">
+      <span class="t">Writing Great Fiction — James Hynes</span>
+      <span class="where">Audible · 24 lectures × 30 min</span>
+      <span class="m">The spine. All 24 lectures, in order, mapped just-in-time to each phase. Guidebook PDF has per-lecture exercises — do the ones that touch your book. Slots: Thu 16:30 &amp; Sat 09:00.</span>
+    </div>
+    <div class="r">
+      <span class="t">Fiction and Storytelling — Walter Mosley</span>
+      <span class="where">MasterClass · 13 lessons ≈ 2 h 20</span>
+      <span class="m">The process course. Watched first — his daily-writing method is the habit this programme runs on. Lessons ≈ 10 min each; any evening.</span>
+    </div>
+    <div class="r">
+      <span class="t">Creative Writing — Margaret Atwood</span>
+      <span class="where">MasterClass · 23 lessons ≈ 3 h 45</span>
+      <span class="m">The depth course — character, voice, layered narrative, openings. Seminar-note it; work the workbook as you watch.</span>
+    </div>
+    <div class="r">
+      <span class="t">BYU Writing Lectures — Brandon Sanderson</span>
+      <span class="where">YouTube · 5 selected lectures</span>
+      <span class="m">Selective supplement: Plot ×2, Viewpoint, Characters, Dialogue. Worldbuilding/magic/business lectures are off-programme (free forever — pleasure viewing only).</span>
+    </div>
+    <div class="r">
+      <span class="t">Your Hero Book</span>
+      <span class="where">Chosen Week 6</span>
+      <span class="m">One published novel structurally close to yours. Read nightly through the draft (Mon–Thu 20:00 reading slot). Steal structure, not sentences.</span>
+    </div>
+  </div>
+
+  <!-- ============ PHASE 1 ============ -->
+  <div class="phase" data-phase="1" data-start="2026-07-04" data-end="2026-07-17" data-name="Foundations &amp; The Idea">
+    <div class="phase-head"><span class="pname">Phase 1 — Foundations &amp; The Idea</span><span class="pdates">Weeks 1–2 · 04–17 Jul</span></div>
+    <p class="phase-goal">Install the daily habit at small size and find a premise with a novel in it. Sessions are 30 minutes this fortnight — freewriting, situation sketches, "what haunts you" lists. You are not drafting yet.</p>
+
+    <div class="week" data-wk="1">
+      <div class="week-head"><span class="wnum">Week 1</span><span class="wdates">04 – 10 Jul</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="grp">Mosley — Lessons 1–7</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m1"><span class="label">Lesson 1</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m2"><span class="label">Lesson 2</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m3"><span class="label">Lesson 3</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m4"><span class="label">Lesson 4</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m5"><span class="label">Lesson 5</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m6"><span class="label">Lesson 6</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-m7"><span class="label">Lesson 7</span><span class="slot">ANY EVENING</span></div>
+        <div class="grp">Hynes</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w1-h1"><span class="label">Lecture 1 — Starting the Writing Process</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w1-s"><span class="label">Six 30-min novel sessions — freewrite toward story ideas, keep everything</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w1-r"><span class="label">Weekly review — capture the ideas with legs</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="2">
+      <div class="week-head"><span class="wnum">Week 2</span><span class="wdates">11 – 17 Jul</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="grp">Mosley — Lessons 8–13</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-m8"><span class="label">Lesson 8</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-m9"><span class="label">Lesson 9</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-m10"><span class="label">Lesson 10</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-m11"><span class="label">Lesson 11</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-m12"><span class="label">Lesson 12</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-m13"><span class="label">Lesson 13</span><span class="slot">ANY EVENING</span></div>
+        <div class="grp">Hynes</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w2-h2"><span class="label">Lecture 2 — Building Fictional Worlds through Evocation</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w2-s"><span class="label">Six 30-min novel sessions — narrow to one premise, write it, write it again better</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w2-r"><span class="label">Weekly review — is this the premise? Commit or keep circling</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="deliv">
+      <h4>Phase 1 Deliverable</h4>
+      <div class="item"><input type="checkbox" class="chk" data-id="p1-d"><span class="label">A one-paragraph premise: protagonist, want, obstacle, why now — plus 10+ completed sessions</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PHASE 2 ============ -->
+  <div class="phase" data-phase="2" data-start="2026-07-18" data-end="2026-07-31" data-name="Character &amp; Craft">
+    <div class="phase-head"><span class="pname">Phase 2 — Character &amp; Craft</span><span class="pdates">Weeks 3–4 · 18–31 Jul</span></div>
+    <p class="phase-goal">Know who the book belongs to, and in whose voice it's told. Sessions grow to full length and turn toward the novel: dossiers, voice experiments, scene fragments that may survive into the draft.</p>
+
+    <div class="week" data-wk="3">
+      <div class="week-head"><span class="wnum">Week 3</span><span class="wdates">18 – 24 Jul</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="grp">Atwood — Lessons 1–12</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a1"><span class="label">Lesson 1</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a2"><span class="label">Lesson 2</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a3"><span class="label">Lesson 3</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a4"><span class="label">Lesson 4</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a5"><span class="label">Lesson 5</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a6"><span class="label">Lesson 6</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a7"><span class="label">Lesson 7</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a8"><span class="label">Lesson 8</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a9"><span class="label">Lesson 9</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a10"><span class="label">Lesson 10</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a11"><span class="label">Lesson 11</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-a12"><span class="label">Lesson 12</span><span class="slot">ANY EVENING</span></div>
+        <div class="grp">Hynes</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-h3"><span class="label">Lecture 3 — How Characters Are Different from People</span><span class="slot">THU 16:30</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-h4"><span class="label">Lecture 4 — Fictional Characters, Imagined and Observed</span><span class="slot">SAT 09:00</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w3-h5"><span class="label">Lecture 5 — Call Me Ishmael: Introducing a Character</span><span class="slot">ANY EVENING</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w3-s"><span class="label">Six full novel sessions — protagonist dossier: wound, want, need, the lie they live by; first-person voice test page</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w3-r"><span class="label">Weekly review</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="4">
+      <div class="week-head"><span class="wnum">Week 4</span><span class="wdates">25 – 31 Jul</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="grp">Atwood — Lessons 13–23</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a13"><span class="label">Lesson 13</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a14"><span class="label">Lesson 14</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a15"><span class="label">Lesson 15</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a16"><span class="label">Lesson 16</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a17"><span class="label">Lesson 17</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a18"><span class="label">Lesson 18</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a19"><span class="label">Lesson 19</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a20"><span class="label">Lesson 20</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a21"><span class="label">Lesson 21</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a22"><span class="label">Lesson 22</span><span class="slot">ANY EVENING</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-a23"><span class="label">Lesson 23</span><span class="slot">ANY EVENING</span></div>
+        <div class="grp">Hynes</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-h6"><span class="label">Lecture 6 — Characters: Round and Flat, Major and Minor</span><span class="slot">THU 16:30</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-h7"><span class="label">Lecture 7 — The Mechanics of Writing Dialogue</span><span class="slot">SAT 09:00</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w4-h8"><span class="label">Lecture 8 — Integrating Dialogue into a Narrative</span><span class="slot">ANY EVENING</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w4-s"><span class="label">Six full novel sessions — secondary cast sketches; a two-hander dialogue scene; choose POV and commit</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w4-r"><span class="label">Weekly review</span><span class="slot">SUN 19:00</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w4-mc"><span class="label">All MasterClass viewing finished — request refund by Sun 02 Aug (request, not just cancel)</span><span class="slot">BY 02 AUG</span></div>
+      </div>
+    </div>
+
+    <div class="deliv">
+      <h4>Phase 2 Deliverable</h4>
+      <div class="item"><input type="checkbox" class="chk" data-id="p2-d"><span class="label">Protagonist + antagonist-figure dossiers, a chosen POV, and 2–3 voice pages you like</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PHASE 3 ============ -->
+  <div class="phase" data-phase="3" data-start="2026-08-01" data-end="2026-08-14" data-name="The Outline">
+    <div class="phase-head"><span class="pname">Phase 3 — The Outline</span><span class="pdates">Weeks 5–6 · 01–14 Aug</span></div>
+    <p class="phase-goal">A blueprint you can't wait to write. Hold plot frameworks loosely (Lecture 12 is your permission slip), but leave this phase knowing your opening image, your midpoint reversal, and roughly how it ends.</p>
+
+    <div class="week" data-wk="5">
+      <div class="week-head"><span class="wnum">Week 5</span><span class="wdates">01 – 07 Aug</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="grp">Hynes</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w5-h9"><span class="label">Lecture 9 — And Then: Turning a Story into a Plot</span><span class="slot">THU 16:30</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w5-h10"><span class="label">Lecture 10 — Plotting with the Freytag Pyramid</span><span class="slot">SAT 09:00</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w5-h11"><span class="label">Lecture 11 — Adding Complexity to Plots</span><span class="slot">ANY EVENING</span></div>
+        <div class="grp">Sanderson</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w5-sn1"><span class="label">Plot lecture (pt 1)</span><span class="slot">SAT / WEEKEND</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w5-s"><span class="label">Six novel sessions — draft the one-page plan; map the spine: opening, midpoint, ending candidates</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w5-r"><span class="label">Weekly review</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="6">
+      <div class="week-head"><span class="wnum">Week 6</span><span class="wdates">08 – 14 Aug</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="grp">Hynes</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w6-h12"><span class="label">Lecture 12 — Structuring a Narrative without a Plot</span><span class="slot">THU 16:30</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w6-h13"><span class="label">Lecture 13 — In the Beginning: How to Start a Plot</span><span class="slot">SAT 09:00</span></div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w6-h14"><span class="label">Lecture 14 — Happily Ever After: How to End a Plot</span><span class="slot">ANY EVENING</span></div>
+        <div class="grp">Sanderson</div>
+        <div class="item sub"><input type="checkbox" class="chk" data-id="w6-sn2"><span class="label">Plot lecture (pt 2)</span><span class="slot">SAT / WEEKEND</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w6-s"><span class="label">Six novel sessions — beat sheet, 15–25 beats</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w6-hb"><span class="label">Choose your Hero Book</span><span class="slot">THIS WEEK</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w6-r"><span class="label">Weekly review</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="deliv">
+      <h4>Phase 3 Deliverable</h4>
+      <div class="item"><input type="checkbox" class="chk" data-id="p3-d"><span class="label">A one-page plan plus a loose chapter/scene beat sheet (15–25 beats)</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PHASE 4 ============ -->
+  <div class="phase" data-phase="4" data-start="2026-08-15" data-end="2026-11-20" data-name="The Draft">
+    <div class="phase-head"><span class="pname">Phase 4 — The Draft</span><span class="pdates">Weeks 7–20 · 15 Aug – 20 Nov</span></div>
+    <p class="phase-goal">A complete, messy first draft of 55–65k words. Word floors are floors, not ceilings — hit the floor, stop guilt-free. Never edit backwards; a bracketed [FIX THIS] is a legal move. One lost day is noise; never miss twice.</p>
+
+    <div class="week" data-wk="7">
+      <div class="week-head"><span class="wnum">Week 7</span><span class="wdates">15 – 21 Aug</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w7-h15"><span class="label">Hynes Lecture 15 — Seeing through Other Eyes: Point of View</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w7-s"><span class="label">Six sessions · floor 450 words each — open the novel; first scene, imperfectly</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w7-r"><span class="label">Weekly review — log word count (target ≈ 2,400)</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="8">
+      <div class="week-head"><span class="wnum">Week 8</span><span class="wdates">22 – 28 Aug</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w8-h16"><span class="label">Hynes Lecture 16 — I, Me, Mine: First-Person Point of View</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w8-s"><span class="label">Six sessions · floor 450 — keep laying track</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w8-r"><span class="label">Weekly review — running total ≈ 5k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="9">
+      <div class="week-head"><span class="wnum">Week 9</span><span class="wdates">29 Aug – 04 Sep</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w9-h17"><span class="label">Hynes Lecture 17 — He, She, It: Third-Person Point of View</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w9-s"><span class="label">Six sessions · floor steps up to 600</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w9-r"><span class="label">Weekly review — running total ≈ 8–9k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="10">
+      <div class="week-head"><span class="wnum">Week 10</span><span class="wdates">05 – 11 Sep</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w10-h18"><span class="label">Hynes Lecture 18 — Evoking Setting and Place in Fiction</span><span class="slot">THU 16:30</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w10-sn3"><span class="label">Sanderson — Viewpoint lecture</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w10-s"><span class="label">Six sessions · full pace from here: floor 750 (450 Wed)</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w10-r"><span class="label">Weekly review — target ≈ 4,300/wk from now on</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="11">
+      <div class="week-head"><span class="wnum">Week 11</span><span class="wdates">12 – 18 Sep</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w11-h19"><span class="label">Hynes Lecture 19 — Pacing in Scenes and Narratives</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w11-s"><span class="label">Six sessions · floor 750 — the story should be pulling now</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w11-r"><span class="label">Weekly review — running total ≈ 17–18k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="12">
+      <div class="week-head"><span class="wnum">Week 12</span><span class="wdates">19 – 25 Sep</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w12-h20"><span class="label">Hynes Lecture 20 — Building Scenes</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w12-s"><span class="label">Six sessions · floor 750</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w12-r"><span class="label">Weekly review — running total ≈ 22k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="13">
+      <div class="week-head"><span class="wnum">Week 13</span><span class="wdates">26 Sep – 02 Oct</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w13-sn4"><span class="label">Sanderson — Characters lecture</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w13-s"><span class="label">Six sessions · floor 750</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w13-r"><span class="label">Weekly review — quarter-programme check-in; total ≈ 26k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="14">
+      <div class="week-head"><span class="wnum">Week 14</span><span class="wdates">03 – 09 Oct</span></div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w14-s"><span class="label">Six sessions · floor 750 — the middle begins; raise the cost of everything your protagonist wants</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w14-r"><span class="label">Weekly review — total ≈ 30k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="15">
+      <div class="week-head"><span class="wnum">Week 15</span><span class="wdates">10 – 16 Oct</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w15-sn5"><span class="label">Sanderson — Dialogue lecture</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w15-s"><span class="label">Six sessions · floor 750 — if stuck, skip the scene and write the one you can see</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w15-r"><span class="label">Weekly review — total ≈ 35k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="16">
+      <div class="week-head"><span class="wnum">Week 16</span><span class="wdates">17 – 23 Oct</span></div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w16-s"><span class="label">Six sessions · floor 750 — midpoint reversal should be behind you or landing now</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w16-r"><span class="label">Weekly review — total ≈ 39k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="17">
+      <div class="week-head"><span class="wnum">Week 17</span><span class="wdates">24 – 30 Oct</span></div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w17-s"><span class="label">Six sessions · floor 750 — revisit the beat sheet; re-plan the back third, don't re-read the front</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w17-r"><span class="label">Weekly review — total ≈ 43k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="18">
+      <div class="week-head"><span class="wnum">Week 18</span><span class="wdates">31 Oct – 06 Nov</span></div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w18-s"><span class="label">Six sessions · floor 750 — home stretch; no new inputs, just output</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w18-r"><span class="label">Weekly review — total ≈ 48k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="19">
+      <div class="week-head"><span class="wnum">Week 19</span><span class="wdates">07 – 13 Nov</span></div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w19-s"><span class="label">Six sessions · floor 750 — write the ending scenes even if the bridge to them is scaffolding</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w19-r"><span class="label">Weekly review — total ≈ 52k</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="20">
+      <div class="week-head"><span class="wnum">Week 20</span><span class="wdates">14 – 20 Nov</span></div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w20-s"><span class="label">Six sessions · floor 750 — close remaining gaps; it's allowed to be ugly</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w20-r"><span class="label">Weekly review — total ≈ 56k+</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="deliv">
+      <h4>Phase 4 Deliverable</h4>
+      <div class="item"><input type="checkbox" class="chk" data-id="p4-d"><span class="label">A complete draft body — every major scene exists, even the ugly ones</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PHASE 5 ============ -->
+  <div class="phase" data-phase="5" data-start="2026-11-21" data-end="2026-12-04" data-name="The Landing">
+    <div class="phase-head"><span class="pname">Phase 5 — The Landing</span><span class="pdates">Weeks 21–22 · 21 Nov – 04 Dec</span></div>
+    <p class="phase-goal">Type THE END, then don't touch it. The revision lectures are saved for now on purpose. When the draft closes, it goes in a drawer for a month and the writing slots revert to the rotation. Revision begins January 2027.</p>
+
+    <div class="week" data-wk="21">
+      <div class="week-head"><span class="wnum">Week 21</span><span class="wdates">21 – 27 Nov</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w21-h21"><span class="label">Hynes Lecture 21 — Should I Write in Drafts?</span><span class="slot">THU 16:30</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w21-h23"><span class="label">Hynes Lecture 23 — Approaches to Researching Fiction</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w21-s"><span class="label">Six sessions — finish outstanding scenes; bracket-note anything unresolved</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w21-r"><span class="label">Weekly review</span><span class="slot">SUN 19:00</span></div>
+      </div>
+    </div>
+
+    <div class="week" data-wk="22">
+      <div class="week-head"><span class="wnum">Week 22</span><span class="wdates">28 Nov – 04 Dec</span></div>
+      <div class="wsec">
+        <h4>Watch / Listen</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w22-h22"><span class="label">Hynes Lecture 22 — Revision without Tears</span><span class="slot">THU 16:30</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w22-h24"><span class="label">Hynes Lecture 24 — Making a Life as a Fiction Writer</span><span class="slot">SAT 09:00</span></div>
+      </div>
+      <div class="wsec">
+        <h4>Ongoing</h4>
+        <div class="item"><input type="checkbox" class="chk" data-id="w22-s"><span class="label">Final sessions — type THE END</span><span class="slot">NOVEL SLOTS</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w22-memo"><span class="label">Write a one-page "state of the draft" memo to future-you</span><span class="slot">SUN 19:00</span></div>
+        <div class="item"><input type="checkbox" class="chk" data-id="w22-drawer"><span class="label">Draft in the drawer. Celebrate properly.</span><span class="slot">04 DEC</span></div>
+      </div>
+    </div>
+
+    <div class="deliv">
+      <h4>Phase 5 Deliverable — The Whole Point</h4>
+      <div class="item"><input type="checkbox" class="chk" data-id="p5-d"><span class="label">A finished first draft, resting until January. You wrote a novel.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var KEY='first-draft-syllabus-checks';
+  var done={};
+  try{ done=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(done)); }catch(e){} }
+
+  var all = document.querySelectorAll('.chk');
+  all.forEach(function(c){ if(done[c.dataset.id]) c.checked=true; });
+
+  var pfill=document.getElementById('pfill'),
+      pct=document.getElementById('pctLabel'),
+      cnt=document.getElementById('countLabel');
+  function updateProgress(){
+    var t=all.length, n=0;
+    all.forEach(function(c){ if(c.checked) n++; });
+    var p = t ? Math.round(n/t*100) : 0;
+    pfill.style.width = p+'%';
+    pct.textContent = p+'%';
+    cnt.textContent = n+' of '+t+' complete';
+  }
+  updateProgress();
+
+  document.addEventListener('change',function(e){
+    var c=e.target; if(!c.classList.contains('chk')) return;
+    if(c.checked) done[c.dataset.id]=true; else delete done[c.dataset.id];
+    save(); updateProgress();
+  });
+
+  // Live week + phase
+  var START = new Date(2026,6,4);
+  var now = new Date();
+  var wk = Math.floor((now-START)/604800000)+1;
+  var wkEl=document.getElementById('nowWeek'),
+      dEl=document.getElementById('nowDates'),
+      pEl=document.getElementById('nowPhase');
+  if (wk < 1){
+    wkEl.textContent='Starts 04 Jul 2026'; pEl.textContent='—';
+  } else if (wk > 22){
+    wkEl.textContent='Programme complete'; pEl.textContent='Drawer month — revision begins January';
+  } else {
+    wkEl.textContent='Week '+wk+' of 22';
+    var s=new Date(START.getTime()+(wk-1)*604800000), e=new Date(s.getTime()+6*86400000);
+    var f=function(d){return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});};
+    dEl.textContent=f(s)+' – '+f(e);
+    document.querySelectorAll('.phase').forEach(function(ph){
+      var ps=new Date(ph.dataset.start+'T00:00:00'), pe=new Date(ph.dataset.end+'T23:59:59');
+      if(now>=ps&&now<=pe){ ph.classList.add('current'); pEl.innerHTML=ph.dataset.name; }
+    });
+    var wcard=document.querySelector('.week[data-wk="'+wk+'"]');
+    if(wcard) wcard.classList.add('thisweek');
+  }
+})();
+</script>
+</body>
+</html>
