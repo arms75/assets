@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Self-Study Syllabus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --forest:#3f7d5b;
+    --sage:#8ba888;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --paper:#142019;
+    --ink:#c2cfb2;
+    --line:#33493b;
+    --card:#1d2d24;
+    --cream:#ece8db;
+    --gold:#c9a24a;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    padding:44px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  .masthead{border-bottom:2px solid var(--cream);padding-bottom:16px;margin-bottom:16px;}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:8px;}
+  h1{font-size:23px;font-weight:600;color:var(--cream);letter-spacing:-.01em;}
+  .standfirst{margin-top:10px;font-size:12.5px;color:var(--teal);}
+
+  .meta{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 30px;font-size:11.5px;color:var(--teal);}
+  .meta b{color:var(--rust);font-weight:600;letter-spacing:.05em;}
+
+  .panel{
+    border:1px solid var(--line);border-radius:10px;background:var(--card);
+    padding:18px 20px;margin-bottom:26px;font-size:12.5px;
+  }
+  .panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--sage);margin-bottom:10px;}
+  .panel ul{list-style:none;}
+  .panel li{padding-left:16px;position:relative;margin-bottom:7px;}
+  .panel li::before{content:"\203A";position:absolute;left:0;color:var(--rust);}
+  .panel b{color:var(--cream);font-weight:600;}
+
+  /* completed band */
+  .done-band{
+    border:1px solid var(--line);border-left:4px solid var(--sage);
+    border-radius:10px;background:rgba(139,168,136,.07);
+    padding:16px 20px;margin-bottom:30px;
+  }
+  .done-band h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--sage);margin-bottom:12px;}
+  .done-row{
+    display:flex;align-items:center;gap:10px;font-size:12px;padding:5px 0;
+    border-bottom:1px dashed rgba(51,73,59,.5);
+  }
+  .done-row:last-child{border-bottom:none;}
+  .done-check{
+    width:15px;height:15px;border-radius:3px;background:var(--sage);flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--paper);
+  }
+  .done-check::after{content:"\2713";}
+  .done-row .t{color:var(--cream);font-weight:600;}
+  .done-row .c{color:var(--teal);font-size:11px;margin-left:auto;}
+
+  .module{margin-bottom:8px;margin-top:30px;}
+  .module-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:14px;
+  }
+  .module-title{font-size:14px;font-weight:600;color:var(--forest);letter-spacing:.03em;}
+  .module-weeks{font-size:11px;color:var(--rust);letter-spacing:.08em;text-transform:uppercase;}
+
+  .week{
+    border:1px solid var(--line);border-radius:10px;background:var(--card);
+    margin-bottom:14px;overflow:hidden;
+  }
+  .week.current .week-head{background:rgba(196,103,60,.16);}
+  .week.current{border-color:var(--rust);}
+  .week.buffer{border-style:dashed;border-color:var(--gold);}
+  .week-head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:11px 16px;background:rgba(63,125,91,.14);
+  }
+  .week.buffer .week-head{background:rgba(201,162,74,.10);}
+  .week-num{font-size:13px;font-weight:600;color:var(--cream);}
+  .now-tag{font-size:9px;letter-spacing:.1em;background:var(--rust);color:#fff;border-radius:4px;padding:1px 6px;margin-left:8px;}
+  .week-dates{font-size:10.5px;color:var(--teal);letter-spacing:.05em;}
+  .week-topic{font-size:12px;color:var(--sage);flex:1;text-align:right;}
+  .week-body{padding:12px 16px 14px;}
+
+  .row{
+    display:grid;grid-template-columns:74px 1fr 20px;gap:10px;align-items:start;
+    padding:6px 0;font-size:12px;border-bottom:1px dashed rgba(51,73,59,.6);
+  }
+  .row:last-child{border-bottom:none;}
+  .row .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding-top:2px;}
+  .k.book{color:var(--sage);}
+  .k.video{color:var(--rust);}
+  .k.bolt{color:var(--teal);}
+  .k.apply{color:var(--gold);}
+  .k.mile{color:var(--cream);}
+  .row .v{color:var(--ink);}
+  .row .v em{color:var(--teal);font-style:italic;}
+
+  .chk{
+    appearance:none;-webkit-appearance:none;width:14px;height:14px;
+    border:1.5px solid #5c6d5f;border-radius:3px;cursor:pointer;position:relative;
+    justify-self:end;margin-top:2px;
+  }
+  .chk:checked{background:var(--sage);border-color:var(--sage);}
+  .chk:checked::after{content:"\2713";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--paper);}
+
+  .warn{
+    border:1px solid rgba(196,103,60,.4);background:rgba(196,103,60,.08);
+    border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--teal);margin-top:10px;
+  }
+  .warn b{color:var(--rust);}
+
+  .progress-row{
+    display:flex;justify-content:space-between;align-items:center;font-size:11px;
+    color:#6f7d76;border-top:1px solid var(--line);padding-top:14px;margin-top:28px;
+  }
+  .reset-link{color:#6f7d76;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit;font-size:11px;padding:0;}
+  .reset-link:hover{color:var(--rust);}
+
+  @media print{
+    :root{--paper:#fff;--ink:#26312b;--card:#fff;--line:#cfd4c7;--cream:#26312b;--teal:#2f6f6a;}
+    body{background:#fff;}
+    .week{break-inside:avoid;}
+    .chk,.progress-row{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Study &middot; SQL for data analysis</div>
+    <h1>SQL self-study syllabus</h1>
+    <p class="standfirst">Foundations of SQL for data analysis &mdash; retrieval, filtering, functions, aggregation, joins, subqueries &mdash; ending with a documented portfolio project. Primary video track: Alex the Analyst.</p>
+  </div>
+
+  <div class="meta">
+    <div><b>SLOTS</b> &nbsp;Mon 16:45&ndash;17:30 + Sat 11:15&ndash;12:45</div>
+    <div><b>WEEKLY</b> &nbsp;~2&frac14; h</div>
+    <div><b>GOAL</b> &nbsp;A multi-table portfolio query you can show the SE team</div>
+  </div>
+
+  <div class="panel">
+    <h3>The four resources</h3>
+    <ul>
+      <li><b>Video (primary)</b> &mdash; Alex the Analyst, MySQL series (in his free Data Analyst Bootcamp playlist on YouTube). One topic-titled video per week, listed by exact title.</li>
+      <li><b>Book</b> &mdash; Sams Teach Yourself SQL in 10 Minutes (Ben Forta). Assigned chapters each week; ~10 min reads.</li>
+      <li><b>Practice</b> &mdash; SQLBolt (sqlbolt.com), interactive in-browser lessons.</li>
+      <li><b>Sandbox</b> &mdash; MySQL + Alex's sample database, plus read-only SIS queries at work where relevant.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h3>Weekly rhythm</h3>
+    <ul>
+      <li><b>Mon (45 min)</b> &mdash; read the book chapter(s), do the matching SQLBolt lesson(s).</li>
+      <li><b>Sat (90 min)</b> &mdash; watch the Alex video, code along, then write 2&ndash;3 of your own queries against the sandbox.</li>
+      <li><b>Every week</b> &mdash; log one useful query to the running cheat-sheet.</li>
+    </ul>
+  </div>
+
+  <!-- COMPLETED -->
+  <div class="done-band">
+    <h3>Completed &mdash; foundations locked in</h3>
+    <div class="done-row"><span class="done-check"></span><span class="t">Setup &amp; retrieval</span><span class="c">Chapters 1&ndash;2 &middot; SELECT</span></div>
+    <div class="done-row"><span class="done-check"></span><span class="t">Filtering &amp; sorting</span><span class="c">Chapters 3&ndash;4 &middot; WHERE, ORDER BY</span></div>
+    <div class="done-row"><span class="done-check"></span><span class="t">Advanced filtering</span><span class="c">Chapters 5&ndash;6 &middot; AND/OR/IN, wildcards</span></div>
+    <div class="done-row"><span class="done-check"></span><span class="t">Calculated fields</span><span class="c">Chapter 7 &middot; aliases, arithmetic</span></div>
+  </div>
+
+  <!-- MODULE: FUNCTIONS -->
+  <div class="module">
+    <div class="module-head"><span class="module-title">Functions &amp; summarising</span><span class="module-weeks">Weeks 1&ndash;4</span></div>
+
+    <div class="week current">
+      <div class="week-head"><span class="week-num">Week 1<span class="now-tag">START HERE</span></span><span class="week-dates">06&ndash;12 Jul</span><span class="week-topic">String &amp; data functions</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"String Functions"</b></span><input type="checkbox" class="chk" data-id="w1-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 8 (Using Data Manipulation Functions)</span><input type="checkbox" class="chk" data-id="w1-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">Function-related review lessons</span><input type="checkbox" class="chk" data-id="w1-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">Date function &rarr; "records from this month"; TRIM / concat a messy text field</span><input type="checkbox" class="chk" data-id="w1-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Know where to look for the right function; know dialects differ</em></span><input type="checkbox" class="chk" data-id="w1-m"></div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 2</span><span class="week-dates">13&ndash;19 Jul</span><span class="week-topic">CASE statements</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Case Statements"</b></span><input type="checkbox" class="chk" data-id="w2-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Re-read Chapter 7 (Calculated Fields) with CASE logic in mind</span><input type="checkbox" class="chk" data-id="w2-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">Continue interactive review</span><input type="checkbox" class="chk" data-id="w2-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">CASE &rarr; bucket a numeric column into labels (e.g. grade bands)</span><input type="checkbox" class="chk" data-id="w2-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Can branch output conditionally inside a SELECT</em></span><input type="checkbox" class="chk" data-id="w2-m"></div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 3</span><span class="week-dates">20&ndash;26 Jul</span><span class="week-topic">Aggregates + GROUP BY</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Group By and Order By"</b></span><input type="checkbox" class="chk" data-id="w3-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 9 (Summarizing Data) &middot; Chapter 10 (Grouping Data)</span><input type="checkbox" class="chk" data-id="w3-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">Queries with aggregates (parts 1&ndash;2)</span><input type="checkbox" class="chk" data-id="w3-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">"How many records per category"; "average of column X per group"</span><input type="checkbox" class="chk" data-id="w3-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Can answer "how many / how much" questions &mdash; SQL starts feeling useful</em></span><input type="checkbox" class="chk" data-id="w3-m"></div>
+      </div>
+    </div>
+
+    <div class="week buffer">
+      <div class="week-head"><span class="week-num">Week 4</span><span class="week-dates">27 Jul &ndash; 02 Aug</span><span class="week-topic">Consolidation &mdash; built-in buffer</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k apply">Catch up</span><span class="v">Clear any backlog; redo weak SQLBolt lessons</span><input type="checkbox" class="chk" data-id="w4-a"></div>
+        <div class="row"><span class="k apply">Cheat-sheet</span><span class="v">Tidy the running cheat-sheet into sections: retrieve / filter / shape / aggregate</span><input type="checkbox" class="chk" data-id="w4-c"></div>
+        <div class="row"><span class="k apply">Challenge</span><span class="v">From memory: one query using WHERE + CASE + GROUP BY together</span><input type="checkbox" class="chk" data-id="w4-x"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Consolidated &mdash; or caught up without guilt. Ahead? Start Week 5 early.</em></span><input type="checkbox" class="chk" data-id="w4-m"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE: GROUPING & SUBQUERIES -->
+  <div class="module">
+    <div class="module-head"><span class="module-title">Filtering groups &amp; subqueries</span><span class="module-weeks">Weeks 5&ndash;6</span></div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 5</span><span class="week-dates">03&ndash;09 Aug</span><span class="week-topic">HAVING</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Having vs Where"</b></span><input type="checkbox" class="chk" data-id="w5-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 10 (Grouping Data) &mdash; the HAVING half, reread closely</span><input type="checkbox" class="chk" data-id="w5-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">Aggregates with GROUP BY lesson</span><input type="checkbox" class="chk" data-id="w5-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">"Count of students per grade" &rarr; then only groups over N with HAVING</span><input type="checkbox" class="chk" data-id="w5-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Can explain WHERE vs HAVING in one sentence</em></span><input type="checkbox" class="chk" data-id="w5-m"></div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 6</span><span class="week-dates">10&ndash;16 Aug</span><span class="week-topic">Subqueries</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Subqueries"</b></span><input type="checkbox" class="chk" data-id="w6-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 11 (Working with Subqueries)</span><input type="checkbox" class="chk" data-id="w6-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">Review; practice nesting a query inside WHERE</span><input type="checkbox" class="chk" data-id="w6-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">"Records above the overall average" (subquery in WHERE)</span><input type="checkbox" class="chk" data-id="w6-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Two-step questions answered in one query</em></span><input type="checkbox" class="chk" data-id="w6-m"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE: JOINS -->
+  <div class="module">
+    <div class="module-head"><span class="module-title">Joins</span><span class="module-weeks">Weeks 7&ndash;8 &middot; the big one</span></div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 7</span><span class="week-dates">17&ndash;23 Aug</span><span class="week-topic">Inner joins</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Joins"</b> (watch to the end of INNER JOIN; stop there)</span><input type="checkbox" class="chk" data-id="w7-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 12 (Joining Tables)</span><input type="checkbox" class="chk" data-id="w7-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">Multi-table queries with JOINs</span><input type="checkbox" class="chk" data-id="w7-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">Join two related tables (students + enrolments pattern), three ways</span><input type="checkbox" class="chk" data-id="w7-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Can write a basic INNER JOIN and explain why it exists</em></span><input type="checkbox" class="chk" data-id="w7-m"></div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 8</span><span class="week-dates">24&ndash;30 Aug</span><span class="week-topic">Outer joins + UNION</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Joins"</b> (LEFT / RIGHT / OUTER remainder) + <b>"Unions"</b></span><input type="checkbox" class="chk" data-id="w8-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 13 (Creating Advanced Joins) &middot; Chapter 14 (Combining Queries)</span><input type="checkbox" class="chk" data-id="w8-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">OUTER JOIN + NULL lessons</span><input type="checkbox" class="chk" data-id="w8-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">"All students with NO emergency contact" (LEFT JOIN + IS NULL)</span><input type="checkbox" class="chk" data-id="w8-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Pick the right join type for the question &mdash; genuinely useful at work now</em></span><input type="checkbox" class="chk" data-id="w8-m"></div>
+        <div class="warn"><b>If joins haven't clicked by now:</b> take an extra week here and push the rest back one &mdash; the December end-point has room to absorb it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE: MODIFYING + ANALYST TOOLS -->
+  <div class="module">
+    <div class="module-head"><span class="module-title">Modifying data &amp; analyst tools</span><span class="module-weeks">Weeks 9&ndash;10</span></div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 9</span><span class="week-dates">31 Aug &ndash; 06 Sep</span><span class="week-topic">INSERT / UPDATE / DELETE</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 15 (Inserting) &middot; Chapter 16 (Updating &amp; Deleting) &middot; Chapter 17 (Creating &amp; Manipulating Tables)</span><input type="checkbox" class="chk" data-id="w9-b"></div>
+        <div class="row"><span class="k bolt">SQLBolt</span><span class="v">INSERT, UPDATE, DELETE, creating tables (final block)</span><input type="checkbox" class="chk" data-id="w9-s"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">Sandbox only: create a small table, insert rows, update some, delete some</span><input type="checkbox" class="chk" data-id="w9-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Full CRUD cycle understood &mdash; and the danger of UPDATE/DELETE without WHERE</em></span><input type="checkbox" class="chk" data-id="w9-m"></div>
+        <div class="warn"><b>Never</b> run UPDATE or DELETE against live work data while learning.</div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 10</span><span class="week-dates">07&ndash;13 Sep</span><span class="week-topic">Views, CTEs, window functions</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"CTEs"</b> + <b>"Window Functions"</b> (intro watch; both are SE-interview staples)</span><input type="checkbox" class="chk" data-id="w10-v"></div>
+        <div class="row"><span class="k book">Book</span><span class="v">Forta Chapter 18 (Using Views); skim Chapters 19&ndash;22 for awareness only</span><input type="checkbox" class="chk" data-id="w10-b"></div>
+        <div class="row"><span class="k apply">Apply</span><span class="v">Rewrite one Week-6 subquery as a CTE; one ROW_NUMBER() over a partition</span><input type="checkbox" class="chk" data-id="w10-a"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>Can read a CTE in someone else's query without flinching</em></span><input type="checkbox" class="chk" data-id="w10-m"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE: CAPSTONE -->
+  <div class="module">
+    <div class="module-head"><span class="module-title">Capstone</span><span class="module-weeks">Week 11</span></div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-num">Week 11</span><span class="week-dates">14&ndash;20 Sep</span><span class="week-topic">Portfolio project</span></div>
+      <div class="week-body">
+        <div class="row"><span class="k video">Video</span><span class="v">Alex &mdash; <b>"Data Cleaning Portfolio Project"</b> (same bootcamp playlist), code along</span><input type="checkbox" class="chk" data-id="w11-v"></div>
+        <div class="row"><span class="k apply">Build</span><span class="v">Five documented queries on SIS-shaped data: one join, one LEFT JOIN + NULL check, one GROUP BY + HAVING, one subquery or CTE, one CASE report</span><input type="checkbox" class="chk" data-id="w11-a"></div>
+        <div class="row"><span class="k apply">Document</span><span class="v">Each query: the question, the SQL, one line on the answer. Save to the Asset Library</span><input type="checkbox" class="chk" data-id="w11-d"></div>
+        <div class="row"><span class="k mile">Milestone</span><span class="v"><em>A portfolio piece you can show the SE team or talk through in an interview</em></span><input type="checkbox" class="chk" data-id="w11-m"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:26px;">
+    <h3>After Week 11 (finishes ~20 Sep)</h3>
+    <ul>
+      <li><b>Continue:</b> Alex &mdash; "Temp Tables", "Stored Procedures", "Triggers and Events", "Exploratory Data Analysis Project"</li>
+      <li><b>Practice reps:</b> SQLZoo or LeetCode easy-SQL, one per Saturday slot</li>
+      <li><b>At work:</b> volunteer for one SQL-adjacent escalation per fortnight &mdash; the SE-path signal</li>
+    </ul>
+  </div>
+
+  <div class="progress-row">
+    <span id="progress-text"></span>
+    <button class="reset-link" id="reset-btn">reset all ticks</button>
+  </div>
+
+</div>
+
+<script>
+  var KEY = 'sql-syllabus-live';
+  var boxes = document.querySelectorAll('.chk');
+  var progressText = document.getElementById('progress-text');
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+
+  function update(){
+    var done = 0;
+    boxes.forEach(function(b){ if(b.checked) done++; });
+    progressText.textContent = done + ' of ' + boxes.length + ' remaining items done \u00b7 saved on this device';
+  }
+  boxes.forEach(function(b){
+    b.checked = !!state[b.dataset.id];
+    b.addEventListener('change', function(){
+      state[b.dataset.id] = b.checked;
+      localStorage.setItem(KEY, JSON.stringify(state));
+      update();
+    });
+  });
+  document.getElementById('reset-btn').addEventListener('click', function(){
+    state = {};
+    localStorage.setItem(KEY, JSON.stringify(state));
+    boxes.forEach(function(b){ b.checked = false; });
+    update();
+  });
+  update();
+</script>
+
+</body>
+</html>

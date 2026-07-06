@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curiosity Rotation Syllabus &mdash; Block A</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --forest:#3f7d5b;
+    --sage:#8ba888;
+    --teal:#5fa39a;
+    --rust:#c4673c;
+    --paper:#142019;
+    --ink:#c2cfb2;
+    --line:#33493b;
+    --card:#1d2d24;
+    --cream:#ece8db;
+    --gold:#c9a24a;
+    --stone:#6a8fa3;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    padding:44px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  .masthead{border-bottom:2px solid var(--cream);padding-bottom:16px;margin-bottom:16px;}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:8px;}
+  h1{font-size:23px;font-weight:600;color:var(--cream);letter-spacing:-.01em;}
+  .standfirst{margin-top:10px;font-size:12.5px;color:var(--teal);}
+
+  .meta{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 30px;font-size:11.5px;color:var(--teal);}
+  .meta b{color:var(--rust);font-weight:600;letter-spacing:.05em;}
+
+  .panel{
+    border:1px solid var(--line);border-radius:10px;background:var(--card);
+    padding:18px 20px;margin-bottom:26px;font-size:12.5px;
+  }
+  .panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--sage);margin-bottom:10px;}
+  .panel ul{list-style:none;}
+  .panel li{padding-left:16px;position:relative;margin-bottom:7px;}
+  .panel li::before{content:"\203A";position:absolute;left:0;color:var(--rust);}
+  .panel b{color:var(--cream);font-weight:600;}
+
+  /* completed band */
+  .done-band{
+    border:1px solid var(--line);border-left:4px solid var(--sage);
+    border-radius:10px;background:rgba(139,168,136,.07);
+    padding:16px 20px;margin-bottom:30px;
+  }
+  .done-band h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--sage);margin-bottom:12px;}
+  .done-row{
+    display:flex;align-items:center;gap:10px;font-size:12px;padding:5px 0;
+    border-bottom:1px dashed rgba(51,73,59,.5);
+  }
+  .done-row:last-child{border-bottom:none;}
+  .done-check{
+    width:15px;height:15px;border-radius:3px;background:var(--sage);flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--paper);
+  }
+  .done-check::after{content:"\2713";}
+  .done-row .t{color:var(--cream);font-weight:600;}
+  .done-row .c{color:var(--teal);font-size:11px;margin-left:auto;text-align:right;}
+
+  .block-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--line);padding-bottom:8px;margin:30px 0 16px;
+  }
+  .block-title{font-size:15px;font-weight:600;color:var(--stone);letter-spacing:.02em;}
+  .block-weeks{font-size:11px;color:var(--rust);letter-spacing:.08em;text-transform:uppercase;}
+
+  .phase-label{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+    margin:22px 0 10px;font-weight:600;
+  }
+
+  .week{
+    border:1px solid var(--line);border-radius:10px;background:var(--card);
+    margin-bottom:12px;overflow:hidden;
+  }
+  .week.current .week-head{background:rgba(196,103,60,.16);}
+  .week.current{border-color:var(--rust);}
+  .week.essay{border-color:var(--gold);}
+  .week-head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:10px 16px;background:rgba(106,143,163,.12);
+  }
+  .week.essay .week-head{background:rgba(201,162,74,.10);}
+  .week-num{font-size:13px;font-weight:600;color:var(--cream);}
+  .now-tag{font-size:9px;letter-spacing:.1em;background:var(--rust);color:#fff;border-radius:4px;padding:1px 6px;margin-left:8px;}
+  .week-dates{font-size:10.5px;color:var(--teal);letter-spacing:.05em;}
+  .week-topic{font-size:12px;color:var(--stone);flex:1;text-align:right;}
+  .week-body{padding:11px 16px 13px;}
+
+  .row{
+    display:grid;grid-template-columns:64px 1fr 20px;gap:10px;align-items:start;
+    padding:6px 0;font-size:12px;border-bottom:1px dashed rgba(51,73,59,.6);
+  }
+  .row:last-child{border-bottom:none;}
+  .row .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding-top:2px;}
+  .k.watch{color:var(--rust);}
+  .k.read{color:var(--sage);}
+  .k.do{color:var(--gold);}
+  .row .v{color:var(--ink);}
+  .row .v b{color:var(--cream);font-weight:600;}
+  .row .v em{color:var(--teal);font-style:italic;}
+
+  .chk{
+    appearance:none;-webkit-appearance:none;width:14px;height:14px;
+    border:1.5px solid #5c6d5f;border-radius:3px;cursor:pointer;position:relative;
+    justify-self:end;margin-top:2px;
+  }
+  .chk:checked{background:var(--sage);border-color:var(--sage);}
+  .chk:checked::after{content:"\2713";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--paper);}
+
+  .essay-prompts{
+    border:1px solid rgba(201,162,74,.35);background:rgba(201,162,74,.07);
+    border-radius:8px;padding:12px 16px;margin:22px 0;font-size:12px;color:var(--teal);
+  }
+  .essay-prompts h4{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+  .essay-prompts ol{margin-left:16px;}
+  .essay-prompts li{margin-bottom:5px;}
+
+  .progress-row{
+    display:flex;justify-content:space-between;align-items:center;font-size:11px;
+    color:#6f7d76;border-top:1px solid var(--line);padding-top:14px;margin-top:28px;
+  }
+  .reset-link{color:#6f7d76;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit;font-size:11px;padding:0;}
+  .reset-link:hover{color:var(--rust);}
+
+  @media print{
+    :root{--paper:#fff;--ink:#26312b;--card:#fff;--line:#cfd4c7;--cream:#26312b;--teal:#2f6f6a;}
+    body{background:#fff;}
+    .week{break-inside:avoid;}
+    .chk,.progress-row{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Study &middot; Curiosity rotation</div>
+    <h1>Curiosity rotation &mdash; Block A</h1>
+    <p class="standfirst">The History of Life on Earth, paced to run alongside draft season: one focused hour a week, video &rarr; reading &rarr; one applied step. Physics &amp; Space (Block B) begins January 2027.</p>
+  </div>
+
+  <div class="meta">
+    <div><b>SLOT</b> &nbsp;Sunday 11:00&ndash;12:00</div>
+    <div><b>WEEKLY</b> &nbsp;1 h</div>
+    <div><b>RUNS TO</b> &nbsp;early December (matches the novel programme)</div>
+  </div>
+
+  <div class="panel">
+    <h3>The three resources</h3>
+    <ul>
+      <li><b>Course spine</b> &mdash; Dino 101: Dinosaur Paleobiology (Coursera, University of Alberta). Free, 12 lessons. Its set text is Brusatte, so reading feeds straight in.</li>
+      <li><b>Reading spine</b> &mdash; The Rise and Fall of the Dinosaurs (Brusatte) &rarr; A Short History of Nearly Everything (Bryson) &rarr; The Rise and Reign of the Mammals (Brusatte).</li>
+      <li><b>Watch</b> &mdash; PBS Eons (YouTube), specific ~10-min episodes named per week.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h3>How the hour runs</h3>
+    <ul>
+      <li><b>0&ndash;25 min</b> &mdash; the week's Dino 101 lesson (or the named Eons episodes), take the lesson quiz where there is one.</li>
+      <li><b>25&ndash;55 min</b> &mdash; the assigned reading.</li>
+      <li><b>Last 5 min</b> &mdash; one line in your rotation log: the single most surprising thing this week.</li>
+      <li><b>Behind?</b> Watch only, skip the reading. Continuity beats completeness.</li>
+    </ul>
+  </div>
+
+  <!-- COMPLETED -->
+  <div class="done-band">
+    <h3>Completed</h3>
+    <div class="done-row"><span class="done-check"></span><span class="t">Dino 101 &mdash; Lesson 1: Appearance &amp; Anatomy</span><span class="c">+ Brusatte, Prologue &amp; Ch. 1</span></div>
+    <div class="done-row"><span class="done-check"></span><span class="t">Dino 101 &mdash; Lesson 2: Death &amp; Fossilization</span><span class="c">+ Brusatte, Ch. 2</span></div>
+  </div>
+
+  <div class="block-head">
+    <span class="block-title">Block A &mdash; The History of Life on Earth</span>
+    <span class="block-weeks">22 weeks</span>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-label">Phase 1 &middot; Dino 101 &mdash; the spine (Weeks 1&ndash;10)</div>
+
+  <div class="week current">
+    <div class="week-head"><span class="week-num">Week 1<span class="now-tag">START HERE</span></span><span class="week-dates">05&ndash;11 Jul</span><span class="week-topic">Eating</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 3: Eating</b></span><input type="checkbox" class="chk" data-id="c-w1a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; Ch. 3</span><input type="checkbox" class="chk" data-id="c-w1b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w1c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 2</span><span class="week-dates">12&ndash;18 Jul</span><span class="week-topic">Moving around</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 4: Moving Around</b></span><input type="checkbox" class="chk" data-id="c-w2a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; Ch. 4</span><input type="checkbox" class="chk" data-id="c-w2b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w2c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 3</span><span class="week-dates">19&ndash;25 Jul</span><span class="week-topic">Birth, growth &amp; reproduction</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 5: Birth, Growth &amp; Reproduction</b></span><input type="checkbox" class="chk" data-id="c-w3a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; Ch. 5</span><input type="checkbox" class="chk" data-id="c-w3b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w3c"></div>
+    </div>
+  </div>
+
+  <div class="week essay">
+    <div class="week-head"><span class="week-num">Week 4</span><span class="week-dates">26 Jul &ndash; 01 Aug</span><span class="week-topic">Attack &amp; defence &middot; essay window opens</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 6: Attack &amp; Defense</b></span><input type="checkbox" class="chk" data-id="c-w4a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; Ch. 6</span><input type="checkbox" class="chk" data-id="c-w4b"></div>
+      <div class="row"><span class="k do">Note</span><span class="v">Pick an essay thread from the prompts below; jot the claim only</span><input type="checkbox" class="chk" data-id="c-w4c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 5</span><span class="week-dates">02&ndash;08 Aug</span><span class="week-topic">What is a species?</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 7: What is a Species?</b></span><input type="checkbox" class="chk" data-id="c-w5a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; Ch. 7</span><input type="checkbox" class="chk" data-id="c-w5b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w5c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 6</span><span class="week-dates">09&ndash;15 Aug</span><span class="week-topic">Evolution</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 8: Evolution</b></span><input type="checkbox" class="chk" data-id="c-w6a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; Ch. 8</span><input type="checkbox" class="chk" data-id="c-w6b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w6c"></div>
+    </div>
+  </div>
+
+  <div class="week essay">
+    <div class="week-head"><span class="week-num">Week 7</span><span class="week-dates">16&ndash;22 Aug</span><span class="week-topic">Write essay #1</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k do">Essay</span><span class="v"><b>Draft essay #1</b> (500&ndash;1000 words) on your Week-4 thread. Claim, evidence, the connection you nearly missed</span><input type="checkbox" class="chk" data-id="c-w7a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Fall</em> &mdash; finish the closing chapter / epilogue</span><input type="checkbox" class="chk" data-id="c-w7b"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 8</span><span class="week-dates">23&ndash;29 Aug</span><span class="week-topic">Geologic time</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 9: Stratigraphy &amp; Geologic Time</b></span><input type="checkbox" class="chk" data-id="c-w8a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Bryson, <em>A Short History</em> &mdash; the geology / deep-time chapters (Part III)</span><input type="checkbox" class="chk" data-id="c-w8b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w8c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 9</span><span class="week-dates">30 Aug &ndash; 05 Sep</span><span class="week-topic">Plate tectonics</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 10: Paleogeography &amp; Plate Tectonics</b></span><input type="checkbox" class="chk" data-id="c-w9a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Bryson, <em>A Short History</em> &mdash; the plate-tectonics / shifting-continents chapters</span><input type="checkbox" class="chk" data-id="c-w9b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w9c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 10</span><span class="week-dates">06&ndash;12 Sep</span><span class="week-topic">Origins &amp; extinction &mdash; Dino 101 finished</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Course</span><span class="v">Dino 101 &mdash; <b>Lesson 11: Dinosaur Origins</b> + <b>Lesson 12: Dinosaur Extinction</b> + course wrap quiz</span><input type="checkbox" class="chk" data-id="c-w10a"></div>
+      <div class="row"><span class="k do">Mark</span><span class="v"><em>Dino 101 complete &mdash; the paleobiology backbone is in</em></span><input type="checkbox" class="chk" data-id="c-w10b"></div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-label">Phase 2 &middot; Deep time &mdash; the wider planet (Weeks 11&ndash;16)</div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 11</span><span class="week-dates">13&ndash;19 Sep</span><span class="week-topic">Origin of life</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k read">Read</span><span class="v">Bryson, <em>A Short History</em> &mdash; the origin-of-life chapters</span><input type="checkbox" class="chk" data-id="c-w11a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the LUCA (last universal common ancestor) episode</span><input type="checkbox" class="chk" data-id="c-w11b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w11c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 12</span><span class="week-dates">20&ndash;26 Sep</span><span class="week-topic">Life onto land</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k read">Read</span><span class="v">Bryson, <em>A Short History</em> &mdash; the early-life / Cambrian chapters</span><input type="checkbox" class="chk" data-id="c-w12a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; <b>"When Fish First Breathed Air"</b> (Tiktaalik)</span><input type="checkbox" class="chk" data-id="c-w12b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w12c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 13</span><span class="week-dates">27 Sep &ndash; 03 Oct</span><span class="week-topic">Carboniferous giants</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the giant-insects / Carboniferous episode</span><input type="checkbox" class="chk" data-id="c-w13a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Bryson &mdash; any outstanding early-life chapters</span><input type="checkbox" class="chk" data-id="c-w13b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w13c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 14</span><span class="week-dates">04&ndash;10 Oct</span><span class="week-topic">The Great Dying</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the Permian extinction ("Great Dying") episode</span><input type="checkbox" class="chk" data-id="c-w14a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the "who survived the Great Dying" follow-up</span><input type="checkbox" class="chk" data-id="c-w14b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w14c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 15</span><span class="week-dates">11&ndash;17 Oct</span><span class="week-topic">Dinosaurs, revisited</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the dinosaur-colours episode ("what colour were they")</span><input type="checkbox" class="chk" data-id="c-w15a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the T. rex tiny-arms episode</span><input type="checkbox" class="chk" data-id="c-w15b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w15c"></div>
+    </div>
+  </div>
+
+  <div class="week essay">
+    <div class="week-head"><span class="week-num">Week 16</span><span class="week-dates">18&ndash;24 Oct</span><span class="week-topic">Write essay #2</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k do">Essay</span><span class="v"><b>Draft essay #2</b> (500&ndash;1000 words) &mdash; a deep-time prompt below, or your own thread</span><input type="checkbox" class="chk" data-id="c-w16a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Bryson &mdash; finish any outstanding deep-time chapters</span><input type="checkbox" class="chk" data-id="c-w16b"></div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-label">Phase 3 &middot; After the dinosaurs (Weeks 17&ndash;22)</div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 17</span><span class="week-dates">25&ndash;31 Oct</span><span class="week-topic">The mammals begin</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Reign of the Mammals</em> &mdash; Ch. 1</span><input type="checkbox" class="chk" data-id="c-w17a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; <b>"When Whales Walked"</b></span><input type="checkbox" class="chk" data-id="c-w17b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w17c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 18</span><span class="week-dates">01&ndash;07 Nov</span><span class="week-topic">Rise of the mammals</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Reign</em> &mdash; Ch. 2&ndash;3</span><input type="checkbox" class="chk" data-id="c-w18a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; <b>"The Time Terror Birds Invaded"</b></span><input type="checkbox" class="chk" data-id="c-w18b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w18c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 19</span><span class="week-dates">08&ndash;14 Nov</span><span class="week-topic">Ice-age megafauna</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Reign</em> &mdash; the Pleistocene / megafauna chapters</span><input type="checkbox" class="chk" data-id="c-w19a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; the Smilodon / sabre-tooth cat episode</span><input type="checkbox" class="chk" data-id="c-w19b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w19c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 20</span><span class="week-dates">15&ndash;21 Nov</span><span class="week-topic">Us</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k read">Read</span><span class="v">Brusatte, <em>Rise &amp; Reign</em> &mdash; closing chapters (primates &rarr; humans)</span><input type="checkbox" class="chk" data-id="c-w20a"></div>
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; an episode on other human species (Neanderthals / Denisovans)</span><input type="checkbox" class="chk" data-id="c-w20b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w20c"></div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="week-head"><span class="week-num">Week 21</span><span class="week-dates">22&ndash;28 Nov</span><span class="week-topic">Loose ends &amp; wonder</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k watch">Eons</span><span class="v">PBS Eons &mdash; free choice: pick any episode a prior week made you curious about</span><input type="checkbox" class="chk" data-id="c-w21a"></div>
+      <div class="row"><span class="k read">Read</span><span class="v">Finish <em>Rise &amp; Reign</em></span><input type="checkbox" class="chk" data-id="c-w21b"></div>
+      <div class="row"><span class="k do">Log</span><span class="v">One surprising thing</span><input type="checkbox" class="chk" data-id="c-w21c"></div>
+    </div>
+  </div>
+
+  <div class="week essay">
+    <div class="week-head"><span class="week-num">Week 22</span><span class="week-dates">29 Nov &ndash; 06 Dec</span><span class="week-topic">Block close</span></div>
+    <div class="week-body">
+      <div class="row"><span class="k do">Essay</span><span class="v"><b>Optional essay #3</b> &mdash; the whole arc: what does deep time do to your sense of significance?</span><input type="checkbox" class="chk" data-id="c-w22a"></div>
+      <div class="row"><span class="k do">Mark</span><span class="v"><em>Block A complete. Physics &amp; Space (Block B) starts January 2027.</em></span><input type="checkbox" class="chk" data-id="c-w22b"></div>
+    </div>
+  </div>
+
+  <div class="essay-prompts">
+    <h4>Essay threads &mdash; History of Life</h4>
+    <ol>
+      <li>What does "deep time" do to your sense of human significance &mdash; humbling, freeing, or unsettling?</li>
+      <li>Pick one extinction event. What's most surprising about what survived versus what didn't?</li>
+      <li>If the continents hadn't drifted, how different might life look? Use one concrete example.</li>
+    </ol>
+    <div style="margin-top:8px;font-size:11px;">Lit-essay in spirit: a claim, evidence, and the connections you missed making &mdash; not a book report. Any prompt is abandonable the instant your own idea takes over.</div>
+  </div>
+
+  <div class="panel">
+    <h3>Off-programme &amp; deferred</h3>
+    <ul>
+      <li><b>Blender</b> &mdash; its own weekly Saturday slot (18:00&ndash;19:30), a continuous project track, not part of this rotation.</li>
+      <li><b>Block B: Conceptual Physics &amp; Space</b> &mdash; Khan Academy + Hewitt + Sagan/Tyson. Starts January 2027 alongside novel revision, same 1 h Sunday slot.</li>
+      <li><b>Prehistoric Planet</b> (Apple TV+) / extra Eons &mdash; pleasure viewing, never an obligation.</li>
+    </ul>
+  </div>
+
+  <div class="progress-row">
+    <span id="progress-text"></span>
+    <button class="reset-link" id="reset-btn">reset all ticks</button>
+  </div>
+
+</div>
+
+<script>
+  var KEY = 'curiosity-rotation-blockA-live';
+  var boxes = document.querySelectorAll('.chk');
+  var progressText = document.getElementById('progress-text');
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+
+  function update(){
+    var done = 0;
+    boxes.forEach(function(b){ if(b.checked) done++; });
+    progressText.textContent = done + ' of ' + boxes.length + ' remaining items done \u00b7 saved on this device';
+  }
+  boxes.forEach(function(b){
+    b.checked = !!state[b.dataset.id];
+    b.addEventListener('change', function(){
+      state[b.dataset.id] = b.checked;
+      localStorage.setItem(KEY, JSON.stringify(state));
+      update();
+    });
+  });
+  document.getElementById('reset-btn').addEventListener('click', function(){
+    state = {};
+    localStorage.setItem(KEY, JSON.stringify(state));
+    boxes.forEach(function(b){ b.checked = false; });
+    update();
+  });
+  update();
+</script>
+
+</body>
+</html>
