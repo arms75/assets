@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neck & Posture Reset</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #161f1c;
+    --surface: #1e2925;
+    --surface-raised: #253430;
+    --border: #33443d;
+    --sage: #93ab8e;
+    --teal: #4f8079;
+    --rust: #b5674a;
+    --text: #e8e4d6;
+    --text-dim: #a9b3ac;
+    --text-faint: #6f7d76;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+    line-height: 1.5;
+  }
+
+  header{
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 6px;
+  }
+
+  h1{
+    font-size: 22px;
+    margin: 0 0 6px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle{
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+
+  .why{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--sage);
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    border-radius: 2px;
+  }
+
+  .why b{ color: var(--sage); }
+
+  section{ margin-bottom: 28px; }
+
+  .section-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .section-title{
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  .section-freq{
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  .exercise{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .exercise:hover{ border-color: var(--teal); }
+
+  .exercise.done{
+    background: var(--surface-raised);
+    border-color: var(--sage);
+  }
+
+  .exercise.done .ex-name{ color: var(--sage); }
+
+  .checkbox{
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--text-faint);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--bg);
+  }
+
+  .exercise.done .checkbox{
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .exercise.done .checkbox::after{ content: "✓"; }
+
+  .ex-body{ flex: 1; }
+
+  .ex-name{
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .ex-detail{
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .caution{
+    background: rgba(181,103,74,0.08);
+    border: 1px solid rgba(181,103,74,0.35);
+    border-radius: 3px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+  }
+
+  .caution .cap{
+    color: var(--rust);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .progress-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-faint);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 8px;
+  }
+
+  .reset-link{
+    color: var(--text-faint);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 11px;
+    padding: 0;
+  }
+
+  .reset-link:hover{ color: var(--rust); }
+
+  @media print{
+    body{ background: #fff; color: #111; }
+    .exercise, .why, .caution{ background: #fff; border-color: #ccc; }
+    .section-title{ color: #333; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Wellness &middot; Posture</div>
+  <h1>Neck &amp; Posture Reset</h1>
+  <div class="subtitle">For forward head posture / chin-line correction</div>
+</header>
+
+<div class="why">
+  <b>Why:</b> forward head posture shortens the neck and compresses soft tissue under the jaw, creating a chin-line fold independent of body fat. Deep neck flexors (chin tucks) and upper-back strength pull the head back into alignment; extensors are already overactive, so they're deprioritised for now.
+</div>
+
+<section>
+  <div class="section-head">
+    <span class="section-title">Daily essentials</span>
+    <span class="section-freq">every day</span>
+  </div>
+
+  <div class="exercise" data-id="chin-tuck">
+    <div class="checkbox"></div>
+    <div class="ex-body">
+      <div class="ex-name">Chin tucks</div>
+      <div class="ex-detail">3 sets &times; 10&ndash;15, hold 5s. Draw chin straight back, no downward nod.</div>
+    </div>
+  </div>
+
+  <div class="exercise" data-id="wall-angels">
+    <div class="checkbox"></div>
+    <div class="ex-body">
+      <div class="ex-name">Wall angels</div>
+      <div class="ex-detail">2 sets &times; 10. Head, upper back, hips flat to wall throughout.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <span class="section-title">Mon / Wed / Fri</span>
+    <span class="section-freq">strength + stretch</span>
+  </div>
+
+  <div class="exercise" data-id="neck-flexion">
+    <div class="checkbox"></div>
+    <div class="ex-body">
+      <div class="ex-name">Weighted neck flexion (bench)</div>
+      <div class="ex-detail">3 sets, aim 12&ndash;15 reps. Face-up, head off end of bench, curl chin to chest. Currently capped ~12 &mdash; that's fine, let reps rise before adding load.</div>
+    </div>
+  </div>
+
+  <div class="exercise" data-id="pec-stretch">
+    <div class="checkbox"></div>
+    <div class="ex-body">
+      <div class="ex-name">Doorway pec stretch</div>
+      <div class="ex-detail">2 sets &times; 30s per side. Forearm on frame, step through gently.</div>
+    </div>
+  </div>
+
+  <div class="exercise" data-id="levator-stretch">
+    <div class="checkbox"></div>
+    <div class="ex-body">
+      <div class="ex-name">Levator scap / upper trap stretch</div>
+      <div class="ex-detail">2 sets &times; 30s per side. Tilt head toward armpit, light hand overpressure.</div>
+    </div>
+  </div>
+
+  <div class="exercise" data-id="thoracic-extension">
+    <div class="checkbox"></div>
+    <div class="ex-body">
+      <div class="ex-name">Thoracic extension over foam roller</div>
+      <div class="ex-detail">1&ndash;2 sets &times; 8&ndash;10, slow. Roller across mid-back, extend gently over it.</div>
+    </div>
+  </div>
+</section>
+
+<div class="caution">
+  <span class="cap">Holding off for now</span>
+  Face-down weighted neck extensions. Feeling easy is expected &mdash; extensors are already overactive in forward head posture. Revisit once flexion reps climb past 15&ndash;20 comfortably and chin tucks feel automatic.
+</div>
+
+<div class="progress-row">
+  <span id="progress-text">0 of 7 done today</span>
+  <button class="reset-link" id="reset-btn">reset today</button>
+</div>
+
+<script>
+  const STORAGE_KEY = 'neck-posture-reset-' + new Date().toISOString().slice(0,10);
+  const exercises = document.querySelectorAll('.exercise');
+  const progressText = document.getElementById('progress-text');
+
+  function loadState(){
+    let state = {};
+    try{
+      state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    }catch(e){ state = {}; }
+    exercises.forEach(ex => {
+      const id = ex.dataset.id;
+      if(state[id]){ ex.classList.add('done'); }
+    });
+    updateProgress();
+  }
+
+  function saveState(){
+    const state = {};
+    exercises.forEach(ex => {
+      state[ex.dataset.id] = ex.classList.contains('done');
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function updateProgress(){
+    const done = document.querySelectorAll('.exercise.done').length;
+    progressText.textContent = done + ' of ' + exercises.length + ' done today';
+  }
+
+  exercises.forEach(ex => {
+    ex.addEventListener('click', () => {
+      ex.classList.toggle('done');
+      saveState();
+      updateProgress();
+    });
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    exercises.forEach(ex => ex.classList.remove('done'));
+    saveState();
+    updateProgress();
+  });
+
+  loadState();
+</script>
+
+</body>
+</html>
