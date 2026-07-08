@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading List — Genres in Translation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1714;
+    --surface: #15231c;
+    --surface-2: #1b2d24;
+    --line: #2a3d33;
+    --ink: #d7e0d2;
+    --ink-muted: #8b9788;
+    --ink-faint: #5f6c5c;
+    --sage: #9caf88;
+    --teal: #5fab9b;
+    --rust: #c06a3e;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* ---- Masthead ---- */
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.3rem;
+  }
+
+  .sub {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    font-style: italic;
+    max-width: 46ch;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  button {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--surface);
+    color: var(--ink-muted);
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  button:hover { color: var(--ink); border-color: var(--teal); }
+
+  /* ---- Progress ---- */
+  .progress-block {
+    margin-bottom: 2.25rem;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+  }
+
+  .progress-count { color: var(--rust); font-weight: 600; }
+
+  .bar {
+    height: 6px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .fill {
+    height: 100%;
+    background: var(--rust);
+    width: 0%;
+    transition: width .25s ease;
+  }
+
+  /* ---- Sections ---- */
+  .section { margin-bottom: 2.1rem; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .section-num {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--rust);
+    letter-spacing: 0.05em;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sage);
+    letter-spacing: 0.01em;
+  }
+
+  .section-count {
+    margin-left: auto;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+  }
+
+  /* ---- Items ---- */
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.65rem 0.15rem;
+    border-bottom: 1px solid rgba(42,61,51,0.5);
+  }
+  .item:last-child { border-bottom: none; }
+
+  .item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    margin-top: 0.2rem;
+    border: 1.5px solid var(--ink-faint);
+    background: var(--surface);
+    cursor: pointer;
+    position: relative;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .item input[type="checkbox"]:hover { border-color: var(--teal); }
+  .item input[type="checkbox"]:checked {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .item input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--bg);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .item-body { flex: 1; min-width: 0; }
+
+  .item-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink);
+    transition: color .15s ease;
+  }
+
+  .item-meta {
+    font-size: 0.74rem;
+    color: var(--ink-muted);
+    margin-top: 0.15rem;
+  }
+
+  .item-year {
+    color: var(--ink-faint);
+  }
+
+  .item.done .item-title {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    text-decoration-color: var(--ink-faint);
+  }
+  .item.done .item-meta { color: var(--ink-faint); opacity: 0.7; }
+
+  /* ---- Footer ---- */
+  footer {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.7rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    body {
+      background: #fff;
+      color: #1c2b23;
+      padding: 0.5in;
+      font-size: 11px;
+    }
+    .actions { display: none; }
+    .bar { border-color: #1c2b23; }
+    .fill { background: #8C3D1C; }
+    .section-title { color: #2B6259; }
+    .section-num { color: #8C3D1C; }
+    .item { border-bottom: 1px solid #ddd; }
+    .item input[type="checkbox"] {
+      border-color: #1c2b23;
+      background: #fff;
+    }
+    .item input[type="checkbox"]:checked { background: #2B6259; border-color: #2B6259; }
+    footer { color: #666; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <span class="eyebrow">Reading List</span>
+      <h1>Genres in Translation</h1>
+      <p class="sub">A cross-genre reading list, chronological within each category — classics alongside contemporary and international voices.</p>
+    </div>
+    <div class="actions">
+      <button id="reset">Reset</button>
+      <button id="print">Print</button>
+    </div>
+  </div>
+
+  <div class="progress-block">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span><span class="progress-count" id="count">0</span> of <span id="total">71</span> read</span>
+    </div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+  </div>
+
+  <!-- 00 Fantasy -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">00</span>
+      <span class="section-title">Fantasy</span>
+      <span class="section-count">7 titles</span>
+    </div>
+    <div class="items" data-section="fantasy">
+      <label class="item"><input type="checkbox" data-id="fantasy-1"><div class="item-body"><div class="item-title">One Thousand and One Nights</div><div class="item-meta">Various — <span class="item-year">8th–10th c.</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="fantasy-2"><div class="item-body"><div class="item-title">The Hobbit</div><div class="item-meta">J.R.R. Tolkien — <span class="item-year">1937</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="fantasy-3"><div class="item-body"><div class="item-title">A Wizard of Earthsea</div><div class="item-meta">Ursula K. Le Guin — <span class="item-year">1968</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="fantasy-4"><div class="item-body"><div class="item-title">Who Fears Death</div><div class="item-meta">Nnedi Okorafor — <span class="item-year">2010</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="fantasy-5"><div class="item-body"><div class="item-title">The Fifth Season</div><div class="item-meta">N.K. Jemisin — <span class="item-year">2015</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="fantasy-6"><div class="item-body"><div class="item-title">Sorcerer to the Crown</div><div class="item-meta">Zen Cho — <span class="item-year">2015</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="fantasy-7"><div class="item-body"><div class="item-title">Children of Blood and Bone</div><div class="item-meta">Tomi Adeyemi — <span class="item-year">2018</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 01 Science Fiction -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <span class="section-title">Science Fiction</span>
+      <span class="section-count">6 titles</span>
+    </div>
+    <div class="items" data-section="scifi">
+      <label class="item"><input type="checkbox" data-id="scifi-1"><div class="item-body"><div class="item-title">Frankenstein</div><div class="item-meta">Mary Shelley — <span class="item-year">1818</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="scifi-2"><div class="item-body"><div class="item-title">The Left Hand of Darkness</div><div class="item-meta">Ursula K. Le Guin — <span class="item-year">1969</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="scifi-3"><div class="item-body"><div class="item-title">Kindred</div><div class="item-meta">Octavia Butler — <span class="item-year">1979</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="scifi-4"><div class="item-body"><div class="item-title">Never Let Me Go</div><div class="item-meta">Kazuo Ishiguro — <span class="item-year">2005</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="scifi-5"><div class="item-body"><div class="item-title">The Three-Body Problem</div><div class="item-meta">Liu Cixin — <span class="item-year">2008 / 2014</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="scifi-6"><div class="item-body"><div class="item-title">Ancillary Justice</div><div class="item-meta">Ann Leckie — <span class="item-year">2013</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 02 Romance -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <span class="section-title">Romance</span>
+      <span class="section-count">6 titles</span>
+    </div>
+    <div class="items" data-section="romance">
+      <label class="item"><input type="checkbox" data-id="romance-1"><div class="item-body"><div class="item-title">Pride and Prejudice</div><div class="item-meta">Jane Austen — <span class="item-year">1813</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="romance-2"><div class="item-body"><div class="item-title">Jane Eyre</div><div class="item-meta">Charlotte Brontë — <span class="item-year">1847</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="romance-3"><div class="item-body"><div class="item-title">The Age of Innocence</div><div class="item-meta">Edith Wharton — <span class="item-year">1920</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="romance-4"><div class="item-body"><div class="item-title">Indigo</div><div class="item-meta">Beverly Jenkins — <span class="item-year">1996</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="romance-5"><div class="item-body"><div class="item-title">The Kiss Quotient</div><div class="item-meta">Helen Hoang — <span class="item-year">2018</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="romance-6"><div class="item-body"><div class="item-title">Red, White & Royal Blue</div><div class="item-meta">Casey McQuiston — <span class="item-year">2019</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 03 Mystery, Crime & Thriller -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <span class="section-title">Mystery, Crime & Thriller</span>
+      <span class="section-count">6 titles</span>
+    </div>
+    <div class="items" data-section="mystery">
+      <label class="item"><input type="checkbox" data-id="mystery-1"><div class="item-body"><div class="item-title">The Murders in the Rue Morgue</div><div class="item-meta">Edgar Allan Poe — <span class="item-year">1841</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="mystery-2"><div class="item-body"><div class="item-title">A Study in Scarlet</div><div class="item-meta">Arthur Conan Doyle — <span class="item-year">1887</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="mystery-3"><div class="item-body"><div class="item-title">The Mysterious Affair at Styles</div><div class="item-meta">Agatha Christie — <span class="item-year">1920</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="mystery-4"><div class="item-body"><div class="item-title">Devil in a Blue Dress</div><div class="item-meta">Walter Mosley — <span class="item-year">1990</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="mystery-5"><div class="item-body"><div class="item-title">Gone Girl</div><div class="item-meta">Gillian Flynn — <span class="item-year">2012</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="mystery-6"><div class="item-body"><div class="item-title">My Sister, the Serial Killer</div><div class="item-meta">Oyinkan Braithwaite — <span class="item-year">2018</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 04 Horror -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <span class="section-title">Horror</span>
+      <span class="section-count">5 titles</span>
+    </div>
+    <div class="items" data-section="horror">
+      <label class="item"><input type="checkbox" data-id="horror-1"><div class="item-body"><div class="item-title">The Turn of the Screw</div><div class="item-meta">Henry James — <span class="item-year">1898</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="horror-2"><div class="item-body"><div class="item-title">The Haunting of Hill House</div><div class="item-meta">Shirley Jackson — <span class="item-year">1959</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="horror-3"><div class="item-body"><div class="item-title">The Ballad of Black Tom</div><div class="item-meta">Victor LaValle — <span class="item-year">2016</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="horror-4"><div class="item-body"><div class="item-title">The Only Good Indians</div><div class="item-meta">Stephen Graham Jones — <span class="item-year">2020</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="horror-5"><div class="item-body"><div class="item-title">Ring Shout</div><div class="item-meta">P. Djèlí Clark — <span class="item-year">2020</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 05 Gothic -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <span class="section-title">Gothic</span>
+      <span class="section-count">5 titles</span>
+    </div>
+    <div class="items" data-section="gothic">
+      <label class="item"><input type="checkbox" data-id="gothic-1"><div class="item-body"><div class="item-title">Wuthering Heights</div><div class="item-meta">Emily Brontë — <span class="item-year">1847</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="gothic-2"><div class="item-body"><div class="item-title">Dracula</div><div class="item-meta">Bram Stoker — <span class="item-year">1897</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="gothic-3"><div class="item-body"><div class="item-title">Rebecca</div><div class="item-meta">Daphne du Maurier — <span class="item-year">1938</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="gothic-4"><div class="item-body"><div class="item-title">White is for Witching</div><div class="item-meta">Helen Oyeyemi — <span class="item-year">2009</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="gothic-5"><div class="item-body"><div class="item-title">Mexican Gothic</div><div class="item-meta">Silvia Moreno-Garcia — <span class="item-year">2020</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 06 Historical Fiction -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <span class="section-title">Historical Fiction</span>
+      <span class="section-count">6 titles</span>
+    </div>
+    <div class="items" data-section="historical">
+      <label class="item"><input type="checkbox" data-id="historical-1"><div class="item-body"><div class="item-title">A Tale of Two Cities</div><div class="item-meta">Charles Dickens — <span class="item-year">1859</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="historical-2"><div class="item-body"><div class="item-title">Things Fall Apart</div><div class="item-meta">Chinua Achebe — <span class="item-year">1958</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="historical-3"><div class="item-body"><div class="item-title">Beloved</div><div class="item-meta">Toni Morrison — <span class="item-year">1987</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="historical-4"><div class="item-body"><div class="item-title">Half of a Yellow Sun</div><div class="item-meta">Chimamanda Ngozi Adichie — <span class="item-year">2006</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="historical-5"><div class="item-body"><div class="item-title">The Underground Railroad</div><div class="item-meta">Colson Whitehead — <span class="item-year">2016</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="historical-6"><div class="item-body"><div class="item-title">Pachinko</div><div class="item-meta">Min Jin Lee — <span class="item-year">2017</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 07 Contemporary Fiction -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <span class="section-title">Contemporary Fiction</span>
+      <span class="section-count">5 titles</span>
+    </div>
+    <div class="items" data-section="contemporary">
+      <label class="item"><input type="checkbox" data-id="contemporary-1"><div class="item-body"><div class="item-title">The Joy Luck Club</div><div class="item-meta">Amy Tan — <span class="item-year">1989</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="contemporary-2"><div class="item-body"><div class="item-title">Americanah</div><div class="item-meta">Chimamanda Ngozi Adichie — <span class="item-year">2013</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="contemporary-3"><div class="item-body"><div class="item-title">The Hate U Give</div><div class="item-meta">Angie Thomas — <span class="item-year">2017</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="contemporary-4"><div class="item-body"><div class="item-title">On Earth We're Briefly Gorgeous</div><div class="item-meta">Ocean Vuong — <span class="item-year">2019</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="contemporary-5"><div class="item-body"><div class="item-title">The Vanishing Half</div><div class="item-meta">Brit Bennett — <span class="item-year">2020</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 08 Literary Fiction -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">08</span>
+      <span class="section-title">Literary Fiction</span>
+      <span class="section-count">6 titles</span>
+    </div>
+    <div class="items" data-section="literary">
+      <label class="item"><input type="checkbox" data-id="literary-1"><div class="item-body"><div class="item-title">Moby-Dick</div><div class="item-meta">Herman Melville — <span class="item-year">1851</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="literary-2"><div class="item-body"><div class="item-title">Mrs Dalloway</div><div class="item-meta">Virginia Woolf — <span class="item-year">1925</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="literary-3"><div class="item-body"><div class="item-title">Their Eyes Were Watching God</div><div class="item-meta">Zora Neale Hurston — <span class="item-year">1937</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="literary-4"><div class="item-body"><div class="item-title">Invisible Man</div><div class="item-meta">Ralph Ellison — <span class="item-year">1952</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="literary-5"><div class="item-body"><div class="item-title">The God of Small Things</div><div class="item-meta">Arundhati Roy — <span class="item-year">1997</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="literary-6"><div class="item-body"><div class="item-title">White Teeth</div><div class="item-meta">Zadie Smith — <span class="item-year">2000</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 09 Poetry -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">09</span>
+      <span class="section-title">Poetry</span>
+      <span class="section-count">5 titles</span>
+    </div>
+    <div class="items" data-section="poetry">
+      <label class="item"><input type="checkbox" data-id="poetry-1"><div class="item-body"><div class="item-title">Leaves of Grass</div><div class="item-meta">Walt Whitman — <span class="item-year">1855</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="poetry-2"><div class="item-body"><div class="item-title">Poems</div><div class="item-meta">Emily Dickinson — <span class="item-year">1890</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="poetry-3"><div class="item-body"><div class="item-title">The Weary Blues</div><div class="item-meta">Langston Hughes — <span class="item-year">1926</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="poetry-4"><div class="item-body"><div class="item-title">The Black Unicorn</div><div class="item-meta">Audre Lorde — <span class="item-year">1978</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="poetry-5"><div class="item-body"><div class="item-title">Night Sky with Exit Wounds</div><div class="item-meta">Ocean Vuong — <span class="item-year">2019</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 10 Short Story -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">10</span>
+      <span class="section-title">Short Story</span>
+      <span class="section-count">4 titles</span>
+    </div>
+    <div class="items" data-section="shortstory">
+      <label class="item"><input type="checkbox" data-id="shortstory-1"><div class="item-body"><div class="item-title">The Awakening and Selected Stories</div><div class="item-meta">Kate Chopin — <span class="item-year">1899</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="shortstory-2"><div class="item-body"><div class="item-title">A Good Man Is Hard to Find</div><div class="item-meta">Flannery O'Connor — <span class="item-year">1955</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="shortstory-3"><div class="item-body"><div class="item-title">Interpreter of Maladies</div><div class="item-meta">Jhumpa Lahiri — <span class="item-year">1999</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="shortstory-4"><div class="item-body"><div class="item-title">Stories of Your Life and Others</div><div class="item-meta">Ted Chiang — <span class="item-year">2002</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 11 Dystopian -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">11</span>
+      <span class="section-title">Dystopian</span>
+      <span class="section-count">5 titles</span>
+    </div>
+    <div class="items" data-section="dystopian">
+      <label class="item"><input type="checkbox" data-id="dystopian-1"><div class="item-body"><div class="item-title">Brave New World</div><div class="item-meta">Aldous Huxley — <span class="item-year">1932</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="dystopian-2"><div class="item-body"><div class="item-title">Nineteen Eighty-Four</div><div class="item-meta">George Orwell — <span class="item-year">1949</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="dystopian-3"><div class="item-body"><div class="item-title">The Handmaid's Tale</div><div class="item-meta">Margaret Atwood — <span class="item-year">1985</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="dystopian-4"><div class="item-body"><div class="item-title">Parable of the Sower</div><div class="item-meta">Octavia Butler — <span class="item-year">1993</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="dystopian-5"><div class="item-body"><div class="item-title">Severance</div><div class="item-meta">Ling Ma — <span class="item-year">2018</span></div></div></label>
+    </div>
+  </div>
+
+  <!-- 12 Magical Realism -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">12</span>
+      <span class="section-title">Magical Realism</span>
+      <span class="section-count">5 titles</span>
+    </div>
+    <div class="items" data-section="magicalrealism">
+      <label class="item"><input type="checkbox" data-id="magicalrealism-1"><div class="item-body"><div class="item-title">One Hundred Years of Solitude</div><div class="item-meta">Gabriel García Márquez — <span class="item-year">1967</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="magicalrealism-2"><div class="item-body"><div class="item-title">Song of Solomon</div><div class="item-meta">Toni Morrison — <span class="item-year">1977</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="magicalrealism-3"><div class="item-body"><div class="item-title">Midnight's Children</div><div class="item-meta">Salman Rushdie — <span class="item-year">1981</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="magicalrealism-4"><div class="item-body"><div class="item-title">The House of the Spirits</div><div class="item-meta">Isabel Allende — <span class="item-year">1982</span></div></div></label>
+      <label class="item"><input type="checkbox" data-id="magicalrealism-5"><div class="item-body"><div class="item-title">Like Water for Chocolate</div><div class="item-meta">Laura Esquivel — <span class="item-year">1989</span></div></div></label>
+    </div>
+  </div>
+
+  <footer>
+    <span>71 titles · 13 genres</span>
+    <span>Progress saved locally in this browser</span>
+  </footer>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'lit_reading_list_v1';
+  const checks = Array.from(document.querySelectorAll('.item input[type="checkbox"]'));
+  const countEl = document.getElementById('count');
+  const totalEl = document.getElementById('total');
+  const fillEl = document.getElementById('fill');
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function save(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function render() {
+    const state = load();
+    let done = 0;
+    checks.forEach(cb => {
+      const on = !!state[cb.dataset.id];
+      cb.checked = on;
+      cb.closest('.item').classList.toggle('done', on);
+      if (on) done++;
+    });
+    const total = checks.length;
+    totalEl.textContent = total;
+    countEl.textContent = done;
+    fillEl.style.width = (total ? (done / total * 100) : 0) + '%';
+  }
+
+  checks.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const state = load();
+      if (cb.checked) state[cb.dataset.id] = true;
+      else delete state[cb.dataset.id];
+      save(state);
+      render();
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    if (confirm('Clear all checked titles?')) {
+      save({});
+      render();
+    }
+  });
+  document.getElementById('print').addEventListener('click', () => window.print());
+
+  render();
+</script>
+</body>
+</html>
