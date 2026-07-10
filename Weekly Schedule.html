@@ -101,9 +101,38 @@
 
   @media (max-width:760px){.grid{grid-template-columns:1fr;}}
   @media print{
-    :root{--paper:#fff;--ink:#26312b;--card:#fff;--line:#cfd4c7;--cream:#26312b;--teal:#2f6f6a;}
-    body{background:#fff;}
-    .day{break-inside:avoid;}
+    @page{margin:12mm;}
+    :root{
+      --paper:#fff;
+      --ink:#1f4a36;      /* dark forest green — primary text */
+      --card:#fff;
+      --line:#c2cebf;
+      --cream:#1f4a36;    /* masthead / rules in dark green */
+      --teal:#b0542a;     /* times in legible orange */
+      --forest:#2f6f52;   /* day-head green */
+    }
+    body{background:#fff;color:#1f4a36;padding:0;}
+    .wrap{max-width:100%;}
+    /* keep two per row on paper: Monday/Tuesday, Wednesday/Thursday, ... */
+    .grid{grid-template-columns:1fr 1fr;gap:10px;}
+    .day{break-inside:avoid;border-color:#c2cebf;}
+    .day-head{background:#2f6f52;color:#fff;}
+    .legend span{color:#1f4a36;}
+    /* orange accents */
+    .slot .time,
+    .masthead .sub,
+    .slot.writing-slot .label,
+    .slot.draft .label{color:#b0542a;}
+    /* dark green for everything else, legible on white */
+    .slot .label,
+    .slot.lecture-slot .label,
+    .slot.review-slot .label,
+    .slot.posture-slot .label{color:#1f4a36;}
+    .slot.draft{
+      background:rgba(176,84,42,.08);
+      border-top:1px dashed rgba(176,84,42,.5);
+      border-bottom:1px dashed rgba(176,84,42,.5);
+    }
     .chk,.footer-row{display:none;}
   }
 </style>
@@ -178,13 +207,8 @@
       <div class="day-head">Thursday</div>
       <div class="slots">
         <div class="slot writing-slot"><span class="time">07:00</span><span class="bar d-writing"></span><span class="label">Writing practice — 500 words</span><input type="checkbox" class="chk" data-id="thu-writing"></div>
-        <div class="slot posture-slot"><span class="time">07:45</span><span class="bar d-posture"></span><span class="label">Chin tucks · wall angels</span><input type="checkbox" class="chk" data-id="thu-posture"></div>
-        <div class="slot"><span class="time">08:00–10:00</span><span class="bar d-work"></span><span class="label">Work</span><input type="checkbox" class="chk" data-id="thu-work1"></div>
-        <div class="slot"><span class="time">10:00–11:30</span><span class="bar d-gym"></span><span class="label">Gym</span><input type="checkbox" class="chk" data-id="thu-gym"></div>
-        <div class="slot"><span class="time">11:30–16:30</span><span class="bar d-work"></span><span class="label">Work</span><input type="checkbox" class="chk" data-id="thu-work2"></div>
         <div class="slot lecture-slot"><span class="time">16:30–17:15</span><span class="bar d-lecture"></span><span class="label">Craft lecture — Hynes</span><input type="checkbox" class="chk" data-id="thu-lecture"></div>
         <div class="slot draft"><span class="time">18:30–19:30</span><span class="bar d-draft"></span><span class="label">Novel session</span><input type="checkbox" class="chk" data-id="thu-novel"></div>
-        <div class="slot"><span class="time">19:30–20:00</span><span class="bar d-clean"></span><span class="label">Cleanup</span><input type="checkbox" class="chk" data-id="thu-clean"></div>
       </div>
     </div>
 
