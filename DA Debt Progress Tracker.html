@@ -292,9 +292,42 @@
   }
   .remaining b { color: var(--sage); font-weight: 600; }
 
+  /* --- Payoff strip --- */
+  .payoff {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+  .payoff > div { background: var(--panel); padding: 14px 16px; }
+  .payoff .p-label {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 6px;
+  }
+  .payoff .p-value { font-size: 20px; font-weight: 600; }
+  .payoff .cleared .p-value { color: var(--teal); }
+  .payoff .remaining-box .p-value { color: var(--rust); }
+
+  .auto-status {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 11px; color: var(--text-dim);
+    border: 1px solid var(--line); border-left: 3px solid var(--teal);
+    background: var(--panel-2); padding: 10px 14px; margin-bottom: 24px;
+  }
+  .auto-status b { color: var(--sage); font-weight: 600; }
+  .auto-status .dot { color: var(--teal-dim); }
+  .auto-status.off { border-left-color: var(--sage-dim); opacity: 0.7; }
+
+  .check-field { display: flex; align-items: center; gap: 8px; }
+  .check-field input { width: auto; }
+  .check-field label { font-size: 11px; color: var(--text); text-transform: none; letter-spacing: 0; }
+
   @media (max-width: 560px) {
     .stats { grid-template-columns: 1fr; }
     .stat .value { font-size: 30px; }
+    .payoff { grid-template-columns: 1fr; }
   }
 
   /* --- Print flip to light --- */
@@ -338,10 +371,23 @@
     <div class="value"><span id="hoursDone">0</span> <span class="unit">hrs</span></div>
   </div>
   <div class="stat earnings">
-    <div class="label">Earned</div>
+    <div class="label">Job Earnings</div>
     <div class="value">$<span id="earned">0</span></div>
   </div>
 </div>
+
+<div class="payoff">
+  <div class="cleared">
+    <div class="p-label">Cleared of $6,300</div>
+    <div class="p-value">$<span id="cleared">0</span></div>
+  </div>
+  <div class="remaining-box">
+    <div class="p-label">Remaining to Clear</div>
+    <div class="p-value">$<span id="remainingAmt">6,300.00</span></div>
+  </div>
+</div>
+
+<div class="auto-status" id="autoStatus"></div>
 
 <div class="bar-wrap">
   <div class="section-title">
@@ -387,6 +433,18 @@
       </div>
       <button class="ghost" onclick="saveConfig()">Save Setup</button>
     </div>
+    <div class="row">
+      <div class="field">
+        <label for="monthlyPayment">Auto-payment / mo ($)</label>
+        <input type="number" id="monthlyPayment" min="0" step="0.01" value="142">
+      </div>
+      <div class="check-field">
+        <input type="checkbox" id="autoEnabled" checked>
+        <label for="autoEnabled">Deduct on the 1st of each month</label>
+      </div>
+      <button class="ghost" onclick="saveAuto()">Save Auto-payment</button>
+    </div>
+    <div class="hint">The monthly amount is applied automatically when you open the tracker — if you miss a few months, it back-fills every 1st that has passed. Changing the amount only affects future payments.</div>
     <div class="btn-group" style="margin-top:8px;">
       <button class="rust" onclick="resetAll()">Reset Everything</button>
       <button class="ghost" onclick="window.print()">Print / PDF</button>
@@ -395,7 +453,8 @@
 </details>
 
 <script>
-  const RATE = 30;
+  const RATE = 30;               // $ per hour
+  const CUR = '$';               // single source of truth for currency symbol
   const KEY = 'taskProgressTracker_v1';
 
   const state = {
@@ -403,8 +462,50 @@
     hoursDone: 0,
     totalJobs: 42,
     defaultHours: 5,
-    log: []   // stack of hours added per job, for undo
+    log: [],                     // stack of job/hour entries, for undo
+    monthlyPayment: 142,         // $ auto-deducted on the 1st
+    autoEnabled: true,
+    autoPaid: 0,                 // accumulated $ from monthly payments (locked in)
+    autoCount: 0,                // number of monthly payments applied
+    nextDue: null                // ISO 'YYYY-MM-01' of the next payment due
   };
+
+  // ---- date helpers ----
+  function firstOfNextMonthISO(d) {
+    let y = d.getFullYear(), m = d.getMonth() + 1; // 1-12
+    if (m === 12) { y += 1; m = 1; } else { m += 1; }
+    return `${y}-${String(m).padStart(2, '0')}-01`;
+  }
+  function advanceMonthISO(iso) {
+    const [y, m] = iso.split('-').map(Number);
+    return firstOfNextMonthISO(new Date(y, m - 1, 1));
+  }
+  function isoToDate(iso) {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+  function fmtDate(iso) {
+    return isoToDate(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function goalAmount() { return state.totalJobs * state.defaultHours * RATE; }
+
+  // ---- apply any monthly payments whose 1st has passed ----
+  function runAutoPayments() {
+    if (!state.nextDue) state.nextDue = firstOfNextMonthISO(new Date());
+    if (!state.autoEnabled) return;
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    let guard = 0;
+    while (guard < 600 && isoToDate(state.nextDue) <= today) {
+      const cleared = state.hoursDone * RATE + state.autoPaid;
+      if (cleared >= goalAmount()) break;      // debt already cleared — stop
+      state.autoPaid = Math.round((state.autoPaid + state.monthlyPayment) * 100) / 100;
+      state.autoCount += 1;
+      state.nextDue = advanceMonthISO(state.nextDue);
+      guard++;
+    }
+  }
 
   function load() {
     try {
@@ -414,53 +515,68 @@
     document.getElementById('totalJobs').value = state.totalJobs;
     document.getElementById('defaultHours').value = state.defaultHours;
     document.getElementById('jobHours').value = state.defaultHours;
+    document.getElementById('monthlyPayment').value = state.monthlyPayment;
+    document.getElementById('autoEnabled').checked = state.autoEnabled;
   }
 
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
   }
 
-  function fmt(n) {
-    return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
-  }
-  function money(n) {
-    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
+  function fmt(n) { return n.toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+  function money(n) { return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
   const MILESTONES = [10, 25, 50, 75, 90, 100];
 
   function render() {
-    const pct = state.totalJobs > 0
-      ? Math.min(100, (state.jobsDone / state.totalJobs) * 100)
-      : 0;
+    const goal = goalAmount();
+    const jobEarnings = state.hoursDone * RATE;
+    const cleared = Math.min(goal, jobEarnings + state.autoPaid);
+    const remaining = Math.max(0, goal - (jobEarnings + state.autoPaid));
+    const pct = goal > 0 ? Math.min(100, ((jobEarnings + state.autoPaid) / goal) * 100) : 0;
 
     document.getElementById('jobsDone').textContent = state.jobsDone;
     document.getElementById('jobsTotal').textContent = state.totalJobs;
     document.getElementById('hoursDone').textContent = fmt(state.hoursDone);
-    document.getElementById('earned').textContent = money(state.hoursDone * RATE);
+    document.getElementById('earned').textContent = money(jobEarnings);
+    document.getElementById('cleared').textContent = money(cleared);
+    document.getElementById('remainingAmt').textContent = money(remaining);
     document.getElementById('pctText').textContent = pct.toFixed(1).replace(/\.0$/, '');
     document.getElementById('barFill').style.width = pct + '%';
 
-    // milestone ticks
-    const totalHours = state.totalJobs * state.defaultHours;
+    // milestone ticks — money against the goal
     const ticks = MILESTONES.map(m => {
       const reached = pct >= m - 0.0001;
-      const amt = money((totalHours * m / 100) * RATE);
+      const amt = money(goal * m / 100);
       return `<div class="tick ${reached ? 'reached' : ''}" style="left:${m}%">
         <div class="flag"></div>
         <div class="m-pct">${m}%</div>
-        <div class="m-amt">$${amt}</div>
+        <div class="m-amt">${CUR}${amt}</div>
       </div>`;
     }).join('');
     document.getElementById('ticks').innerHTML = ticks;
 
-    const jobsLeft = Math.max(0, state.totalJobs - state.jobsDone);
-    const projHoursLeft = jobsLeft * state.defaultHours;
-    const rem = document.getElementById('remaining');
-    if (jobsLeft === 0) {
-      rem.innerHTML = `<b>Complete.</b> All ${state.totalJobs} jobs done — total earned $${money(state.hoursDone * RATE)}.`;
+    // auto-payment status
+    const as = document.getElementById('autoStatus');
+    if (state.autoEnabled) {
+      as.classList.remove('off');
+      as.innerHTML = `<span class="dot">●</span> Auto-payment <b>${CUR}${money(state.monthlyPayment)}</b> on the 1st
+        <span class="dot">·</span> <b>${state.autoCount}</b> applied (<b>${CUR}${money(state.autoPaid)}</b>)
+        <span class="dot">·</span> next <b>${state.nextDue ? fmtDate(state.nextDue) : '—'}</b>`;
     } else {
-      rem.innerHTML = `<b>${jobsLeft}</b> jobs left · ~<b>${fmt(projHoursLeft)}</b> hrs to go · ~$${money(projHoursLeft * RATE)} remaining at the default rate.`;
+      as.classList.add('off');
+      as.innerHTML = `<span class="dot">○</span> Auto-payment paused
+        <span class="dot">·</span> <b>${state.autoCount}</b> applied so far (<b>${CUR}${money(state.autoPaid)}</b>)`;
+    }
+
+    // remaining line
+    const rem = document.getElementById('remaining');
+    if (remaining <= 0) {
+      rem.innerHTML = `<b>Cleared.</b> Santander, VM &amp; Argos paid off — ${CUR}${money(goal)} reached via ${CUR}${money(jobEarnings)} in jobs + ${CUR}${money(state.autoPaid)} in payments.`;
+    } else {
+      const hrsLeft = remaining / RATE;
+      const jobsLeftByWork = state.defaultHours > 0 ? hrsLeft / state.defaultHours : 0;
+      rem.innerHTML = `<b>${CUR}${money(remaining)}</b> left to clear · ~<b>${fmt(hrsLeft)}</b> hrs / ~<b>${Math.ceil(jobsLeftByWork)}</b> jobs of work at ${CUR}${RATE}/hr, before further monthly payments.`;
     }
   }
 
@@ -473,7 +589,6 @@
   }
 
   function undoJob() {
-    // remove the most recent job entry
     for (let i = state.log.length - 1; i >= 0; i--) {
       if (state.log[i].type === 'job') {
         state.hoursDone = Math.round((state.hoursDone - state.log[i].hours) * 100) / 100;
@@ -504,15 +619,29 @@
     save(); render();
   }
 
+  function saveAuto() {
+    const amt = parseFloat(document.getElementById('monthlyPayment').value) || 0;
+    const on = document.getElementById('autoEnabled').checked;
+    state.monthlyPayment = Math.max(0, amt);
+    state.autoEnabled = on;
+    runAutoPayments();   // catch up if it was just switched on
+    save(); render();
+  }
+
   function resetAll() {
-    if (!confirm('Reset all progress? This clears jobs and hours (setup stays).')) return;
+    if (!confirm('Reset all progress? This clears jobs, hours and applied monthly payments (setup stays).')) return;
     state.jobsDone = 0;
     state.hoursDone = 0;
     state.log = [];
+    state.autoPaid = 0;
+    state.autoCount = 0;
+    state.nextDue = firstOfNextMonthISO(new Date());
     save(); render();
   }
 
   load();
+  runAutoPayments();
+  save();
   render();
 </script>
 </body>
