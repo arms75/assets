@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Progress Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1512;
+    --panel: #14201a;
+    --panel-2: #1a281f;
+    --line: #2c3d31;
+    --forest: #16241c;
+    --sage: #9db89a;
+    --sage-dim: #6f8a6d;
+    --teal: #4a9d9c;
+    --teal-dim: #357a79;
+    --rust: #c06a3d;
+    --rust-dim: #8f4d2b;
+    --text: #dce6da;
+    --text-dim: #7f948a;
+    --done: #4a9d9c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 32px 20px 64px;
+    max-width: 860px;
+    margin: 0 auto;
+    font-size: 14px;
+  }
+
+  header {
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--sage);
+    text-transform: uppercase;
+  }
+
+  .sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* --- Goal spec --- */
+  .goal {
+    border: 1px solid var(--rust-dim);
+    border-left: 3px solid var(--rust);
+    background: var(--panel-2);
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .goal-target { display: flex; flex-direction: column; gap: 2px; }
+  .goal-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .goal-amt {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--rust);
+  }
+  .goal-spec {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    flex: 1;
+    min-width: 220px;
+  }
+  .goal-spec b { color: var(--sage); font-weight: 600; }
+
+  /* --- Stat row --- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 16px 14px;
+  }
+
+  .stat .label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .stat .value {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .stat .value .unit {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  .stat.earnings .value { color: var(--teal); }
+  .stat.jobs .value { color: var(--sage); }
+  .stat.hours .value { color: var(--rust); }
+
+  /* --- Progress --- */
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sage-dim);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .section-title .pct { color: var(--teal); font-weight: 600; }
+
+  .bar-wrap {
+    margin-bottom: 40px;
+  }
+
+  .bar-track {
+    position: relative;
+    height: 30px;
+    background: var(--forest);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal-dim), var(--teal));
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  .ticks {
+    position: relative;
+    height: 44px;
+    margin-top: 2px;
+  }
+
+  .tick {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 74px;
+  }
+
+  .tick .flag {
+    width: 1px;
+    height: 8px;
+    background: var(--line);
+    margin: 0 auto 4px;
+  }
+
+  .tick .m-pct { font-size: 10px; color: var(--text-dim); }
+  .tick .m-amt { font-size: 10px; color: var(--sage-dim); margin-top: 1px; }
+
+  .tick.reached .flag { background: var(--rust); height: 12px; }
+  .tick.reached .m-pct { color: var(--rust); font-weight: 600; }
+  .tick.reached .m-amt { color: var(--sage); }
+
+  /* --- Log controls --- */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card h2 {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sage-dim);
+    margin-bottom: 16px;
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+
+  .field label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  input[type="number"] {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 9px 10px;
+    font-size: 14px;
+    width: 110px;
+  }
+
+  input[type="number"]:focus { outline: none; border-color: var(--teal); }
+
+  button {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--teal-dim);
+    border: 1px solid var(--teal);
+    color: #fff;
+    padding: 9px 16px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  button:hover { background: var(--teal); }
+
+  button.ghost {
+    background: transparent;
+    border-color: var(--line);
+    color: var(--text-dim);
+  }
+  button.ghost:hover { border-color: var(--sage-dim); color: var(--sage); background: transparent; }
+
+  button.rust { background: var(--rust-dim); border-color: var(--rust); }
+  button.rust:hover { background: var(--rust); }
+
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .hint { font-size: 11px; color: var(--text-dim); margin-top: 10px; }
+
+  /* --- Config (collapsible) --- */
+  details {
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    padding: 0;
+  }
+  summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sage-dim);
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸ "; color: var(--rust); }
+  details[open] summary::before { content: "▾ "; }
+  .config-body { padding: 0 16px 16px; }
+
+  .remaining {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+  .remaining b { color: var(--sage); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .stats { grid-template-columns: 1fr; }
+    .stat .value { font-size: 30px; }
+  }
+
+  /* --- Print flip to light --- */
+  @media print {
+    body { background: #fff; color: #1a1a1a; }
+    :root {
+      --panel: #fff; --panel-2: #f4f4f2; --line: #ccc;
+      --forest: #eee; --text: #1a1a1a; --text-dim: #555;
+      --sage: #3a5a38; --sage-dim: #4a6a48; --teal: #2a6a69; --rust: #a04a20;
+    }
+    button, .hint, details summary { display: none; }
+    .card, .stat { break-inside: avoid; }
+    .bar-fill { background: #2a6a69; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Task Progress Tracker</h1>
+  <div class="sub">Pay fixed at $30.00 / hour · saved locally in this browser</div>
+</header>
+
+<div class="goal">
+  <div class="goal-target">
+    <span class="goal-label">Target</span>
+    <span class="goal-amt">$6,300.00</span>
+  </div>
+  <div class="goal-spec">
+    Clears <b>Santander</b>, <b>VM</b> &amp; <b>Argos</b> — 42 jobs · 210 hrs at $30/hr.
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat jobs">
+    <div class="label">Jobs Completed</div>
+    <div class="value"><span id="jobsDone">0</span> <span class="unit">/ <span id="jobsTotal">42</span></span></div>
+  </div>
+  <div class="stat hours">
+    <div class="label">Hours Logged</div>
+    <div class="value"><span id="hoursDone">0</span> <span class="unit">hrs</span></div>
+  </div>
+  <div class="stat earnings">
+    <div class="label">Earned</div>
+    <div class="value">$<span id="earned">0</span></div>
+  </div>
+</div>
+
+<div class="bar-wrap">
+  <div class="section-title">
+    <span>Progress</span>
+    <span class="pct"><span id="pctText">0</span>%</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+  <div class="ticks" id="ticks"></div>
+  <div class="remaining" id="remaining"></div>
+</div>
+
+<div class="card">
+  <h2>Log Progress</h2>
+  <div class="row">
+    <div class="field">
+      <label for="jobHours">Hours for this job</label>
+      <input type="number" id="jobHours" min="0" step="0.25" value="5">
+    </div>
+    <button onclick="logJob()">+ Log 1 Job</button>
+    <button class="ghost" onclick="undoJob()">Undo Last Job</button>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="adjHours">Add / remove hours only</label>
+      <input type="number" id="adjHours" step="0.25" value="0">
+    </div>
+    <button class="ghost" onclick="adjustHours()">Apply Hours</button>
+  </div>
+  <div class="hint">"Log 1 Job" adds one job plus the hours you enter. Use "Apply Hours" for extra time that isn't tied to finishing a job (negatives allowed).</div>
+</div>
+
+<details>
+  <summary>Setup &amp; Reset</summary>
+  <div class="config-body">
+    <div class="row">
+      <div class="field">
+        <label for="totalJobs">Total jobs target</label>
+        <input type="number" id="totalJobs" min="1" value="42">
+      </div>
+      <div class="field">
+        <label for="defaultHours">Default hrs / job</label>
+        <input type="number" id="defaultHours" min="0" step="0.25" value="5">
+      </div>
+      <button class="ghost" onclick="saveConfig()">Save Setup</button>
+    </div>
+    <div class="btn-group" style="margin-top:8px;">
+      <button class="rust" onclick="resetAll()">Reset Everything</button>
+      <button class="ghost" onclick="window.print()">Print / PDF</button>
+    </div>
+  </div>
+</details>
+
+<script>
+  const RATE = 30;
+  const KEY = 'taskProgressTracker_v1';
+
+  const state = {
+    jobsDone: 0,
+    hoursDone: 0,
+    totalJobs: 42,
+    defaultHours: 5,
+    log: []   // stack of hours added per job, for undo
+  };
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) Object.assign(state, JSON.parse(raw));
+    } catch (e) {}
+    document.getElementById('totalJobs').value = state.totalJobs;
+    document.getElementById('defaultHours').value = state.defaultHours;
+    document.getElementById('jobHours').value = state.defaultHours;
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function fmt(n) {
+    return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  }
+  function money(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  const MILESTONES = [10, 25, 50, 75, 90, 100];
+
+  function render() {
+    const pct = state.totalJobs > 0
+      ? Math.min(100, (state.jobsDone / state.totalJobs) * 100)
+      : 0;
+
+    document.getElementById('jobsDone').textContent = state.jobsDone;
+    document.getElementById('jobsTotal').textContent = state.totalJobs;
+    document.getElementById('hoursDone').textContent = fmt(state.hoursDone);
+    document.getElementById('earned').textContent = money(state.hoursDone * RATE);
+    document.getElementById('pctText').textContent = pct.toFixed(1).replace(/\.0$/, '');
+    document.getElementById('barFill').style.width = pct + '%';
+
+    // milestone ticks
+    const totalHours = state.totalJobs * state.defaultHours;
+    const ticks = MILESTONES.map(m => {
+      const reached = pct >= m - 0.0001;
+      const amt = money((totalHours * m / 100) * RATE);
+      return `<div class="tick ${reached ? 'reached' : ''}" style="left:${m}%">
+        <div class="flag"></div>
+        <div class="m-pct">${m}%</div>
+        <div class="m-amt">$${amt}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('ticks').innerHTML = ticks;
+
+    const jobsLeft = Math.max(0, state.totalJobs - state.jobsDone);
+    const projHoursLeft = jobsLeft * state.defaultHours;
+    const rem = document.getElementById('remaining');
+    if (jobsLeft === 0) {
+      rem.innerHTML = `<b>Complete.</b> All ${state.totalJobs} jobs done — total earned $${money(state.hoursDone * RATE)}.`;
+    } else {
+      rem.innerHTML = `<b>${jobsLeft}</b> jobs left · ~<b>${fmt(projHoursLeft)}</b> hrs to go · ~$${money(projHoursLeft * RATE)} remaining at the default rate.`;
+    }
+  }
+
+  function logJob() {
+    const h = parseFloat(document.getElementById('jobHours').value) || 0;
+    state.jobsDone += 1;
+    state.hoursDone = Math.round((state.hoursDone + h) * 100) / 100;
+    state.log.push({ type: 'job', hours: h });
+    save(); render();
+  }
+
+  function undoJob() {
+    // remove the most recent job entry
+    for (let i = state.log.length - 1; i >= 0; i--) {
+      if (state.log[i].type === 'job') {
+        state.hoursDone = Math.round((state.hoursDone - state.log[i].hours) * 100) / 100;
+        if (state.hoursDone < 0) state.hoursDone = 0;
+        state.jobsDone = Math.max(0, state.jobsDone - 1);
+        state.log.splice(i, 1);
+        break;
+      }
+    }
+    save(); render();
+  }
+
+  function adjustHours() {
+    const h = parseFloat(document.getElementById('adjHours').value) || 0;
+    state.hoursDone = Math.round((state.hoursDone + h) * 100) / 100;
+    if (state.hoursDone < 0) state.hoursDone = 0;
+    state.log.push({ type: 'hours', hours: h });
+    document.getElementById('adjHours').value = 0;
+    save(); render();
+  }
+
+  function saveConfig() {
+    const t = parseInt(document.getElementById('totalJobs').value) || 1;
+    const d = parseFloat(document.getElementById('defaultHours').value) || 0;
+    state.totalJobs = Math.max(1, t);
+    state.defaultHours = d;
+    document.getElementById('jobHours').value = d;
+    save(); render();
+  }
+
+  function resetAll() {
+    if (!confirm('Reset all progress? This clears jobs and hours (setup stays).')) return;
+    state.jobsDone = 0;
+    state.hoursDone = 0;
+    state.log = [];
+    save(); render();
+  }
+
+  load();
+  render();
+</script>
+</body>
+</html>
