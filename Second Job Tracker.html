@@ -31,10 +31,10 @@
   /* shifts */
   .shift{display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--panel);border:1px solid var(--line);border-radius:8px;margin-bottom:7px}
   .shift.done{background:var(--panel-2);border-color:#3a5a48}
-  .shift .day{font-size:13px;min-width:120px;flex-shrink:0}
+  .shift .day{font-size:13px;min-width:96px;flex-shrink:0}
   .shift.done .day{color:var(--teal);font-weight:500}
-  .dots{display:flex;gap:10px;flex:1}
-  .dot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--faint);background:transparent;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:background .15s,border-color .15s,transform .08s}
+  .dots{display:flex;gap:7px;flex:1;flex-wrap:wrap}
+  .dot{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--faint);background:transparent;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:background .15s,border-color .15s,transform .08s}
   .dot:hover{border-color:var(--teal)}
   .dot:active{transform:scale(.9)}
   .dot.done{background:var(--teal);border-color:var(--teal)}
@@ -103,13 +103,13 @@
   <header>
     <div class="eyebrow">Second job</div>
     <h1>Earnings tracker</h1>
-    <p class="sub">Wed, Fri &amp; Sat &middot; 2 hrs each &middot; target <b style="color:var(--cream);font-weight:600">&pound;375</b> / month gross &middot; paid in USD</p>
+    <p class="sub">Wed, Fri &amp; Sat &middot; 6 hrs each &middot; target <b style="color:var(--cream);font-weight:600">&pound;1,683</b> / month gross &middot; paid in USD</p>
   </header>
 
   <!-- SHIFTS -->
   <div class="seclabel">This week's shifts <button class="small" id="resetWeek">new week</button></div>
   <div id="shifts"></div>
-  <p class="wk-summary" id="wkSummary">0 of 6 hours done</p>
+  <p class="wk-summary" id="wkSummary">0 of 18 hours done &middot; 0 of 3 projects</p>
 
   <!-- EARNINGS -->
   <div class="seclabel">Earnings <span style="color:var(--teal);letter-spacing:.06em" id="monthLabel"></span></div>
@@ -129,16 +129,17 @@
   </div>
 
   <!-- TARGET -->
-  <div class="seclabel">Target &middot; &pound;375 gross</div>
+  <div class="seclabel">Target &middot; &pound;1,683 gross</div>
   <div class="card">
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div class="track-meta"><span id="metaLeft">&pound;0 of &pound;375</span><span id="metaRight">0%</span></div>
+    <div class="track-meta"><span id="metaLeft">&pound;0 of &pound;1,683</span><span id="metaRight">0%</span></div>
     <div class="stats">
       <div class="stat"><div class="num" id="sTotal">&pound;0</div><div class="lbl">gross</div></div>
-      <div class="stat"><div class="num" id="sLeft">&pound;375</div><div class="lbl">to go</div></div>
+      <div class="stat"><div class="num" id="sLeft">&pound;1,683</div><div class="lbl">to go</div></div>
       <div class="stat"><div class="num" id="sNet">&pound;0</div><div class="lbl">take&#8209;home</div></div>
     </div>
-    <p class="wk-summary" id="netNote" style="margin-top:14px">&pound;0 take-home after 29% &middot; &pound;250 goal</p>
+    <p class="wk-summary" id="netNote" style="margin-top:14px">&pound;0 take-home after 29% &middot; &pound;1,195 goal</p>
+    <p class="wk-summary" id="debtNote">&pound;0 to debt after &pound;150 living</p>
     <div class="met" id="metNote" style="display:none">Target met for the month &mdash; nice one.</div>
   </div>
 
@@ -151,14 +152,19 @@
 <script>
 (function(){
   var KEY = 'second-job-tracker';
-  var TARGET = 375;                   // gross GBP / month (6 hrs/wk @ ~$20, converted)
+  var HOURS = 6;                      // hours per shift day (one project)
+  var TARGET = 1683;                  // gross GBP / month (18 hrs/wk @ $30, converted)
   var KEEP = 0.71;                    // take-home multiplier after 29% tax + student loan
-  var NET_GOAL = 250;                 // the take-home figure this is really aiming at
-  var FALLBACK_RATE = 0.756;          // updated automatically from live feed on load
+  var NET_GOAL = 1195;                // the take-home figure this is really aiming at
+  var LIVING = 150;                   // monthly slice of take-home for living costs
+  var FALLBACK_RATE = 0.7194;         // updated automatically from live feed on load
   var DAYS = [['wed','Wednesday'],['fri','Friday'],['sat','Saturday']];
 
+  function blank(){ var a = []; for(var i=0;i<HOURS;i++) a.push(false); return a; }
+  function freshWeek(){ return { wed:blank(), fri:blank(), sat:blank() }; }
+
   var state = {
-    shifts: { wed:[false,false], fri:[false,false], sat:[false,false] },
+    shifts: freshWeek(),
     entries: [],            // { usd, rate, gbp, ts }
     rate: FALLBACK_RATE,
     rateManual: false,
@@ -170,8 +176,14 @@
       var raw = localStorage.getItem(KEY);
       if(raw){ var s = JSON.parse(raw); if(s && typeof s === 'object') state = Object.assign(state, s); }
     }catch(e){}
-    if(!state.shifts) state.shifts = { wed:[false,false], fri:[false,false], sat:[false,false] };
-    if(!state.shifts.sat) state.shifts.sat = [false,false];
+    if(!state.shifts) state.shifts = freshWeek();
+    // normalise each day to HOURS slots (migrates older 2-hour weeks)
+    DAYS.forEach(function(d){
+      var a = state.shifts[d[0]];
+      if(!Array.isArray(a)) a = [];
+      while(a.length < HOURS) a.push(false);
+      state.shifts[d[0]] = a.slice(0, HOURS);
+    });
     if(!Array.isArray(state.entries)) state.entries = [];
   }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
@@ -213,7 +225,7 @@
       var key = d[0], hrs = state.shifts[key];
       var done = hrs.filter(Boolean).length; doneHrs += done;
       var row = document.createElement('div');
-      row.className = 'shift' + (done === 2 ? ' done' : '');
+      row.className = 'shift' + (done === HOURS ? ' done' : '');
       var label = document.createElement('span'); label.className = 'day'; label.textContent = d[1];
       row.appendChild(label);
       var dots = document.createElement('div'); dots.className = 'dots';
@@ -226,11 +238,13 @@
         dots.appendChild(b);
       });
       row.appendChild(dots);
-      var cnt = document.createElement('span'); cnt.className = 'cnt'; cnt.textContent = done + '/2';
+      var cnt = document.createElement('span'); cnt.className = 'cnt'; cnt.textContent = done + '/' + HOURS;
       row.appendChild(cnt);
       box.appendChild(row);
     });
-    document.getElementById('wkSummary').textContent = doneHrs + ' of ' + (DAYS.length * 2) + ' hours done';
+    var projects = DAYS.filter(function(d){ return state.shifts[d[0]].filter(Boolean).length === HOURS; }).length;
+    document.getElementById('wkSummary').textContent =
+      doneHrs + ' of ' + (DAYS.length * HOURS) + ' hours done \u00b7 ' + projects + ' of ' + DAYS.length + ' projects';
   }
 
   // ---- earnings + target ----
@@ -266,8 +280,9 @@
     document.getElementById('sTotal').innerHTML = gbp0(total);
     document.getElementById('sLeft').innerHTML = gbp0(left);
     document.getElementById('sNet').innerHTML = gbp0(net);
-    document.getElementById('netNote').innerHTML = gbp0(net) + ' take-home after 29% &middot; \u00a3' + NET_GOAL + ' goal'
+    document.getElementById('netNote').innerHTML = gbp0(net) + ' take-home after 29% &middot; ' + gbp0(NET_GOAL) + ' goal'
       + (net >= NET_GOAL ? ' \u2713' : '');
+    document.getElementById('debtNote').innerHTML = gbp0(Math.max(0, net - LIVING)) + ' to debt after \u00a3' + LIVING + ' living';
     document.getElementById('metNote').style.display = total >= TARGET ? 'block' : 'none';
   }
 
@@ -294,7 +309,7 @@
     state.entries = []; renderEntries(); renderTarget(); save();
   });
   document.getElementById('resetWeek').addEventListener('click', function(){
-    state.shifts = { wed:[false,false], fri:[false,false], sat:[false,false] }; renderShifts(); save();
+    state.shifts = freshWeek(); renderShifts(); save();
   });
 
   // ---- init ----
