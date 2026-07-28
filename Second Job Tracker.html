@@ -75,6 +75,8 @@
   /* target */
   .track{height:8px;background:var(--line);border-radius:100px;overflow:hidden;margin-top:4px}
   .fill{height:100%;width:0;background:var(--teal);border-radius:100px;transition:width .35s ease}
+  .track-2{margin-top:16px}
+  .fill-2{background:var(--rust)}
   .track-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.04em}
   .stats{display:flex;gap:30px;margin-top:18px}
   .stat .num{font-size:26px;font-weight:600;color:var(--cream);line-height:1}
@@ -133,6 +135,10 @@
   <div class="card">
     <div class="track"><div class="fill" id="fill"></div></div>
     <div class="track-meta"><span id="metaLeft">&pound;0 of &pound;1,683</span><span id="metaRight">0%</span></div>
+
+    <div class="track track-2"><div class="fill fill-2" id="fill2"></div></div>
+    <div class="track-meta"><span id="meta2Left">&pound;0 of &pound;400 take-home</span><span id="meta2Right">0%</span></div>
+
     <div class="stats">
       <div class="stat"><div class="num" id="sTotal">&pound;0</div><div class="lbl">gross</div></div>
       <div class="stat"><div class="num" id="sLeft">&pound;1,683</div><div class="lbl">to go</div></div>
@@ -156,6 +162,7 @@
   var TARGET = 1683;                  // gross GBP / month (18 hrs/wk @ $30, converted)
   var KEEP = 0.71;                    // take-home multiplier after 29% tax + student loan
   var NET_GOAL = 1195;                // the take-home figure this is really aiming at
+  var FLOOR = 400;                    // minimum take-home goal / month (second bar)
   var LIVING = 150;                   // monthly slice of take-home for living costs
   var FALLBACK_RATE = 0.7194;         // updated automatically from live feed on load
   var DAYS = [['wed','Wednesday'],['fri','Friday'],['sat','Saturday']];
@@ -277,6 +284,11 @@
     document.getElementById('fill').style.width = pct + '%';
     document.getElementById('metaLeft').innerHTML = gbp0(total) + ' of ' + gbp0(TARGET);
     document.getElementById('metaRight').textContent = pct + '%';
+    var pct2 = Math.min(100, Math.round((net / FLOOR) * 100));
+    document.getElementById('fill2').style.width = pct2 + '%';
+    document.getElementById('meta2Left').innerHTML = gbp0(net) + ' of ' + gbp0(FLOOR) + ' take-home'
+      + (net >= FLOOR ? ' \u2713' : '');
+    document.getElementById('meta2Right').textContent = pct2 + '%';
     document.getElementById('sTotal').innerHTML = gbp0(total);
     document.getElementById('sLeft').innerHTML = gbp0(left);
     document.getElementById('sNet').innerHTML = gbp0(net);
