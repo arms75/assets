@@ -77,6 +77,7 @@
   .fill{height:100%;width:0;background:var(--teal);border-radius:100px;transition:width .35s ease}
   .track-2{margin-top:16px}
   .fill-2{background:var(--rust)}
+  .fill-hrs{background:var(--sage)}
   .track-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.04em}
   .stats{display:flex;gap:30px;margin-top:18px}
   .stat .num{font-size:26px;font-weight:600;color:var(--cream);line-height:1}
@@ -105,13 +106,21 @@
   <header>
     <div class="eyebrow">Second job</div>
     <h1>Earnings tracker</h1>
-    <p class="sub">Wed, Fri &amp; Sat &middot; 6 hrs each &middot; target <b style="color:var(--cream);font-weight:600">&pound;1,683</b> / month gross &middot; paid in USD</p>
+    <p class="sub">Wed &amp; Fri 3 hrs &middot; Sat 2 hrs &middot; target <b style="color:var(--cream);font-weight:600">&pound;647</b> / month gross &middot; paid in USD</p>
   </header>
 
   <!-- SHIFTS -->
   <div class="seclabel">This week's shifts <button class="small" id="resetWeek">new week</button></div>
   <div id="shifts"></div>
-  <p class="wk-summary" id="wkSummary">0 of 18 hours done &middot; 0 of 3 projects</p>
+  <p class="wk-summary" id="wkSummary">0 of 8 hours done this week</p>
+
+  <!-- MONTHLY HOURS -->
+  <div class="seclabel">Hours this month</div>
+  <div class="card">
+    <div class="track"><div class="fill fill-hrs" id="fillHrs"></div></div>
+    <div class="track-meta"><span id="hrsLeft">0 of 30 hrs</span><span id="hrsRight">0%</span></div>
+    <p class="wk-summary" id="hrsNote" style="margin-top:12px">Includes this week &middot; banked weeks add up as you go</p>
+  </div>
 
   <!-- EARNINGS -->
   <div class="seclabel">Earnings <span style="color:var(--teal);letter-spacing:.06em" id="monthLabel"></span></div>
@@ -131,20 +140,20 @@
   </div>
 
   <!-- TARGET -->
-  <div class="seclabel">Target &middot; &pound;1,683 gross</div>
+  <div class="seclabel">Target &middot; &pound;647 gross</div>
   <div class="card">
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div class="track-meta"><span id="metaLeft">&pound;0 of &pound;1,683</span><span id="metaRight">0%</span></div>
+    <div class="track-meta"><span id="metaLeft">&pound;0 of &pound;647</span><span id="metaRight">0%</span></div>
 
     <div class="track track-2"><div class="fill fill-2" id="fill2"></div></div>
     <div class="track-meta"><span id="meta2Left">&pound;0 of &pound;400 take-home</span><span id="meta2Right">0%</span></div>
 
     <div class="stats">
       <div class="stat"><div class="num" id="sTotal">&pound;0</div><div class="lbl">gross</div></div>
-      <div class="stat"><div class="num" id="sLeft">&pound;1,683</div><div class="lbl">to go</div></div>
+      <div class="stat"><div class="num" id="sLeft">&pound;647</div><div class="lbl">to go</div></div>
       <div class="stat"><div class="num" id="sNet">&pound;0</div><div class="lbl">take&#8209;home</div></div>
     </div>
-    <p class="wk-summary" id="netNote" style="margin-top:14px">&pound;0 take-home after 29% &middot; &pound;1,195 goal</p>
+    <p class="wk-summary" id="netNote" style="margin-top:14px">&pound;0 take-home after 29% &middot; &pound;460 goal</p>
     <p class="wk-summary" id="debtNote">&pound;0 to debt after &pound;150 living</p>
     <div class="met" id="metNote" style="display:none">Target met for the month &mdash; nice one.</div>
   </div>
@@ -158,20 +167,22 @@
 <script>
 (function(){
   var KEY = 'second-job-tracker';
-  var HOURS = 6;                      // hours per shift day (one project)
-  var TARGET = 1683;                  // gross GBP / month (18 hrs/wk @ $30, converted)
+  var TARGET = 647;                   // gross GBP / month (30 hrs @ $30, converted)
   var KEEP = 0.71;                    // take-home multiplier after 29% tax + student loan
-  var NET_GOAL = 1195;                // the take-home figure this is really aiming at
+  var NET_GOAL = 460;                 // the take-home figure this is really aiming at
   var FLOOR = 400;                    // minimum take-home goal / month (second bar)
   var LIVING = 150;                   // monthly slice of take-home for living costs
+  var MONTH_HOURS_GOAL = 30;          // monthly hours aim
   var FALLBACK_RATE = 0.7194;         // updated automatically from live feed on load
-  var DAYS = [['wed','Wednesday'],['fri','Friday'],['sat','Saturday']];
+  var DAYS = [['wed','Wednesday',3],['fri','Friday',3],['sat','Saturday',2]];
+  var WEEK_HOURS = DAYS.reduce(function(t,d){ return t + d[2]; }, 0);  // 8
 
-  function blank(){ var a = []; for(var i=0;i<HOURS;i++) a.push(false); return a; }
-  function freshWeek(){ return { wed:blank(), fri:blank(), sat:blank() }; }
+  function blank(n){ var a = []; for(var i=0;i<n;i++) a.push(false); return a; }
+  function freshWeek(){ var w = {}; DAYS.forEach(function(d){ w[d[0]] = blank(d[2]); }); return w; }
 
   var state = {
     shifts: freshWeek(),
+    monthHours: 0,          // hours banked from completed weeks this month
     entries: [],            // { usd, rate, gbp, ts }
     rate: FALLBACK_RATE,
     rateManual: false,
@@ -184,14 +195,15 @@
       if(raw){ var s = JSON.parse(raw); if(s && typeof s === 'object') state = Object.assign(state, s); }
     }catch(e){}
     if(!state.shifts) state.shifts = freshWeek();
-    // normalise each day to HOURS slots (migrates older 2-hour weeks)
+    // normalise each day to its own hour count (migrates older weeks)
     DAYS.forEach(function(d){
       var a = state.shifts[d[0]];
       if(!Array.isArray(a)) a = [];
-      while(a.length < HOURS) a.push(false);
-      state.shifts[d[0]] = a.slice(0, HOURS);
+      while(a.length < d[2]) a.push(false);
+      state.shifts[d[0]] = a.slice(0, d[2]);
     });
     if(!Array.isArray(state.entries)) state.entries = [];
+    if(typeof state.monthHours !== 'number' || state.monthHours < 0) state.monthHours = 0;
   }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
@@ -229,10 +241,10 @@
     var box = document.getElementById('shifts'); box.innerHTML = '';
     var doneHrs = 0;
     DAYS.forEach(function(d){
-      var key = d[0], hrs = state.shifts[key];
+      var key = d[0], dh = d[2], hrs = state.shifts[key];
       var done = hrs.filter(Boolean).length; doneHrs += done;
       var row = document.createElement('div');
-      row.className = 'shift' + (done === HOURS ? ' done' : '');
+      row.className = 'shift' + (done === dh ? ' done' : '');
       var label = document.createElement('span'); label.className = 'day'; label.textContent = d[1];
       row.appendChild(label);
       var dots = document.createElement('div'); dots.className = 'dots';
@@ -245,13 +257,30 @@
         dots.appendChild(b);
       });
       row.appendChild(dots);
-      var cnt = document.createElement('span'); cnt.className = 'cnt'; cnt.textContent = done + '/' + HOURS;
+      var cnt = document.createElement('span'); cnt.className = 'cnt'; cnt.textContent = done + '/' + dh;
       row.appendChild(cnt);
       box.appendChild(row);
     });
-    var projects = DAYS.filter(function(d){ return state.shifts[d[0]].filter(Boolean).length === HOURS; }).length;
     document.getElementById('wkSummary').textContent =
-      doneHrs + ' of ' + (DAYS.length * HOURS) + ' hours done \u00b7 ' + projects + ' of ' + DAYS.length + ' projects';
+      doneHrs + ' of ' + WEEK_HOURS + ' hours done this week';
+    renderHours(doneHrs);
+  }
+
+  function weekHoursDone(){
+    var n = 0; DAYS.forEach(function(d){ n += state.shifts[d[0]].filter(Boolean).length; }); return n;
+  }
+  function renderHours(weekDone){
+    if(typeof weekDone !== 'number') weekDone = weekHoursDone();
+    var total = state.monthHours + weekDone;
+    var pct = Math.min(100, Math.round((total / MONTH_HOURS_GOAL) * 100));
+    document.getElementById('fillHrs').style.width = pct + '%';
+    document.getElementById('hrsLeft').innerHTML = total + ' of ' + MONTH_HOURS_GOAL + ' hrs'
+      + (total >= MONTH_HOURS_GOAL ? ' \u2713' : '');
+    document.getElementById('hrsRight').textContent = pct + '%';
+    var note = state.monthHours > 0
+      ? state.monthHours + ' hrs banked + ' + weekDone + ' this week'
+      : 'Includes this week \u00b7 banked weeks add up as you go';
+    document.getElementById('hrsNote').textContent = note;
   }
 
   // ---- earnings + target ----
@@ -317,11 +346,15 @@
   });
   document.getElementById('usd').addEventListener('keydown', function(e){ if(e.key === 'Enter') document.getElementById('logBtn').click(); });
   document.getElementById('resetMonth').addEventListener('click', function(){
-    if(!confirm('Clear this month\u2019s logged earnings? Your shift ticks stay.')) return;
-    state.entries = []; renderEntries(); renderTarget(); save();
+    if(!confirm('Clear this month\u2019s logged earnings and banked hours? Your current week\u2019s shift ticks stay.')) return;
+    state.entries = []; state.monthHours = 0;
+    renderEntries(); renderTarget(); renderHours(); save();
   });
   document.getElementById('resetWeek').addEventListener('click', function(){
-    state.shifts = freshWeek(); renderShifts(); save();
+    if(!confirm('Start a new week? This week\u2019s hours bank into the monthly total and the grid clears.')) return;
+    state.monthHours += weekHoursDone();
+    state.shifts = freshWeek();
+    renderShifts(); save();
   });
 
   // ---- init ----
